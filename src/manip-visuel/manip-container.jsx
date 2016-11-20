@@ -7,8 +7,10 @@ export default class ManipContainer extends Component {
     this.getRect = this.getRect.bind(this) ;
 
     this.state = {
-      containerWidth:0,
-      containerHeight:0
+      containerWidth: 0,
+      containerHeight: 0,
+      containerDX: 0,
+      containerDY: 0,
     }
   }
 
@@ -16,13 +18,15 @@ export default class ManipContainer extends Component {
   }
 
   getRect(el){
-    const{width,height} = el.getBoundingClientRect() ;
+    const{width, height, left, top} = el.getBoundingClientRect() ;
 
-    console.log('rect', width,height);
+    console.log('rect : ', left, top, width, height );
 
     this.setState({
-      containerWidth:width,
-      containerHeight:height
+      containerWidth: width,
+      containerHeight: height,
+      containerDX: left,
+      containerDY: top,
     })
 
   }
@@ -33,11 +37,9 @@ export default class ManipContainer extends Component {
       <div
         className="container"
         ref={ this.getRect }
-
         >
         <Manip
-          containerWidth={this.state.containerWidth}
-          containerHeight={this.state.containerHeight}
+          {...this.state}
           maxScale={2.8}
           minScale={0.4}
           />

@@ -12,34 +12,41 @@ export default class ManipEvents extends Component {
     this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this) ;
 
     this.state = {
-      posX:props.containerWidth*0.5,
-      posY:props.containerHeight*0.5
+      posX:props.containerWidth*0.5 ,//+ props.containerDX,
+      posY:props.containerHeight*0.5 //+ props.containerDY
     }
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
-      posX:nextProps.containerWidth*0.5,
-      posY:nextProps.containerHeight*0.5,
+      posX:nextProps.containerWidth*0.5 ,//+ nextProps.containerDX,
+      posY:nextProps.containerHeight*0.5 //+ nextProps.containerDY,
     })
   }
 
-// ici mettre la gestion des events.
   onPlateMouseDown(event) {
     const {clientX, clientY, shiftKey} = event ;
     const {posX, posY} = this.state ;
 
+    const {containerDX,containerDY} = this.props ;
+    const clientDX = clientX - containerDX ;
+    const clientDY = clientY - containerDY ;
+
     event.preventDefault();
     document.addEventListener('mouseup', this.onDocumentMouseUp);
     document.addEventListener('mousemove', this.onDocumentMouseMove);
-    this.props.transformer.eMouseDown(posX,posY,clientX, clientY, shiftKey) ;
+    this.props.transformer.eMouseDown(posX,posY,clientDX, clientDY, shiftKey) ;
   }
 
   onDocumentMouseMove(event) {
     const {clientX, clientY, shiftKey} = event ;
     const {posX, posY} = this.state ;
 
-    this.props.transformer.eMouseMove(posX,posY,clientX, clientY, shiftKey) ;
+    const {containerDX,containerDY} = this.props ;
+    const clientDX = clientX - containerDX ;
+    const clientDY = clientY - containerDY ;
+
+    this.props.transformer.eMouseMove(posX,posY,clientDX, clientDY, shiftKey) ;
     this.updatePosXY() ;
   }
 

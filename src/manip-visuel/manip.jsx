@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component/*, PropTypes*/ } from 'react';
 import Transformer from './transformer-img' ;
 import ManipEvents from './manip-events' ;
 
