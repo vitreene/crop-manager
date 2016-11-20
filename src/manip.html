@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Manip</title>
+<link rel="stylesheet" href="./manip.css" />
+</head>
+
+<body onload="init();" class="nomargin">
+
+	<div id="exampleContainer2" class="container">
+	<div>
+	<ul>
+		<li>Touch: One finger drag to move</li>
+		<li>Touch: Two finger gesture to rotate/scale.</li>
+		<li>Mouse: click and drag to move</li>
+		<li>Mouse: Shift key+Mouse click and drag to rotate/scale</li>
+	</ul>
+	</div>
+		<div id="plateContainer" class="plateContainer">
+			<canvas id="plateCanvas" width="400" height="400" class="plate"></canvas>
+		</div>
+	</div>
+
+<script type="text/javascript" src="./gestures.js" ></script>
+</body>
+
+</html>

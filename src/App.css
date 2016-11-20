@@ -1,0 +1,62 @@
+.App {
+  text-align: center;
+  position: relative;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.manip-visuel{
+  position: absolute;
+  left: 0;
+  top: 0;
+  /*width: 300px;
+  height: 400px;
+  overflow: hidden;
+  */
+}
+
+.manip-visuel img{
+  position: absolute;
+  /*
+  width: 100%;
+  height: auto;
+  left: -200px;
+  top: -200px;*/
+}
+.monitor{
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: violet;
+  padding: 0.5rem;
+  color: white;
+}
+
+.container{
+  overflow: hidden;
+  position: absolute;
+  background-color: beige;
+  width: 95%;
+  height: 300px;
+  /*width: 600px;
+  height: 400px;*/
+}
