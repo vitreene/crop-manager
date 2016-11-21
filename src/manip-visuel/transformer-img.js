@@ -2,9 +2,10 @@
 export default class  {
     constructor(
       maxScale = 1.5,
-      minScale = 0.5
+      minScale = 0.5,
+      initScale = 0.5
     ) {
-      this.currentScale = 0.5;
+      this.currentScale = initScale ;
       this.currentRotation = 0;
       this.input = {
         dragStartX: 0,

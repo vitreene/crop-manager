@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ManipContainer from './manip-visuel/manip-container' ;
 
+
 import './App.css';
 import logo from './logo.svg';
 
@@ -25,7 +26,10 @@ export default class App extends Component {
 /*
 reste à faire :
 √ tenir compte du décalage de positon;
-- proportions personnalisées du container
+√ proportions personnalisées du container
+  -> rotation est idem ;
+  -> scale : ? % du container ?
+  -> move % du container
 - responsive au resize
 - transfert des données à l'arret de la fonction.
 - adaptation aux dimensions de l'image importée

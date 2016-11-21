@@ -75,7 +75,7 @@ export default class ManipEvents extends Component {
   }
 
   render(){
-    const {containerWidth,containerHeight} = this.props ;
+    const {containerWidth,containerHeight, visuel, visuX, visuY} = this.props ;
     const container = (containerWidth || containerHeight)
     ? (
       <ContainerTranformerIMG
@@ -85,8 +85,8 @@ export default class ManipEvents extends Component {
         currentScale={this.props.transformer.currentScale}
         onMouseDown={this.onPlateMouseDown}
         >
-        <img id="visuel" key="visuel" src={bird} role="presentation"
-           style={{left: '-200px',top: '-200px', width:'400px', height:'400px'}} />
+        <img id="visuel" key="visuel" src={visuel} role="presentation"
+           style={{left: -visuX*0.5, top: -visuY*0.5}} />
         </ContainerTranformerIMG>
     )
     : (
