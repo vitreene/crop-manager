@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import ContainerTranformerIMG from './container-tranformer-img' ;
-import bird from './big-white-bird-big-opt.jpg';
 
 
+// gestion des evenements souris et tactiles <- à faire
 export default class ManipEvents extends Component {
   constructor(props){
     super(props);
@@ -10,32 +10,91 @@ export default class ManipEvents extends Component {
     this.onPlateMouseDown = this.onPlateMouseDown.bind(this) ;
     this.onDocumentMouseMove = this.onDocumentMouseMove.bind(this) ;
     this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this) ;
+    this.onTouchStart = this.onTouchStart.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
 
     this.state = {
-      posX:props.containerWidth*0.5 ,//+ props.containerDX,
-      posY:props.containerHeight*0.5 //+ props.containerDY
+      posX:props.containerWidth*0.5 ,
+      posY:props.containerHeight*0.5
     }
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
-      posX:nextProps.containerWidth*0.5 ,//+ nextProps.containerDX,
-      posY:nextProps.containerHeight*0.5 //+ nextProps.containerDY,
+      posX:nextProps.containerWidth*0.5 ,
+      posY:nextProps.containerHeight*0.5
     })
   }
+  // EVENT TACTILE
+  onTouchStart(event) {
+    event.preventDefault();
 
+    const touches = event.touches.length ;
+    const shiftKey = (touches === 2) ;
+    let posXYs = [] ;
+
+    for (let t=0 ; t<touches ; t++ ){
+      posXYs.unshift(event.touches[t].clientX, event.touches[t].clientY) ;
+    } ;
+
+    if (touches === 1) {
+      document.addEventListener('touchmove', this.onTouchMove);
+      document.addEventListener('touchend', this.onTouchEnd);
+      document.addEventListener('touchcancel', this.onTouchEnd);
+    }
+
+    this.props.transformer.eMouseDown(shiftKey, ...posXYs) ;
+
+  }
+
+  onTouchMove(event) {
+    event.preventDefault();
+
+    const touches = event.touches.length ;
+    const shiftKey = (touches === 2) ;
+    let posXYs = [] ;
+
+    for (let t=0 ; t<touches ; t++ ){
+      posXYs.unshift(event.touches[t].clientX, event.touches[t].clientY) ;
+    } ;
+  console.log('onTouchMove', shiftKey, ...posXYs);
+    this.props.transformer.eMouseMove(shiftKey, ...posXYs) ;
+    this.updatePosXY() ;
+  }
+
+  onTouchEnd(event) {
+    event.preventDefault();
+    //const shiftKey = (event.touches.length === 1) ;
+    const {dragging} = this.props.transformer.input ;
+    const touches = event.touches.length ;
+
+    if (touches === 0 && dragging) {
+      this.props.transformer.handleDragStop();
+      document.removeEventListener('touchmove', this.onTouchMove);
+      document.removeEventListener('touchend', this.onTouchEnd);
+      document.removeEventListener('touchcancel', this.onTouchEnd);
+
+    } else if (touches === 1) {
+      const posXYs = [event.touches[0].clientX, event.touches[0].clientY] ;
+      this.props.transformer.handleGestureStop();
+      this.props.transformer.handleDragStart(...posXYs);
+    }
+  }
+
+  // EVENTS SOURIS
   onPlateMouseDown(event) {
     const {clientX, clientY, shiftKey} = event ;
     const {posX, posY} = this.state ;
 
     const {containerDX,containerDY} = this.props ;
-    const clientDX = clientX - containerDX ;
-    const clientDY = clientY - containerDY ;
+    const eClientX = clientX - containerDX ;
+    const eClientY = clientY - containerDY ;
 
     event.preventDefault();
     document.addEventListener('mouseup', this.onDocumentMouseUp);
     document.addEventListener('mousemove', this.onDocumentMouseMove);
-    this.props.transformer.eMouseDown(posX,posY,clientDX, clientDY, shiftKey) ;
+    this.props.transformer.eMouseDown(shiftKey, eClientX, eClientY, posX, posY ) ;
   }
 
   onDocumentMouseMove(event) {
@@ -43,10 +102,10 @@ export default class ManipEvents extends Component {
     const {posX, posY} = this.state ;
 
     const {containerDX,containerDY} = this.props ;
-    const clientDX = clientX - containerDX ;
-    const clientDY = clientY - containerDY ;
+    const eClientX = clientX - containerDX ;
+    const eClientY = clientY - containerDY ;
 
-    this.props.transformer.eMouseMove(posX,posY,clientDX, clientDY, shiftKey) ;
+    this.props.transformer.eMouseMove(shiftKey, eClientX, eClientY, posX, posY ) ;
     this.updatePosXY() ;
   }
 
@@ -84,6 +143,7 @@ export default class ManipEvents extends Component {
         currentRotation={this.props.transformer.currentRotation}
         currentScale={this.props.transformer.currentScale}
         onMouseDown={this.onPlateMouseDown}
+        onTouchStart={this.onTouchStart}
         >
         <img id="visuel" key="visuel" src={visuel} role="presentation"
            style={{left: -visuX*0.5, top: -visuY*0.5}} />

@@ -2,9 +2,8 @@ import React, { Component/*, PropTypes*/ } from 'react';
 import Transformer from './transformer-img' ;
 import ManipEvents from './manip-events' ;
 
-// ne construite Transformer que si l'image est prete.
-// je ne peux pas considerer que l'image sera toujours dispo.
-//const manip = (MyComp) => {
+
+// injecte la librairie Transformer et l'initialise lorsque l'image est chargée
 
 export default  class ManipWrapper extends Component {
     constructor(props){
@@ -60,8 +59,3 @@ export default  class ManipWrapper extends Component {
         );
     }
   }
-
-//  return ManipWrapper
-//}
-
-//export default manip(ManipEvents)

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function ContainerTranformerIMG (props) {
-  const {children,onMouseDown} = props ;
+  const {children,onMouseDown,onTouchStart} = props ;
 
   function transforming() {
     const {posX, posY, currentRotation, currentScale} = props ;
@@ -12,6 +12,7 @@ export default function ContainerTranformerIMG (props) {
     return (
       <div
         onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
         className="manip-visuel"
         style={transforming()}
         >

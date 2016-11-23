@@ -29,7 +29,7 @@ reste à faire :
 √ proportions personnalisées du container
   -> rotation est idem ;
   -> scale : ? % du container ?
-  -> move % du container
+  -> move % du centre du container
 - responsive au resize
 - transfert des données à l'arret de la fonction.
 - adaptation aux dimensions de l'image importée

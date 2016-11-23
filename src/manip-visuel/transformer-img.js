@@ -164,7 +164,7 @@ export default class  {
       this.handleDragStop();
     }
 
-    eMouseMove(posX, posY, eClientX, eClientY, shiftKey){
+    eMouseMove(shiftKey,eClientX, eClientY, posX, posY ){
       if (shiftKey) {
           this.handleGesture(posX, posY, eClientX, eClientY);
         } else {
@@ -172,7 +172,8 @@ export default class  {
         }
     }
 
-    eMouseDown(posX,posY,eClientX, eClientY, shiftKey){
+    eMouseDown(shiftKey, eClientX, eClientY, posX, posY ){
+
       if (shiftKey === true) {
         //assume second touchpoint is in middle of screen
         this.handleGestureStart(posX, posY, eClientX, eClientY);

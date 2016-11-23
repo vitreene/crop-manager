@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Manip from './manip' ;
 import bird from './big-white-bird-big-opt.jpg';
-import gold from './goldenage-logo.jpg';
-import clim from './bio_climatique-4854.jpg';
+//import gold from './goldenage-logo.jpg';
+//import clim from './bio_climatique-4854.jpg';
 
+
+// injecte l'image et le conteneur.
 export default class ManipContainer extends Component {
   constructor(props){
     super(props);
@@ -45,7 +47,7 @@ export default class ManipContainer extends Component {
           {...this.state}
           maxScale={2.8}
           minScale={0.4}
-          visuel={clim}
+          visuel={bird}
           />
       </div>
     );
