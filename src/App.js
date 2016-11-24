@@ -31,11 +31,15 @@ reste à faire :
   -> scale : ? % du container ?
   -> move % du centre du container
 - responsive au resize
-- transfert des données à l'arret de la fonction.
+√ transfert des données à l'arret de la fonction.
 - adaptation aux dimensions de l'image importée
 - transposition des données à un autre contexte.
 lecture des données initiales
-- local storage
+√ local storage
 - reset des modifications
-- version touch
+√ version touch
+- miroir horizontal et vertical
+- limites :
+  - le contact simultané de deux doigts n'est pas vu
+  - depasser la limite bloquant l'image à son milieu
 */

@@ -1,12 +1,12 @@
 
 export default class  {
     constructor(
-      maxScale = 1.5,
-      minScale = 0.5,
-      initScale = 0.5
+      params,
+      currentRotation = 0,
+      currentScale = 0.5
     ) {
-      this.currentScale = initScale ;
-      this.currentRotation = 0;
+      this.currentScale = currentScale ;
+      this.currentRotation = currentRotation ;
       this.input = {
         dragStartX: 0,
         dragStartY: 0,
@@ -19,10 +19,7 @@ export default class  {
         touchStartAngle: 0,
         pointers: [],
       };
-      this.param = {
-        maxScale,
-        minScale
-      };
+      this.param = params;
     }
 
     indexOfPointer(pointerId) {
@@ -183,4 +180,8 @@ export default class  {
       }
     }
 
+    init(scale, rotation){
+      this.currentScale = scale ;
+      this.currentRotation = rotation;
+    }
 }

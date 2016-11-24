@@ -8,52 +8,73 @@ import ManipEvents from './manip-events' ;
 export default  class ManipWrapper extends Component {
     constructor(props){
       super(props);
-      this.getScale = this.getScale.bind(this);
-      this.state = {
-        imgLoaded: false,
-        imgWidth: 0,
-        imgHeight: 0
-      };
+      this.initScale = this.initScale.bind(this);
+      this.initTransform = this.initTransform.bind(this);
+      this.uploadIMG = this.uploadIMG.bind(this);
+
+      this.img = new Image() ;
+      this.state = { imgLoaded: false};
     }
 
     componentWillMount() {
-      const {visuel} = this.props ;
-      const img = new Image() ;
-      img.src= visuel ;
-      img.onload = () =>{
-        this.setState({
-          imgWidth  : img.width,
-          imgHeight : img.height,
-          imgLoaded : true
-        })
-        console.log('VISUEL', img.width, img.height);
-      };
-
+      this.uploadIMG();
     }
-    getScale(containerWidth,containerHeight,imgWidth,imgHeight){
+
+    uploadIMG(){
+      const {src} = this.props.visuel ;
+      this.img.src = src ;
+      this.img.onload = () => {
+        this.setState({imgLoaded : true})
+      };
+    }
+
+    initScale(containerWidth,containerHeight,imgWidth,imgHeight){
       return (((containerWidth/imgWidth) * imgHeight) > containerHeight)
         ? containerHeight/imgHeight
         : containerWidth/imgWidth ;
     }
 
+    initTransform(){
+      const {visuel, containerWidth, containerHeight} = this.props ;
+      const {imgWidth,imgHeight} = this.state ;
+      const ratio = containerWidth /containerHeight ;
+      const dim = (ratio > 1 ) ? containerWidth : containerHeight ;
+      const posX = visuel.pox * dim || containerWidth*0.5  ;
+      const posY = visuel.poy * dim || containerHeight*0.5 ;
+      const currentRotation = visuel.rot || 0 ;
+      const currentScale = ('undefined' === typeof visuel.ech)
+        ? this.initScale(containerWidth, containerHeight, imgWidth, imgHeight)
+        : visuel.ech * dim ;
+
+      console.log('initTransform',visuel, posX,posY);
+
+      return {
+        posX,
+        posY,
+        currentScale,
+        currentRotation,
+      };
+    }
+
     render(){
+      const {params, visuel, ...props} = this.props ;
 
       if (this.state.imgLoaded) {
-          const {containerWidth,containerHeight,maxScale, minScale, visuel} = this.props ;
-          const {imgWidth,imgHeight} = this.state ;
-          const initScale =  this.getScale(containerWidth,containerHeight,imgWidth,imgHeight) ;
+        const {width, height, src} = this.img ;
+        const {posX, posY, currentRotation, currentScale} = this.initTransform() ;
+        const transformIMG = new Transformer(params, currentRotation, currentScale) ;
 
-          const transformIMG = new Transformer(maxScale, minScale, initScale) ;
-
-          return (
-            <ManipEvents
-              {...this.props}
-              transformer={transformIMG}
-              visuel={visuel}
-              visuX={this.state.imgWidth}
-              visuY={this.state.imgHeight}
-              />
-          )
+        return (
+          <ManipEvents
+            {...props}
+            transformer={transformIMG}
+            src={src}
+            posX={posX}
+            posY={posY}
+            imgWidth={width}
+            imgHeight={height}
+            />
+        )
       } else return (
         <div className="spinner" > Oh ! wait a second… </div>
         );
