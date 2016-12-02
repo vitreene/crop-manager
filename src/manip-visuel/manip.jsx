@@ -28,6 +28,7 @@ export default  class ManipWrapper extends Component {
       };
     }
 
+    // verifier ce calcul !
     initScale(containerWidth,containerHeight,imgWidth,imgHeight){
       return (((containerWidth/imgWidth) * imgHeight) > containerHeight)
         ? containerHeight/imgHeight
@@ -36,17 +37,24 @@ export default  class ManipWrapper extends Component {
 
     initTransform(){
       const {visuel, containerWidth, containerHeight} = this.props ;
-      const {imgWidth,imgHeight} = this.state ;
-      const ratio = containerWidth /containerHeight ;
-      const dim = (ratio > 1 ) ? containerWidth : containerHeight ;
-      const posX = visuel.pox * dim || containerWidth*0.5  ;
-      const posY = visuel.poy * dim || containerHeight*0.5 ;
+      const {width:imgWidth, height:imgHeight} = this.img ;
+
+      const imgLong = ((imgWidth/imgHeight) > 1)
+        ? imgWidth
+        : imgHeight ;
+
+      const containerLong = ((containerWidth /containerHeight) > 1 )
+        ? containerWidth
+        : containerHeight ;
+
+      // conservion en absolu
+      const posX = (visuel.pox+0.5) * containerWidth || containerWidth*0.5  ;
+      const posY = (visuel.poy+0.5)* containerHeight || containerHeight*0.5 ;
+
       const currentRotation = visuel.rot || 0 ;
       const currentScale = ('undefined' === typeof visuel.ech)
         ? this.initScale(containerWidth, containerHeight, imgWidth, imgHeight)
-        : visuel.ech * dim ;
-
-      console.log('initTransform',visuel, posX,posY);
+        : (visuel.ech * containerLong)/imgLong ;
 
       return {
         posX,
@@ -57,6 +65,7 @@ export default  class ManipWrapper extends Component {
     }
 
     render(){
+      // eslint-disable-next-line
       const {params, visuel, ...props} = this.props ;
 
       if (this.state.imgLoaded) {

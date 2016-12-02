@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react'
 import ContainerTranformerIMG from './container-tranformer-img' ;
 
@@ -20,7 +21,7 @@ export default class ManipEvents extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const {posX, posY} = this.props ;
+    const {posX, posY} = nextProps ;
     this.setState({posX, posY}) ;
   }
 
@@ -137,82 +138,23 @@ export default class ManipEvents extends Component {
     this.setState({posX, posY}) ;
   }
 
-
-
-
   recordPosition(){
-
     const {posX, posY} = this.state ;
-    const {src} = this.props ;
+    const {src, imgWidth, imgHeight} = this.props ;
     const {currentScale, currentRotation} = this.props.transformer ;
 
-    this.props.record(src, posX, posY, currentScale, currentRotation) ;
-
-    return  ;
-    console.log('position : ', Math.round(posX), Math.round(posY), Math.round(currentScale*100)/100, Math.round(currentRotation) );
-    const {containerWidth, containerHeight, ratio} = this.props ;
-    /* SORTIE
-    données : (posX, posY, currentScale, currentRotation) = image ; (w, h) = zone ; dim  = wrapper.
-    px = posX / dim ;
-    py = posY / dim ;
-    sc = scale /dim
-    rot = rotation
-    */
-    const dim = (ratio > 1 ) ?containerWidth : containerHeight ;
-    const pox = posX / dim ;
-    const poy = posY / dim ;
-    const rot = currentRotation ;
-    const ech = currentScale / dim ;
-
-    console.log('record : ', dim, pox, poy, rot, ech);
-
-    const transform = {
-      pox : 0.4831704701642133,
-      poy : 0.5340000020751955,
-      rot : 26.50945903362782,
-      ech : 0.0028736238056335573
-    }
-
-    /* ENTREE
-    dim = coté du conteneur
-    div#wrapper -> #conteneur[carré] -> layer#visuel , layer#masque - layer#zone
-
-    carré <- dim = coté-long du conteneur ;
-    visuel : posX = px *  dim ; posY = py * dim ; scale = sc * dim ; rotation = rot .
-    zone : si ratio > 1 : containerWidth = dim * long, containerHeight = containerWidth * ratio.
-    	si ratio < 1 : containerHeight = dim * long, containerWidth = containerHeight * ratio.
-    	x= dim-containerWidth /2, y = dim-containerHeight / 2
-
-    */
-    const e_dim = (ratio > 1 ) ?containerWidth : containerHeight ;
-    const e_posX = transform.pox * dim ;
-    const e_posY = transform.poy * dim ;
-    const e_currentScale = transform.ech * dim ;
-    const e_currentRotation = transform.rot ;
-
-    const transformEnter = {
-      posX: e_posX,
-      posY: e_posY,
-      currentScale: e_currentScale,
-      currentRotation: e_currentRotation
-    };
-
-    console.log('positionE: ', Math.round(e_posX), Math.round(e_posY),
-    Math.round(e_currentScale*100)/100, Math.round(e_currentRotation) );
-
-    //this.setState({posX:e_posX, posY:e_posY}) ;
-    //this.props.transformer.init(e_currentScale, e_currentRotation) ;
-
+    this.props.record(src, imgWidth, imgHeight, posX, posY, currentScale, currentRotation) ;
   }
 
   render(){
-    const {containerWidth, containerHeight, src, imgWidth, imgHeight} = this.props ;
+    const {containerWidth, containerHeight, src, imgWidth, imgHeight, miroir} = this.props ;
     const {posX, posY} = this.state;
     const {currentScale, currentRotation} = this.props.transformer ;
 
     const container = (containerWidth || containerHeight)
     ? (
       <ContainerTranformerIMG
+        miroir={miroir}
         posX={posX}
         posY={posY}
         currentRotation={currentRotation}
