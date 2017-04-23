@@ -1,0 +1,124 @@
+
+
+
+.icon-plain{
+  fill:#EBEBEB;
+  fill-rule:nonzero;
+}
+.icon-circle{
+  fill: #0D79F2 ;
+  stroke: $white ;
+  stroke-width:0.5;
+  &.nobgc{
+    fill:none;
+  }
+}
+
+/*
+fillRule="evenodd" strokeMiterlimit="1.41" clipRule="evenodd" strokeLinecap="round" strokeLinejoin="round"
+*/
+.icon-svg{
+  fill-rule:evenodd;
+  stroke-miterlimit:1.41;
+  clip-rule:evenodd;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.icon-small {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.icon-x-small {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.disabled{
+  opacity: 0.6;
+}
+
+.icon-miroir-filet{
+  fill:none ;
+  stroke: $white ;
+  stroke-width: 2;
+}
+
+.input-hidden{display:none}
+
+.icon-miroir-clair{fill: $white ;}
+.icon-miroir-clair-inverse{fill: #003061  ;}
+
+.icon-miroir-sombre{fill: #1397E1 ;}
+.icon-miroir-sombre-inverse{fill: $white ;}
+
+.icon-checked{ fill: none; }
+.icon-checked-inverse{ fill: #0D79F2 ;}
+
+/*// VISUEL : COVER/CONTAINS*/
+.icon-cov-fond{
+  stroke: #0D79F2 ;
+  stroke-width: 2;
+}
+.icon-cov-sombre{
+  fill: #1397E1;
+  stroke: $white ;
+  stroke-width: 2;
+}
+.icon-cov-sombre-inverse{
+  fill: #003061 ;
+  stroke: $white ;
+  stroke-width: 2;
+}
+
+/*// BLOC-MESSAGE_POSITION*/
+.icon-bloc-message{
+  fill: $white;
+  stroke: #003061  ;
+  stroke-width: 2;
+}
+
+.icon-bloc-message-inverse{
+  fill: #0D79F2;
+  stroke: #003061  ;
+  stroke-width: 2;
+}
+.icon-bloc-message-pave{ fill: #1397E1; stroke:none}
+.icon-bloc-message-pave-inverse{ fill: #003061 ; stroke:none}
+
+.icon-bloc-message-lien{fill: $white;}
+
+.icon-card-vue-grip{
+  fill:$grismoyen;
+}
+.icon-card-vue-expand{
+  fill: #0D79F2;
+}
+.icon-card-vue-oeil circle{
+  fill: $white;
+  stroke: #003061  ;
+  stroke-width: 1;
+}
+
+.icon-oeil{
+  fill: #0D79F2;
+}
+
+.icon-card-vue-plus{
+  fill: $white;
+}
+
+.list-plus-cercle{
+  fill: #003061  ;
+  stroke: $white ;
+  stroke-width: 3;
+}
+
+
+
