@@ -1,74 +1,78 @@
-import React, {Component} from 'react';
+// eslint-disable-next-line
+import React, {Component, PropTypes} from 'react';
 const isClient = typeof window !== "undefined";
         
  export default  class Wrapper extends Component {
-        constructor(props) {
-            super(props)
-            this.getRect = this.getRect.bind(this);
-            this.resizeContainer = this.resizeContainer.bind(this);
-        }
-        state = {}
-        debounceResizeContainer = null
+     static propTypes = {
 
-        componentDidMount() {
-            this.getRect(this.wrapper);
-            isClient && window.addEventListener('resize', this.resizeContainer);
-        }
+     }
+    constructor(props) {
+        super(props)
+        this.getRect = this.getRect.bind(this);
+        this.resizeContainer = this.resizeContainer.bind(this);
+    }
+    state = {}
+    debounceResizeContainer = null
 
-        componentWillUnmount() {
-            isClient && window.removeEventListener('resize', this.resizeContainer);
-        }
+    componentDidMount() {
+        this.getRect(this.wrapper);
+        isClient && window.addEventListener('resize', this.resizeContainer);
+    }
 
-        resizeContainer() {
-            const {wrapper, getRect} = this;
-            let {debounceResizeContainer} = this;
-            clearTimeout(debounceResizeContainer);
-            debounceResizeContainer = setTimeout(() => {
-                getRect(wrapper);
-            }, 250)
-        }
+    componentWillUnmount() {
+        isClient && window.removeEventListener('resize', this.resizeContainer);
+    }
 
-        getRect(el) {
-            if (isClient && el) {
-                const {width, height, left, top} = el.getBoundingClientRect();
-                const ratio = (height === 0)
-                    ? 1
-                    : width / height;
-                const cote = Math.min(width, height);
+    resizeContainer() {
+        const {wrapper, getRect} = this;
+        let {debounceResizeContainer} = this;
+        clearTimeout(debounceResizeContainer);
+        debounceResizeContainer = setTimeout(() => {
+            getRect(wrapper);
+        }, 250)
+    }
 
-                const contDX = left + window.scrollX;
-                const contDY = top + window.scrollY;
-                    
-                const midX = Math.round( contDX + (width * 0.5) );
-                const midY = Math.round( contDY + (height * 0.5) );                
+    getRect(el) {
+        if (isClient && el) {
+            const {width, height, left, top} = el.getBoundingClientRect();
+            const ratio = (height === 0)
+                ? 1
+                : width / height;
+            const cote = Math.min(width, height);
 
-                this.setState({
-                    containerSize: {width, height},
-                    containerPos: {contDX, contDY},
-                    mid: {midX, midY},
-                    ratio,
-                    cote
-                });
-            }
-        }
+            const contDX = left + window.scrollX;
+            const contDY = top + window.scrollY;
+                
+            const midX = Math.round( contDX + (width * 0.5) );
+            const midY = Math.round( contDY + (height * 0.5) );                
 
-        render() {
-            const {mid, containerSize, containerPos} = this.state;
-
-            const childrenWithProps = React.Children
-                .map(this.props.children,
-                (child) => React.cloneElement(child, {mid, containerSize, containerPos})
-                );
-
-            return (
-                <div 
-                    className="manip-wrapper" 
-                    ref={ref => this.wrapper = ref}  >
-
-                        {childrenWithProps}
-                </div>
-
-            );
+            this.setState({
+                containerSize: {width, height},
+                containerPos: {contDX, contDY},
+                mid: {midX, midY},
+                ratio, // deprecie ?
+                cote, // deprecie ?
+            });
         }
     }
+
+    render() {
+        const {mid, containerSize, containerPos} = this.state;
+
+        const childrenWithProps = React.Children
+            .map(this.props.children,
+            (child) => React.cloneElement(child, {mid, containerSize, containerPos})
+            );
+
+        return (
+            <div 
+                className="manip-wrapper" 
+                ref={ref => this.wrapper = ref}  >
+
+                    {childrenWithProps}
+            </div>
+
+        );
+    }
+}
 

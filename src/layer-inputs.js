@@ -1,10 +1,8 @@
-import React from 'react'
-
+import React, {PropTypes} from 'react'
 
 let mouseDown = false;
 
 const Inputs = (props) => {
-    // let conteneur;
     const {pointerPosition, mid, containerSize, containerPos} = props;
 
     const handleTouchStart = (e)=>{
@@ -43,15 +41,13 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        pointerPosition({type, pointers});
+        pointerPosition({type, pointers, containerSize});
     }
 
     function eventMouse(e, type) {
         e.stopPropagation();
         e.preventDefault();
 
-        console.log('mouseDown', mouseDown, type);
-        
         const {pageX, pageY, shiftKey} = e;
         const {contDX, contDY} = containerPos;
         const {midX, midY} = mid;
@@ -64,42 +60,28 @@ const Inputs = (props) => {
             shiftKey && {posX: midX, posY: midY}
         ].filter(Boolean);
 
-        pointerPosition({type, pointers});
+        pointerPosition({type, pointers, containerSize});
     }
 
-    // function getRect() {
-    //     const {left, top, width, height} = conteneur.getBoundingClientRect();
-    //     return  {
-    //         containerDX: (isClient) ? left + window.scrollX : 0,
-    //         containerDY: (isClient) ? top + window.scrollY : 0,
-    //         width, 
-    //         height
-    //     }
-    // }
-
-    
     return (
-
-                    <div 
-                    className="inputsWrapper"
-                    style={containerSize}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                    />
-)
+            <div 
+            className="inputsWrapper"
+            style={containerSize}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            />
+    )
 };
 
-export default Inputs
+Inputs.propTypes = {
+    pointerPosition: PropTypes.func, 
+    mid: PropTypes.object, 
+    containerSize: PropTypes.object, 
+    containerPos: PropTypes.object
+}
 
-/*
-            <div 
-                ref={ref => conteneur = ref}
-                className="manip-edit-conteneur" 
-                style={dims}
-                >
-             </div>
-*/
+export default Inputs
