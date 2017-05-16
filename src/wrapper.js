@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+const isClient = typeof window !== "undefined";
         
  export default  class Wrapper extends Component {
         constructor(props) {
@@ -12,11 +12,11 @@ import React, {Component} from 'react';
 
         componentDidMount() {
             this.getRect(this.wrapper);
-            window.addEventListener('resize', this.resizeContainer);
+            isClient && window.addEventListener('resize', this.resizeContainer);
         }
 
         componentWillUnmount() {
-            window.removeEventListener('resize', this.resizeContainer);
+            isClient && window.removeEventListener('resize', this.resizeContainer);
         }
 
         resizeContainer() {
@@ -29,18 +29,23 @@ import React, {Component} from 'react';
         }
 
         getRect(el) {
-            if (el) {
+            if (isClient && el) {
                 const {width, height, left, top} = el.getBoundingClientRect();
                 const ratio = (height === 0)
                     ? 1
                     : width / height;
                 const cote = Math.min(width, height);
 
+                const contDX = left + window.scrollX;
+                const contDY = top + window.scrollY;
+                    
+                const midX = Math.round( contDX + (width * 0.5) );
+                const midY = Math.round( contDY + (height * 0.5) );                
+
                 this.setState({
-                    containerWidth: width,
-                    containerHeight: height,
-                    containerDX: left + window.scrollX,
-                    containerDY: top + window.scrollY,
+                    containerSize: {width, height},
+                    containerPos: {contDX, contDY},
+                    mid: {midX, midY},
                     ratio,
                     cote
                 });
@@ -48,17 +53,11 @@ import React, {Component} from 'react';
         }
 
         render() {
-            const {cote} = this.state;
-            const dims = cote
-                ? {
-                    width: cote,
-                    height: cote
-                }
-                : null;
+            const {mid, containerSize, containerPos} = this.state;
 
             const childrenWithProps = React.Children
                 .map(this.props.children,
-                (child) => React.cloneElement(child, {dims})
+                (child) => React.cloneElement(child, {mid, containerSize, containerPos})
                 );
 
             return (

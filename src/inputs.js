@@ -1,59 +1,44 @@
 import React from 'react'
 
-// import React, {Component} from 'react'
-const isClient = typeof window !== "undefined";
+
 let mouseDown = false;
 
 const Inputs = (props) => {
-    let conteneur;
-    const {dims, pointerPosition} = props;
+    // let conteneur;
+    const {pointerPosition, mid, containerSize, containerPos} = props;
 
     const handleTouchStart = (e)=>{
-        e.stopPropagation();
-        e.preventDefault();
         eventTouch(e, 'touch start')
-    }
+    };
     const handleTouchMove = (e)=>{
-        e.stopPropagation();
-        e.preventDefault();
         eventTouch(e, 'touch move')
-    }
+    };
     const handleTouchEnd = (e)=>{
-        e.stopPropagation();
-        e.preventDefault();
         eventTouch(e, 'touch end')
-    }
+    };
     const handleMouseDown = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
         mouseDown = true;
-        // console.log('handleClick', mouseDown);
          eventMouse(e, 'mouse start');
-    }
+    };
     const handleMouseMove = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // console.log('handleMove', mouseDown);
         if (mouseDown) eventMouse(e, 'mouse move');
-    }
-
+    };
     const handleMouseUp = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
         mouseDown = false;
         eventMouse(e, 'mouse end');
-        // console.log('handleUp', mouseDown);
-    }
+    };
 
     function eventTouch(e, type) {
-        // console.log( e.touches);
-        const {containerDX, containerDY} = getRect();
+        e.stopPropagation();
+        e.preventDefault();        
+        const {contDX, contDY} = containerPos;
+        
         const pointers = Object.keys(e.touches)
         .reverse()
         .map( index => (
                 {
-                    posX: Math.round( e.touches[index].pageX - containerDX ),
-                    posY: Math.round( e.touches[index].pageY - containerDY ),
+                    posX: Math.round( e.touches[index].pageX - contDX ),
+                    posY: Math.round( e.touches[index].pageY - contDY ),
                 }
             )
         )
@@ -62,40 +47,42 @@ const Inputs = (props) => {
     }
 
     function eventMouse(e, type) {
-        const {pageX, pageY, shiftKey} = e;
-        const {containerDX, containerDY, width, height} = getRect();
+        e.stopPropagation();
+        e.preventDefault();
 
-        const posX = Math.round( pageX - containerDX );
-        const posY = Math.round( pageY - containerDY );
-        const middleX = Math.round( containerDX + (width * 0.5) );
-        const middleY = Math.round( containerDY + (height * 0.5) );
+        console.log('mouseDown', mouseDown, type);
+        
+        const {pageX, pageY, shiftKey} = e;
+        const {contDX, contDY} = containerPos;
+        const {midX, midY} = mid;
+
+        const posX = Math.round( pageX - contDX );
+        const posY = Math.round( pageY - contDY );
 
         const pointers = [
             {posX, posY},
-            shiftKey && {posX: middleX, posY: middleY}
+            shiftKey && {posX: midX, posY: midY}
         ].filter(Boolean);
 
         pointerPosition({type, pointers});
     }
 
-    function getRect() {
-        const {left, top, width, height} = conteneur.getBoundingClientRect();
-        return  {
-            containerDX: (isClient) ? left + window.scrollX : 0,
-            containerDY: (isClient) ? top + window.scrollY : 0,
-            width, 
-            height
-        }
-    }
+    // function getRect() {
+    //     const {left, top, width, height} = conteneur.getBoundingClientRect();
+    //     return  {
+    //         containerDX: (isClient) ? left + window.scrollX : 0,
+    //         containerDY: (isClient) ? top + window.scrollY : 0,
+    //         width, 
+    //         height
+    //     }
+    // }
 
     
     return (
-            <div 
-                ref={ref => conteneur = ref}
-                className="manip-edit-conteneur" 
-                style={dims}
-                >
-                    <div className="inputsWrapper"
+
+                    <div 
+                    className="inputsWrapper"
+                    style={containerSize}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
@@ -103,8 +90,16 @@ const Inputs = (props) => {
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                     />
-             </div>
 )
 };
 
 export default Inputs
+
+/*
+            <div 
+                ref={ref => conteneur = ref}
+                className="manip-edit-conteneur" 
+                style={dims}
+                >
+             </div>
+*/

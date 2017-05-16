@@ -13,35 +13,28 @@ export default class Manip extends Component {
 
     state = {
          pointer: {posX: 0, posY: 0},
-         pointer2:{posX: 0, posY: 0}
+         axe: {posX: 0, posY: 0},
+         action: null
     }
 
     pointerPosition({type, pointers}) {
-        // debugger;
         const [device, action] = type.split(' ');
-
-        console.log('type', device, action);
-        
         const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
-
-        // console.log('pointers', modifier, pointers);
-        
         const pointer = pointers[+modifier];
         const axe = modifier && pointers[0];
 
-
-      this.setState({
-          pointers,
-        pointer,
-        axe,
-        action
-        });
+        this.setState({
+            //   pointers,
+            pointer,
+            axe,
+            action
+            });
     }
 
     render() {
-      const {pointer, axe, pointers, action} = this.state;
+      const {pointer, axe, /*pointers, */ action} = this.state;
       const {id} = this.props;
-        return (
+      return (
     <div id={id} className="manip-conteneur">
 
         <Wrapper>
@@ -49,15 +42,40 @@ export default class Manip extends Component {
         </Wrapper>
             <Reglages/>
             
-                { pointer && 
-                    <div>
-                        action :{action} - pointer x: {pointer.posX}, y: {pointer.posY} 
-                    </div> 
-                } 
-                { axe && <div>axe x: {axe.posX}, y: {axe.posY} </div>  }
+            <Pointers {...{pointer, axe, action}} />
+            <Plotters {...{pointer, axe, action}}/>
                
     </div>
         );
     }
 }
-                /*<div> <span>{JSON.stringify(pointers)} </span></div>*/
+
+ /*<div> <span>{JSON.stringify(pointers)} </span></div>*/
+
+
+const Pointers = ({action, axe, pointer}) => (
+    <div className="pointers-infos">
+        { pointer && 
+            <div>
+                action :{action} - pointer x: {pointer.posX}, y: {pointer.posY} 
+            </div> 
+        } 
+        { axe && 
+            <div>axe x: {axe.posX}, y: {axe.posY} </div>
+        }
+        </div>
+);
+
+
+
+// placer pointer-events: none; dans la css
+// sinon, l'élément capture l'event et onMouseUp n'est pas lancé
+const Plotters = ({action, axe, pointer}) => {
+    const point = {top: pointer.posY, left: pointer.posX};
+    const pointAxe = {top: axe.posY, left: axe.posX};
+    return (
+        <div>
+    <span className="plot" style={point}>&#x2299;</span>
+    <span className="plot" style={pointAxe}>&#x22a1;</span>
+    </div>
+);}
