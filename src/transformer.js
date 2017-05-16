@@ -14,28 +14,35 @@ sortie :
 
 // position initiale
 let debut = {posX: 0, posY:0};
-// position précédente
-// let point = {posX: 0, posY:0};
+
 // valeur du décalage entre point et la nouvelle valeur pointer
 let move = {dX: 0, dY: 0};
 
 // arrivee : position en fin d'action 
-// translate : valeur du déplacement en %
+
+// translate : valeur du déplacement en px
+let translate = {dX: 0, dY: 0};
 
 // + : le decalage initial
 let initial;
-let translate;
 
 export default function(position){
+    const {axe} = position;
 
-    const {pointer, axe, action, containerSize, transform} = position;
+    return (axe) 
+        ? rotateAndScaleImage(position)
+        : translateImage(position)
+}
+
+function translateImage(position){
+    // eslint-disable-next-line
+    const {pointer, /*axe, */ action, transform} = position;
     let res;
 
     switch (action) {
         case 'start' :
            res = 'c’est parti!' 
            debut = pointer;
-        //    point = pointer;
            initial = transform.translate
             break;
     
@@ -44,11 +51,6 @@ export default function(position){
                dX: pointer.posX - debut.posX,
                dY: pointer.posY - debut.posY,
            };
-        //    move = {
-        //        dX: pointer.posX - point.posX,
-        //        dY: pointer.posY - point.posY,
-        //    };
-        //    point = pointer;
            res = `ca bouge! move : ${move.dX}, ${move.dY}`;
 
         translate = { 
@@ -65,20 +67,20 @@ export default function(position){
             res = `ah c’est fini. Point de départ: ${debut.posX} , ${debut.posY},  point d'arrivée : ${arrivee.posX}, ${arrivee.posY}`; 
 
             move = {dX: 0, dY: 0};
-            // point = {posX: 0, posY:0};
             break;
     
         default:
             break;
     }
 
-        // const translate = { 
-        //     dX: Math.round( (move.dX / containerSize.width) *100),
-        //     dY: Math.round( (move.dY / containerSize.height) *100),
-        // }
     return {
         message : res,
         translate,
         };
+
 }
 
+function rotateAndScaleImage(position) {
+    console.log('rotateAndScaleImage');
+    
+}

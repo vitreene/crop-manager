@@ -5,9 +5,8 @@ import LayerInputs from './layer-inputs'
 import Reglages from './reglages'
 import LayerImage from './layer-image'
 
-
 import transformer from './transformer'
-import newPosition from './new-position'
+
 export default class Manip extends Component {
      static propTypes = {
         id: PropTypes.string
@@ -32,19 +31,17 @@ export default class Manip extends Component {
         const pointer = pointers[+modifier];
         const axe = modifier && pointers[0];
 
-        const {message, translate} = transformer({pointer, axe, containerSize,action, transform: this.state.transform});
+        const {message, translate} = transformer({
+            pointer, 
+            axe, 
+            action, 
+            transform: this.state.transform
+        });
 
-        const transform = {translate};
-// console.log('transform', transform);
-
-        // const transform = newPosition({
-        //     prevTransform: this.state.transform, 
-        //     newTransform: translate
-        // });
 
         this.setState({
             message,
-            transform,
+            transform: {translate},
             pointer,
             axe,
             action
@@ -52,7 +49,9 @@ export default class Manip extends Component {
     }
 
     render() {
-      const {pointer, axe, action, transform, message} = this.state;
+      const {pointer, axe, action, message} = this.state;
+
+      const {transform} = this.state;
       const {id} = this.props;
       return (
             <div id={id} className="manip-conteneur">
@@ -64,7 +63,7 @@ export default class Manip extends Component {
                     <Reglages/>
                     
                     <Pointers {...{transform, pointer, axe, action, message}} />
-                    {/*<Plotters {...{pointer, axe}}/>*/}
+                    <Plotters {...{pointer, axe}}/>
                     
             </div>
         );
