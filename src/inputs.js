@@ -8,9 +8,44 @@ const Inputs = (props) => {
     let conteneur;
     const {dims, pointerPosition} = props;
 
-    const handleTouch = (e)=>{
+    const handleTouchStart = (e)=>{
         e.stopPropagation();
         e.preventDefault();
+        eventTouch(e, 'touch start')
+    }
+    const handleTouchMove = (e)=>{
+        e.stopPropagation();
+        e.preventDefault();
+        eventTouch(e, 'touch move')
+    }
+    const handleTouchEnd = (e)=>{
+        e.stopPropagation();
+        e.preventDefault();
+        eventTouch(e, 'touch end')
+    }
+    const handleMouseDown = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mouseDown = true;
+        // console.log('handleClick', mouseDown);
+         eventMouse(e, 'mouse start');
+    }
+    const handleMouseMove = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // console.log('handleMove', mouseDown);
+        if (mouseDown) eventMouse(e, 'mouse move');
+    }
+
+    const handleMouseUp = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mouseDown = false;
+        eventMouse(e, 'mouse end');
+        // console.log('handleUp', mouseDown);
+    }
+
+    function eventTouch(e, type) {
         // console.log( e.touches);
         const {containerDX, containerDY} = getRect();
         const pointers = Object.keys(e.touches)
@@ -23,31 +58,10 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        pointerPosition(pointers);
+        pointerPosition({type, pointers});
     }
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        mouseDown = true;
-        // console.log('handleClick', mouseDown);
-         eventMouse(e);
-    }
-    const handleMove = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // console.log('handleMove', mouseDown);
-        if (mouseDown) eventMouse(e);
-    }
-
-    const handleUp = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        mouseDown = false;
-        // console.log('handleUp', mouseDown);
-    }
-
-    function eventMouse(e) {
+    function eventMouse(e, type) {
         const {pageX, pageY, shiftKey} = e;
         const {containerDX, containerDY, width, height} = getRect();
 
@@ -61,7 +75,7 @@ const Inputs = (props) => {
             shiftKey && {posX: middleX, posY: middleY}
         ].filter(Boolean);
 
-        pointerPosition(pointers);
+        pointerPosition({type, pointers});
     }
 
     function getRect() {
@@ -82,11 +96,12 @@ const Inputs = (props) => {
                 style={dims}
                 >
                     <div className="inputsWrapper"
-                    onTouchStart={handleTouch}
-                    onTouchMove={handleTouch}
-                    onMouseDown={handleClick}
-                    onMouseUp={handleUp}
-                    onMouseMove={handleMove}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
                     />
              </div>
 )

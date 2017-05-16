@@ -16,8 +16,12 @@ export default class Manip extends Component {
          pointer2:{posX: 0, posY: 0}
     }
 
-    pointerPosition(pointers) {
+    pointerPosition({type, pointers}) {
         // debugger;
+        const [device, action] = type.split(' ');
+
+        console.log('type', device, action);
+        
         const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
 
         // console.log('pointers', modifier, pointers);
@@ -29,12 +33,13 @@ export default class Manip extends Component {
       this.setState({
           pointers,
         pointer,
-        axe
+        axe,
+        action
         });
     }
 
     render() {
-      const {pointer, axe, pointers} = this.state;
+      const {pointer, axe, pointers, action} = this.state;
       const {id} = this.props;
         return (
     <div id={id} className="manip-conteneur">
@@ -44,7 +49,11 @@ export default class Manip extends Component {
         </Wrapper>
             <Reglages/>
             
-                {pointer &&<div>pointer x: {pointer.posX}, y: {pointer.posY} </div> } 
+                { pointer && 
+                    <div>
+                        action :{action} - pointer x: {pointer.posX}, y: {pointer.posY} 
+                    </div> 
+                } 
                 { axe && <div>axe x: {axe.posX}, y: {axe.posY} </div>  }
                
     </div>
