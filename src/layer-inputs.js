@@ -72,6 +72,7 @@ const Inputs = (props) => {
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
             />
     )

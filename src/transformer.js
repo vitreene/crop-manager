@@ -15,32 +15,46 @@ sortie :
 // position initiale
 let debut = {posX: 0, posY:0};
 // position précédente
-let point = {posX: 0, posY:0};
+// let point = {posX: 0, posY:0};
 // valeur du décalage entre point et la nouvelle valeur pointer
-let deplacement = {dX: 0, dY: 0};
+let move = {dX: 0, dY: 0};
 
 // arrivee : position en fin d'action 
 // translate : valeur du déplacement en %
 
+// + : le decalage initial
+let initial;
+let translate;
+
 export default function(position){
 
-    const {pointer, axe, action, containerSize} = position;
+    const {pointer, axe, action, containerSize, transform} = position;
     let res;
 
     switch (action) {
         case 'start' :
            res = 'c’est parti!' 
            debut = pointer;
-           point = pointer;
+        //    point = pointer;
+           initial = transform.translate
             break;
     
         case 'move' :
-           deplacement = {
-               dX: pointer.posX - point.posX,
-               dY: pointer.posY - point.posY,
+           move = {
+               dX: pointer.posX - debut.posX,
+               dY: pointer.posY - debut.posY,
            };
-           point = pointer;
-           res = `ca bouge! deplacement : ${deplacement.dX}, ${deplacement.dY}`;
+        //    move = {
+        //        dX: pointer.posX - point.posX,
+        //        dY: pointer.posY - point.posY,
+        //    };
+        //    point = pointer;
+           res = `ca bouge! move : ${move.dX}, ${move.dY}`;
+
+        translate = { 
+            dX: initial.dX + move.dX,
+            dY: initial.dY + move.dY,
+        }           
             break;
     
         case 'end' :
@@ -50,17 +64,18 @@ export default function(position){
             };
             res = `ah c’est fini. Point de départ: ${debut.posX} , ${debut.posY},  point d'arrivée : ${arrivee.posX}, ${arrivee.posY}`; 
 
-            deplacement = {dX: 0, dY: 0};
-            point = {posX: 0, posY:0};
+            move = {dX: 0, dY: 0};
+            // point = {posX: 0, posY:0};
             break;
     
         default:
             break;
     }
-        const translate = { 
-            dX: Math.round( (deplacement.dX / containerSize.width) *100),
-            dY: Math.round( (deplacement.dY / containerSize.height) *100),
-        }
+
+        // const translate = { 
+        //     dX: Math.round( (move.dX / containerSize.width) *100),
+        //     dY: Math.round( (move.dY / containerSize.height) *100),
+        // }
     return {
         message : res,
         translate,

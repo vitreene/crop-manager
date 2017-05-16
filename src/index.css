@@ -67,6 +67,7 @@ body {
 
 .layer-image{
   background-color: orange;
+  overflow: hidden;
 }
 .manip-reglages-icons{
   display: flex;

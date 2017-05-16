@@ -13,7 +13,7 @@ entrees :
 */
 
 export default function({prevTransform, newTransform}) {
-    const newTranslate = newTransform.translate;
+    const newTranslate = newTransform; //.translate;
     const prevTranslate = prevTransform.translate;
 
     const translate = {

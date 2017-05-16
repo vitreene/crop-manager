@@ -32,12 +32,18 @@ export default class Manip extends Component {
         const pointer = pointers[+modifier];
         const axe = modifier && pointers[0];
 
-        const transform = newPosition({
-            prevTransform: this.state.transform, 
-            newTransform: transformer({pointer, axe, containerSize,action})}
-            );
+        const {message, translate} = transformer({pointer, axe, containerSize,action, transform: this.state.transform});
+
+        const transform = {translate};
+// console.log('transform', transform);
+
+        // const transform = newPosition({
+        //     prevTransform: this.state.transform, 
+        //     newTransform: translate
+        // });
 
         this.setState({
+            message,
             transform,
             pointer,
             axe,
@@ -46,7 +52,7 @@ export default class Manip extends Component {
     }
 
     render() {
-      const {pointer, axe, action, transform} = this.state;
+      const {pointer, axe, action, transform, message} = this.state;
       const {id} = this.props;
       return (
             <div id={id} className="manip-conteneur">
@@ -57,8 +63,8 @@ export default class Manip extends Component {
                 </Wrapper>
                     <Reglages/>
                     
-                    <Pointers {...{transform, pointer, axe, action}} />
-                    <Plotters {...{pointer, axe}}/>
+                    <Pointers {...{transform, pointer, axe, action, message}} />
+                    {/*<Plotters {...{pointer, axe}}/>*/}
                     
             </div>
         );
@@ -66,10 +72,10 @@ export default class Manip extends Component {
 }
 
 
-const Pointers = ({transform, action, axe, pointer}) => (
+const Pointers = ({transform, action, axe, pointer, message}) => (
     <div className="pointers-infos">
         { transform.translate && 
-        <div>{transform.message} | {transform.translate.dX}%, {transform.translate.dY}% </div>
+        <div>{message} | {transform.translate.dX}px, {transform.translate.dY}px </div>
         }
         { pointer && 
             <div>
