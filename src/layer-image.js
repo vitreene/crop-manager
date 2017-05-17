@@ -3,10 +3,16 @@ import pic from './UI/big-white-bird-big-opt.jpg';
 
 
 const LayerImage = ({transform}) => {
-    const {dX, dY} = transform.translate;
+    const{translate, rotate = 0, scale = 1} = transform;
+    const {dX = 0, dY = 0 } = translate;
     
     const transformation = {
-       transform: `translate(${dX || 0}px, ${dY || 0}px)`
+       transform: `
+        translate(${dX}px, ${dY}px)
+        rotate(${rotate}deg)
+        scale(${scale})
+        translateZ(0)
+       `
     };
 
     return (

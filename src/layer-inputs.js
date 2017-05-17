@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react'
 let mouseDown = false;
 
 const Inputs = (props) => {
-    const {pointerPosition, mid, containerSize, containerPos} = props;
+    const {pointerPosition, /*middle, */ containerSize, containerPos} = props;
 
     const handleTouchStart = (e)=>{
         eventTouch(e, 'touch start')
@@ -41,7 +41,7 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        pointerPosition({type, pointers, containerSize});
+        pointerPosition({type, pointers /*,containerSize*/});
     }
 
     function eventMouse(e, type) {
@@ -50,7 +50,10 @@ const Inputs = (props) => {
 
         const {pageX, pageY, shiftKey} = e;
         const {contDX, contDY} = containerPos;
-        const {midX, midY} = mid;
+        const {width, height} = containerSize;
+        // const {midX, midY} = middle;
+        const midX = Math.round( (width * 0.5) );
+        const midY = Math.round( (height * 0.5) );  
 
         const posX = Math.round( pageX - contDX );
         const posY = Math.round( pageY - contDY );
@@ -60,7 +63,7 @@ const Inputs = (props) => {
             shiftKey && {posX: midX, posY: midY}
         ].filter(Boolean);
 
-        pointerPosition({type, pointers, containerSize});
+        pointerPosition({type, pointers /*,containerSize*/});
     }
 
     return (
@@ -80,7 +83,7 @@ const Inputs = (props) => {
 
 Inputs.propTypes = {
     pointerPosition: PropTypes.func, 
-    mid: PropTypes.object, 
+    middle: PropTypes.object, 
     containerSize: PropTypes.object, 
     containerPos: PropTypes.object
 }

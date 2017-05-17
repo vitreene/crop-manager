@@ -18,20 +18,24 @@ export default class Manip extends Component {
     }
 
     state = {
-        transform: {translate: {dX: 0, dY:0} },
+        transform: {
+            translate: {dX: 0, dY:0},
+            rotate: 0,
+            scale: 1
+        },
         pointer: {posX: 0, posY: 0},
         axe: {posX: 0, posY: 0},
         action: null
     }
 
-    pointerPosition({type, pointers, containerSize}) {
+    pointerPosition({type, pointers /*,containerSize*/}) {
          // eslint-disable-next-line
         const [device, action] = type.split(' ');
         const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
         const pointer = pointers[+modifier];
         const axe = modifier && pointers[0];
 
-        const {message, translate} = transformer({
+        const {message, ...transform} = transformer({
             pointer, 
             axe, 
             action, 
@@ -41,7 +45,7 @@ export default class Manip extends Component {
 
         this.setState({
             message,
-            transform: {translate},
+            transform,
             pointer,
             axe,
             action

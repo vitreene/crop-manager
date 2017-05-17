@@ -43,13 +43,15 @@ const isClient = typeof window !== "undefined";
             const contDX = left + window.scrollX;
             const contDY = top + window.scrollY;
                 
-            const midX = Math.round( contDX + (width * 0.5) );
-            const midY = Math.round( contDY + (height * 0.5) );                
+            // const midX = Math.round( (width * 0.5) );
+            // const midY = Math.round( (height * 0.5) );                
+            // const midX = Math.round( contDX + (width * 0.5) );
+            // const midY = Math.round( contDY + (height * 0.5) );                
 
             this.setState({
                 containerSize: {width, height},
                 containerPos: {contDX, contDY},
-                mid: {midX, midY},
+                // middle: {midX, midY},
                 ratio, // deprecie ?
                 cote, // deprecie ?
             });
@@ -57,11 +59,11 @@ const isClient = typeof window !== "undefined";
     }
 
     render() {
-        const {mid, containerSize, containerPos} = this.state;
+        const {/*middle, */ containerSize, containerPos} = this.state;
 
         const childrenWithProps = React.Children
             .map(this.props.children,
-            (child) => React.cloneElement(child, {mid, containerSize, containerPos})
+            (child) => React.cloneElement(child, {/*middle, */ containerSize, containerPos})
             );
 
         return (

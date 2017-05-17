@@ -42,7 +42,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  border: thin solid red;
+  outline: 4px inset red;
 }
 
 .manip-edit-conteneur{
