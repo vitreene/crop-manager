@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import React, {Component, PropTypes} from 'react';
+import Loading from './Loading'
 const isClient = typeof window !== "undefined";
         
  export default  class Wrapper extends Component {
@@ -11,7 +12,9 @@ const isClient = typeof window !== "undefined";
         this.getRect = this.getRect.bind(this);
         this.resizeContainer = this.resizeContainer.bind(this);
     }
-    state = {}
+    state = {
+        isLoading: true
+    }
     debounceResizeContainer = null
 
     componentDidMount() {
@@ -54,12 +57,13 @@ const isClient = typeof window !== "undefined";
                 // middle: {midX, midY},
                 ratio, // deprecie ?
                 cote, // deprecie ?
+                isLoading: false
             });
         }
     }
 
     render() {
-        const {/*middle, */ containerSize, containerPos} = this.state;
+        const {/*middle, */ isLoading, containerSize, containerPos} = this.state;
 
         const childrenWithProps = React.Children
             .map(this.props.children,
@@ -71,7 +75,10 @@ const isClient = typeof window !== "undefined";
                 className="manip-wrapper" 
                 ref={ref => this.wrapper = ref}  >
 
-                    {childrenWithProps}
+                   { isLoading 
+                   ? <Loading/>
+                   : childrenWithProps
+                   }
             </div>
 
         );

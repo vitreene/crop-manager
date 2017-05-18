@@ -22,8 +22,10 @@ const Inputs = (props) => {
         if (mouseDown) eventMouse(e, 'mouse move');
     };
     const handleMouseUp = (e) => {
-        mouseDown = false;
-        eventMouse(e, 'mouse end');
+        if (mouseDown){
+            mouseDown = false;
+            eventMouse(e, 'mouse end');
+        }
     };
 
     function eventTouch(e, type) {

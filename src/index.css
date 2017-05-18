@@ -42,15 +42,15 @@ body {
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  outline: 4px inset red;
 }
 
 .manip-edit-conteneur{
   background-color: aqua;
 }
+.layer-crop,
 .layer-image,
 .inputsWrapper{
-    position: absolute;
+  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
@@ -66,9 +66,34 @@ body {
 }
 
 .layer-image{
-  background-color: orange;
+  background-color:black;
   overflow: hidden;
 }
+
+.layer-image-img{
+  opacity: 0.5;
+}
+
+.layer-crop{
+  width: 100%;
+  height: 100%
+}
+
+.layer-crop-inner{
+  position: relative;
+  overflow: hidden;
+  /*height: 80%;*/
+    outline: 4px inset red;
+
+}
+
+.layer-crop-img{
+  /*position: absolute;*/
+  /*top: 0;
+  left: 0;*/
+
+}
+
 .manip-reglages-icons{
   display: flex;
   justify-content: space-around;
