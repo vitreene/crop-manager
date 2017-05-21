@@ -19,18 +19,39 @@ let scale = 0;
 let rotateStart = 0;
 let scaleStart = 0;
 
-export default function(position){
-    const {axe} = position;
 
-    return (axe) 
-        ? rotateAndScaleImage(position)
-        : translateImage(position)
+
+export default function ({type, pointers, transform, pivot}) {
+
+        const [device, action] = type.split(' ');
+        const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
+        const pointer = pointers[+modifier];
+        const axe = modifier && pointers[0];
+
+        
+        const {message, ...reste} = whatTransform({pointer, axe, action, transform, pivot});
+
+        return {
+            transform: reste,
+            pointers: {pointer, axe}, 
+            action, 
+            device,          
+            message,
+        }
+
 }
 
 
+function whatTransform({pointer, axe, ...reste}) {
+  
+    
+    return (axe) 
+        ? rotateAndScaleImage({pointer, axe, ...reste})
+        : translateImage({pointer, ...reste})
+}
 
-function translateImage(position){
-    const {pointer, action, transform} = position;
+
+function translateImage({pointer, action, transform, pivot}){
     let message;
 
     switch (action) {
@@ -45,8 +66,8 @@ function translateImage(position){
     
         case 'move' :
             translate = { 
-                dX: translation.dX + (pointer.posX - debut.posX),
-                dY: translation.dY + (pointer.posY - debut.posY),
+                dX: translation.dX + (pointer.posX - debut.posX) * pivot.h,
+                dY: translation.dY + (pointer.posY - debut.posY) * pivot.v,
             }           
             message = `ca bouge! move : ${translate.dX}, ${translate.dY}`;
         break;
@@ -74,8 +95,7 @@ function translateImage(position){
 
 }
 
-function rotateAndScaleImage(position) {
-    const {pointer, axe, action, transform} = position;
+function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     let message;
     const d = {
         dX: pointer.posX - axe.posX,
@@ -87,19 +107,20 @@ function rotateAndScaleImage(position) {
             translate = transform.translate || {dX: 0, dY: 0};            rotation = transform.rotate || 0;
             scalation = transform.scale || 1;
 
-            rotateStart = Math.atan2(d.dX, d.dY);
+            rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
 
         break;
     
         case 'move' :
-            const stepRotation = Math.atan2(d.dX, d.dY);
+            const stepRotation = Math.atan2(d.dX, d.dY) * pivot.h * pivot.v ;
+
             const stepScale = Math.sqrt(d.dX * d.dX + d.dY * d.dY);
 
             rotate = rotation + Math.round((rotateStart - stepRotation) * DEG);
             scale = scalation + (Math.round(stepScale - scaleStart) * 0.01);
 
-            message = `rotate : ${rotate}, scale : ${scale}, D : ${d.dX}, ${d.dY}, `
+            message = `step : ${Math.round(stepRotation *100) /100}, rotate : ${rotate}, scale : ${scale}, D : ${d.dX}, ${d.dY}, `
         break;
     
         case 'end' :

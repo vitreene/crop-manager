@@ -8,72 +8,165 @@ import Reglages from './reglages'
 
 import transformer from './transformer'
 
+const hydrate = { 
+    translate: {dX: 50, dY: -50},
+    rotate: 60,
+    scale: 1.4    
+}
+
 export default class Controleur extends Component {
      static propTypes = {
         // id: PropTypes.string
         visuel: PropTypes.string,
         crop: PropTypes.object
-        
      }
-// eslint-disable-next-line
     constructor(props) {
         super(props);
-        this.pointerPosition= this.pointerPosition.bind(this);
+        this.getPointerPosition = this.getPointerPosition.bind(this);
+        this.getPivot = this.getPivot.bind(this);
+        this.updateRendu = this.updateRendu.bind(this);
+        this.getConteneurSize = this.getConteneurSize.bind(this);
+        this.setCropperSize = this.setCropperSize.bind(this);
+        this.getCropSize = this.getCropSize.bind(this);
+        this.setCropperSize = this.setCropperSize.bind(this);
     }
-
     state = {
         transform: {
-            translate: {dX: 0, dY:0},
+            translate: {dX: 0, dY: 0},
             rotate: 0,
             scale: 1
         },
-        pointer: {posX: 0, posY: 0},
-        axe: {posX: 0, posY: 0},
-        action: null
+        pivot: {
+            h: 1,
+            v: 1
+        },
+        cropper: {
+            pos:{x: 0, y: 0}, 
+            size: {w: 0, h: 0}            
+        },
+        pointers: {
+            pointer: {posX: 0, posY: 0},
+            axe: {posX: 0, posY: 0},
+        },
+        conteneur: {
+            containerPos: {contDX: 0, contDY: 0}, 
+            containerSize: {width: 0, height: 0},
+        },
+        action: null,
+        device: null,
+        rendu:{
+            translate: {dX: 0, dY: 0},
+            rotate: 0,
+            scale: 1
+        }
     }
 
-    pointerPosition({type, pointers /*,containerSize*/}) {
-         // eslint-disable-next-line
-        const [device, action] = type.split(' ');
-        const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
-        const pointer = pointers[+modifier];
-        const axe = modifier && pointers[0];
+    componentWillMount() {
+        // this.setState({transform: {...hydrate}});
+    }
 
-        const {message, ...transform} = transformer({
-            pointer, 
-            axe, 
-            action, 
-            transform: this.state.transform
+    getConteneurSize({containerPos, containerSize}){
+        this.setState({
+            conteneur: {
+                containerPos, 
+                containerSize,
+            }
         });
+    }
 
+    getCropSize({pos, size}){
+      const {crop} = this.props;
+       this.setCropperSize({pos, size, crop});
+    }
+
+    getPivot({h,v}){
+        // transformer true/false en (-1)/(+1) (true = checked)
+        const pivot = {
+            h: h ? -1 : 1,
+            v: v ? -1 : 1,
+        };
+        this.setState({pivot}, this.updateRendu);
+    }
+    
+    getPointerPosition({type, pointers}) {
+        const {transform, pivot} = this.state;
+        const res = transformer({type, pointers, transform, pivot});
+        
+        this.setState({...res}, this.updateRendu);
+    }
+
+    updateRendu(){
+        /*
+        - mettre le transform à l'échelle locale
+        */
+
+        const {transform, pivot} = this.state;
+        const {dX, dY} = transform.translate;
+        // const h = (pivot.h < 0);
+        // const v = (pivot.v < 0);
+
+
+        /*
+        let rotate = transform.rotate;
+        if (h && !v) rotate = 180 - transform.rotate;
+        if (v && !h) rotate =  180 - transform.rotate;
+        if (!v && !h) rotate = transform.rotate;
+        if (v && h) rotate = transform.rotate;
+        */
+
+        // si pivot est l'un des deux : h ou v, rotate = 180 - t.rotate ;
+        const rotate = ((pivot.h + pivot.v) === 0) 
+            ? 180 - transform.rotate
+            : transform.rotate;
+
+        const scale = {
+            x: transform.scale * pivot.v, 
+            y: transform.scale * pivot.h
+        };
+
+        const translate = {
+            dX: dX * pivot.h,
+            dY: dY * pivot.v
+        };
+
+        const rendu = {translate, rotate, scale};
+        this.setState({rendu});
+    }
+
+// sortir la fonction
+    setCropperSize({pos, size, crop}){
+/*
+contraindre crop dans les dimensions du conteneur-inner
+*/
 
         this.setState({
-            message,
-            transform,
-            pointer,
-            axe,
-            action
-            });
+            cropper: {
+                pos:{x: 0, y: 0}, 
+                size: {w:0, h:0}
+            }
+        });      
+      
     }
 
     render() {
       const {visuel, crop} = this.props;
-      const {pointer, axe, action, message} = this.state;
+      const {rendu, conteneur} = this.state;
+      const {getPointerPosition, getConteneurSize, getPivot} = this;
 
-      const {transform} = this.state;
-    //   const {id} = this.props;
+      const {pointers, action, message} = this.state;
+ 
       return (
             <div className="manip-conteneur">
 
-                <Wrapper>
-                    <LayerImage {...{transform, visuel}}/>
-                    <LayerCrop {...{transform, crop, visuel}}/>
-                    <LayerInputs pointerPosition={this.pointerPosition}/>
+                <Wrapper {...{getConteneurSize}} >
+                    <LayerImage {...{rendu, ...conteneur, visuel}}/>
+                    <LayerCrop {...{rendu, ...conteneur, visuel, crop}}/>
+                    <LayerInputs {...{getPointerPosition, ...conteneur}}/>
                 </Wrapper>
-                    <Reglages/>
-                    
-                    <Pointers {...{transform, pointer, axe, action, message}} />
-                    <Plotters {...{pointer, axe}}/>
+                    <Reglages {...{getPivot}}/>
+                    <Transformers {...{rendu}} />
+                    <Pointers {...{rendu, pointers, action, message}} />
+                    <Plotters {...{...pointers, ...conteneur}}/>
                     
             </div>
         );
@@ -81,7 +174,7 @@ export default class Controleur extends Component {
 }
 
 
-const Pointers = ({transform, action, axe, pointer, message}) => (
+const Pointers = ({rendu: transform, pointers: {pointer, axe}, action, message}) => (
     <div className="pointers-infos">
         { transform.translate && 
         <div>{message} | {transform.translate.dX}px, {transform.translate.dY}px </div>
@@ -97,14 +190,30 @@ const Pointers = ({transform, action, axe, pointer, message}) => (
         </div>
 );
 
+const Transformers =( {rendu: transform}) => (
+        <div className="pointers-infos">
+            { transform.translate && 
+            <div>translate : {transform.translate.dX}px, {transform.translate.dY}px </div>
+            }
+            { transform.rotate && 
+            <div>rotate : {transform.rotate}deg</div>
+            }
+            { transform.scale && 
+            <div>scale X : {transform.scale.x}, Y : {transform.scale.y}</div>
+            }
+        </div>
+)
 
 // placer pointer-events: none; dans la css
 // sinon, l'élément capture l'event et onMouseUp n'est pas lancé
-const Plotters = ({axe, pointer}) => {
+const Plotters = ({axe, pointer, containerSize}) => {
+
+    const middle = {top: containerSize.height*0.5, left: containerSize.width*0.5, color: "blue"};
     const point = {top: pointer.posY, left: pointer.posX};
     const pointAxe = {top: axe.posY, left: axe.posX};
     return (
         <div>
+    <span className="plot" style={middle}>&#215;</span>
     <span className="plot" style={point}>&#x2299;</span>
     <span className="plot" style={pointAxe}>&#x22a1;</span>
     </div>

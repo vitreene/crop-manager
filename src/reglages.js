@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import {
   MiroirH,
@@ -12,40 +12,31 @@ import Text from './UI/text'
 
 
 export default class Reglages extends Component {
+     static propTypes = {
+        getPivot: PropTypes.func,
+     }    
     state = { 
         h : false,
-        v :false
+        v : false
      }
     
     constructor(props){
         super(props);
-        this.onMiroir = this.onMiroir.bind(this);
+        this.onPivot = this.onPivot.bind(this);
         this.onCover = this.onCover.bind(this);
-        // const {pivX, pivY} = this.props.visuel ;
-        // this.state = {
-        // h : pivX || false,
-        // v : pivY || false
-        // };
     }
 
-    onMiroir(e){
+    onPivot(e){
         const {checked, name} = e.target;
-        const miroir = {
-        pivX : (name==='h') ? checked : this.state.h,
-        pivY : (name==='v') ? checked : this.state.v
+        const {getPivot} = this.props;
+        const pivot = {
+        h : (name==='h') ? checked : this.state.h,
+        v : (name==='v') ? checked : this.state.v
         };
 
-        this.setState({[name]:checked}) ;
+        this.setState({[name]:checked});
 
-        // const transform = Object.assign(
-        // {},
-        // this.props.visuel,
-        // miroir
-        // );
-
-        // //console.log('transform', transform);
-
-        // this.props.onMove(transform) ;
+        getPivot(pivot);
     }
 
     onCover(e){
@@ -81,7 +72,7 @@ export default class Reglages extends Component {
                 name="h"
                 type="checkbox"
                 checked={this.state.h}
-                onChange={this.onMiroir}
+                onChange={this.onPivot}
                 />
                 <label htmlFor="miroir-h">
                 <MiroirH checked={this.state.h}/>
@@ -94,7 +85,7 @@ export default class Reglages extends Component {
                 name="v"
                 type="checkbox"
                 checked={this.state.v}
-                onChange={this.onMiroir}
+                onChange={this.onPivot}
                 />
                 <label htmlFor="miroir-v">
                 <MiroirV checked={this.state.v} />

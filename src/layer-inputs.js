@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react'
 let mouseDown = false;
 
 const Inputs = (props) => {
-    const {pointerPosition, /*middle, */ containerSize, containerPos} = props;
+    const {getPointerPosition, containerSize, containerPos} = props;
 
     const handleTouchStart = (e)=>{
         eventTouch(e, 'touch start')
@@ -43,7 +43,7 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        pointerPosition({type, pointers /*,containerSize*/});
+        getPointerPosition({type, pointers});
     }
 
     function eventMouse(e, type) {
@@ -53,7 +53,7 @@ const Inputs = (props) => {
         const {pageX, pageY, shiftKey} = e;
         const {contDX, contDY} = containerPos;
         const {width, height} = containerSize;
-        // const {midX, midY} = middle;
+        
         const midX = Math.round( (width * 0.5) );
         const midY = Math.round( (height * 0.5) );  
 
@@ -65,7 +65,7 @@ const Inputs = (props) => {
             shiftKey && {posX: midX, posY: midY}
         ].filter(Boolean);
 
-        pointerPosition({type, pointers /*,containerSize*/});
+        getPointerPosition({type, pointers});
     }
 
     return (

@@ -1,32 +1,23 @@
 import React from 'react';
-/*
-- calculer la place du crop par rapport à ses dimensions de départ.
-
-- calculer le decalage de l'image.
-*/
 
 const LayerCrop = (props) => {
-    // console.log('Props-crop', props);
-    // const {containerPos, containerSize, crop, transform, visuel} = props;
-    const {transform, visuel, ...layerCrop} = props;
-    const cropBoundingRect = setCropBoundingRect(layerCrop);
+    const {rendu: transform, visuel, /*containerPos,*/ containerSize, crop} = props;
+    const cropBoundingRect = setCropBoundingRect(containerSize, crop);
 
-    const{translate, rotate = 0, scale = 1} = transform;
+    const{translate, rotate = 0, scale = {x: 1, y: 1}} = transform;
     const {dX = 0, dY = 0 } = translate;
     
     const transformation = {
        transform: `
         translate3d(${dX}px, ${dY}px, 0)
         rotate(${rotate}deg)
-        scale(${scale})
+        scale(${scale.x}, ${scale.y})
        `,
-        marginLeft: -cropBoundingRect.x,
-        marginTop: -cropBoundingRect.y,
     };
 
     const cropLayer = {
-        marginLeft: cropBoundingRect.x,
-        marginTop: cropBoundingRect.y,
+        left: cropBoundingRect.x,
+        top: cropBoundingRect.y,
         width: cropBoundingRect.w,
         height: cropBoundingRect.h
     };
@@ -36,18 +27,20 @@ const LayerCrop = (props) => {
      className="layer-crop">
         <div className="layer-crop-inner"
              style={cropLayer}>
-            <img 
-            src={visuel} 
-            className="layer-crop-img"
-            style={transformation} 
-            role="presentation"/>
+
+                <img 
+                src={visuel} 
+                className="layer-crop-img"
+                style={transformation} 
+                role="presentation"/>
+
         </div>
      </div>
 )};
 
 export default LayerCrop;
 
-export function setCropBoundingRect({/*containerPos,*/ containerSize, crop}) {
+export function setCropBoundingRect(containerSize, crop) {
     if (!containerSize) return;
     /*
     containersize - margin = surface utile,
@@ -55,6 +48,11 @@ export function setCropBoundingRect({/*containerPos,*/ containerSize, crop}) {
     sortie :
     cropSize : size crop, 
     cropPos : decalage crop.
+
+    + 
+    trnir compte des dimensions du crop
+    - adapter à la taille,
+    - obtenir un % à employer pour l'image
     */
     const {cropW, cropH, padding} = crop;
     const cropSize = {
