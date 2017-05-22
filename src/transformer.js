@@ -22,7 +22,6 @@ let scaleStart = 0;
 
 
 export default function ({type, pointers, transform, pivot}) {
-
         const [device, action] = type.split(' ');
         const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
         const pointer = pointers[+modifier];

@@ -24,54 +24,52 @@ export default class Controleur extends Component {
         super(props);
         this.getPointerPosition = this.getPointerPosition.bind(this);
         this.getPivot = this.getPivot.bind(this);
-        this.updateRendu = this.updateRendu.bind(this);
         this.getConteneurSize = this.getConteneurSize.bind(this);
         this.setCropperSize = this.setCropperSize.bind(this);
         this.getCropSize = this.getCropSize.bind(this);
-        this.setCropperSize = this.setCropperSize.bind(this);
+        this.updateRendu = this.updateRendu.bind(this);
     }
     state = {
-        transform: {
-            translate: {dX: 0, dY: 0},
-            rotate: 0,
-            scale: 1
-        },
-        pivot: {
-            h: 1,
-            v: 1
-        },
         cropper: {
             pos:{x: 0, y: 0}, 
             size: {w: 0, h: 0}            
         },
-        pointers: {
-            pointer: {posX: 0, posY: 0},
-            axe: {posX: 0, posY: 0},
-        },
-        conteneur: {
-            containerPos: {contDX: 0, contDY: 0}, 
-            containerSize: {width: 0, height: 0},
-        },
-        action: null,
-        device: null,
-        rendu:{
+        rendu: {
             translate: {dX: 0, dY: 0},
             rotate: 0,
             scale: 1
         }
     }
 
+    transform =  {
+        translate: {dX: 0, dY: 0},
+        rotate: 0,
+        scale: 1
+    }
+    pivot = {
+        h: 1,
+        v: 1
+    }
+    pointers = {
+        pointer: {posX: 0, posY: 0},
+        axe: {posX: 0, posY: 0},
+    }
+    action = null
+    device = null
+    message = ''
+
+    conteneur = {
+        containerPos: {contDX: 0, contDY: 0}, 
+        containerSize: {width: 0, height: 0},
+    }
+
     componentWillMount() {
         // this.setState({transform: {...hydrate}});
     }
 
-    getConteneurSize({containerPos, containerSize}){
-        this.setState({
-            conteneur: {
-                containerPos, 
-                containerSize,
-            }
-        });
+    getConteneurSize({containerPos, containerSize}) {
+        this.conteneur = { containerPos,  containerSize};
+        this.updateRendu();
     }
 
     getCropSize({pos, size}){
@@ -81,38 +79,35 @@ export default class Controleur extends Component {
 
     getPivot({h,v}){
         // transformer true/false en (-1)/(+1) (true = checked)
-        const pivot = {
+        this.pivot = {
             h: h ? -1 : 1,
             v: v ? -1 : 1,
         };
-        this.setState({pivot}, this.updateRendu);
+        this.updateRendu();
     }
     
     getPointerPosition({type, pointers}) {
-        const {transform, pivot} = this.state;
-        const res = transformer({type, pointers, transform, pivot});
-        
-        this.setState({...res}, this.updateRendu);
+        const {transform, pivot} = this;
+        const t = transformer({
+            type, 
+            pointers, 
+            transform,
+            pivot
+        });      
+        this.transform = t.transform;
+        this.pointers = t.pointers;
+        this.action = t.action;
+        this.device = t.device;
+        this.message = t.message;
+        this.updateRendu();  
     }
 
     updateRendu(){
         /*
         - mettre le transform à l'échelle locale
         */
-
-        const {transform, pivot} = this.state;
+        const {transform, pivot} = this;
         const {dX, dY} = transform.translate;
-        // const h = (pivot.h < 0);
-        // const v = (pivot.v < 0);
-
-
-        /*
-        let rotate = transform.rotate;
-        if (h && !v) rotate = 180 - transform.rotate;
-        if (v && !h) rotate =  180 - transform.rotate;
-        if (!v && !h) rotate = transform.rotate;
-        if (v && h) rotate = transform.rotate;
-        */
 
         // si pivot est l'un des deux : h ou v, rotate = 180 - t.rotate ;
         const rotate = ((pivot.h + pivot.v) === 0) 
@@ -133,12 +128,12 @@ export default class Controleur extends Component {
         this.setState({rendu});
     }
 
-// sortir la fonction
-    setCropperSize({pos, size, crop}){
-/*
-contraindre crop dans les dimensions du conteneur-inner
-*/
 
+    // sortir la fonction
+    setCropperSize({pos, size, crop}){
+    /*
+    contraindre crop dans les dimensions du conteneur-inner
+    */
         this.setState({
             cropper: {
                 pos:{x: 0, y: 0}, 
@@ -150,10 +145,11 @@ contraindre crop dans les dimensions du conteneur-inner
 
     render() {
       const {visuel, crop} = this.props;
-      const {rendu, conteneur} = this.state;
+    //   const {rendu, conteneur} = this.state;
+      const {rendu} = this.state;
       const {getPointerPosition, getConteneurSize, getPivot} = this;
-
-      const {pointers, action, message} = this.state;
+    //   const {} = this;
+      const {conteneur, pointers, action, message} = this;
  
       return (
             <div className="manip-conteneur">
@@ -163,10 +159,11 @@ contraindre crop dans les dimensions du conteneur-inner
                     <LayerCrop {...{rendu, ...conteneur, visuel, crop}}/>
                     <LayerInputs {...{getPointerPosition, ...conteneur}}/>
                 </Wrapper>
+                
                     <Reglages {...{getPivot}}/>
-                    <Transformers {...{rendu}} />
+                    {/*<Transformers {...{rendu}} />*/}
                     <Pointers {...{rendu, pointers, action, message}} />
-                    <Plotters {...{...pointers, ...conteneur}}/>
+                    {/*<Plotters {...{...pointers, ...conteneur}}/>*/}
                     
             </div>
         );
