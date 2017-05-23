@@ -1,25 +1,28 @@
 import React from 'react';
+// import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 
 const LayerCrop = (props) => {
-    const {rendu: transform, visuel, containerSize, crop} = props;
-    const cropBoundingRect = setCropBoundingRect(containerSize, crop);
-    const cropInnerRect = setCropInnerRect(cropBoundingRect, crop);
+    const {rendu: transform, visuel, cropWrapper, cropper} = props;
+
+    // const {rendu: transform, visuel, containerSize, crop} = props;
+    // const cropBoundingRect = setCropWrapper(containerSize, crop);
+    // const cropInnerRect = setCropper(cropBoundingRect, crop);
 
     const cropLayer = {
-        left: cropBoundingRect.x,
-        top: cropBoundingRect.y,
-        width: cropBoundingRect.w,
-        height: cropBoundingRect.h
+        left: cropWrapper.x,
+        top: cropWrapper.y,
+        width: cropWrapper.w,
+        height: cropWrapper.h
     };
 
     const cropLayerInner = {
-        // left: cropInnerRect.x,
-        // top: cropInnerRect.y,
-        width: cropInnerRect.w,
-        height: cropInnerRect.h
+        // left: cropper.x,
+        // top: cropper.y,
+        width: cropper.w,
+        height: cropper.h
     };
 
-    const r = cropInnerRect.ratio;
+    const r = cropper.ratio;
 
     const{translate, rotate = 0, scale = {x: 1, y: 1}} = transform;
     const {dX = 0, dY = 0 } = translate;
@@ -52,7 +55,7 @@ const LayerCrop = (props) => {
 )};
 
 export default LayerCrop;
-
+/*
 export function setCropBoundingRect(containerSize, crop) {
     if (!containerSize) return;
 
@@ -71,7 +74,7 @@ export function setCropBoundingRect(containerSize, crop) {
     }
 }
 
-function setCropInnerRect(cropBoundingRect, crop) {
+export function setCropInnerRect(cropBoundingRect, crop) {
     const {cropW, cropH} = crop;
 
     const ratioW = cropW / cropBoundingRect.w;
@@ -99,3 +102,5 @@ function setCropInnerRect(cropBoundingRect, crop) {
         ratio
     }
 }
+
+*/

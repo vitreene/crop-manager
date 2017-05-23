@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, {Component} from 'react';
 
-import Manip from './manip'
+import Manip from './Manip'
 
 import './App.css';
 import logo from './logo.svg';
@@ -17,8 +17,7 @@ export default class App extends Component {
     return (
       <div className="container">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <h2>Welcome to React</h2>
+          <h2>Manip'image</h2>
         </div>
         <div className="element-wrapper">
           <Manip/>

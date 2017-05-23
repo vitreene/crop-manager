@@ -6,7 +6,7 @@ import Controleur from './controleur'
 import visuel from './UI/big-white-bird-big-opt.jpg';
 
 // padding : marge interieure en % entre le crop et le wrapper.
-const crop = {cropW:400, cropH: 350, padding:10};
+const crop = {w:350, h: 450, padding:5};
 
 export default class Manip extends Component {
      static propTypes = {
@@ -26,3 +26,11 @@ export default class Manip extends Component {
         );
     }
 }
+
+/*
+dimensions :
+x, y pour le top et left de l'élément,
+dX, dY : décalage
+w, h : largeur hauteur de référence
+width, height : dimensions appliquées
+*/
