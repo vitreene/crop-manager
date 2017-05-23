@@ -83,6 +83,13 @@ body {
 }
 
 .layer-crop-inner{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  outline: 4px inset blueviolet;
+}
+.layer-crop-outer {
   position: relative;
   overflow: hidden;
   display: flex;
@@ -91,22 +98,14 @@ body {
   outline: 4px inset red;
 }
 
+/*
 .layer-image-img-outer,
 .layer-crop-img-outer{
 }
 
 .layer-crop-img{
-    /*position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -25%;
-    margin-top: -25%;*/
-  /*opacity: 0.2;*/
-  /*position: absolute;*/
-  /*top: 0;
-  left: 0;*/
-
 }
+*/
 
 .manip-reglages-icons{
   display: flex;
@@ -174,7 +173,7 @@ body {
 .miroir-visuel{
   width: 100%;
   height: 100%;
-  //position: absolute ;
+  /*position: absolute ;*/
   transform-origin: center center ;
   outline: 10px solid red ;
 }

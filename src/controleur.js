@@ -40,27 +40,27 @@ export default class Controleur extends Component {
             scale: 1
         }
     }
-
-    transform =  {
-        translate: {dX: 0, dY: 0},
-        rotate: 0,
-        scale: 1
-    }
-    pivot = {
-        h: 1,
-        v: 1
-    }
-    pointers = {
-        pointer: {posX: 0, posY: 0},
-        axe: {posX: 0, posY: 0},
-    }
-    action = null
-    device = null
-    message = ''
-
-    conteneur = {
-        containerPos: {contDX: 0, contDY: 0}, 
-        containerSize: {width: 0, height: 0},
+    manip = {
+        transform:  {
+            translate: {dX: 0, dY: 0},
+            rotate: 0,
+            scale: 1
+        },
+        pivot: {
+            h: 1,
+            v: 1
+        },
+        pointers: {
+            pointer: {posX: 0, posY: 0},
+            axe: {posX: 0, posY: 0},
+        },
+        conteneur: {
+            containerPos: {contDX: 0, contDY: 0}, 
+            containerSize: {width: 0, height: 0},
+        },
+        action: null,
+        device: null,
+        message: ''
     }
 
     componentWillMount() {
@@ -68,7 +68,7 @@ export default class Controleur extends Component {
     }
 
     getConteneurSize({containerPos, containerSize}) {
-        this.conteneur = { containerPos,  containerSize};
+        this.manip.conteneur = { containerPos, containerSize};
         this.updateRendu();
     }
 
@@ -79,7 +79,7 @@ export default class Controleur extends Component {
 
     getPivot({h,v}){
         // transformer true/false en (-1)/(+1) (true = checked)
-        this.pivot = {
+        this.manip.pivot = {
             h: h ? -1 : 1,
             v: v ? -1 : 1,
         };
@@ -87,18 +87,14 @@ export default class Controleur extends Component {
     }
     
     getPointerPosition({type, pointers}) {
-        const {transform, pivot} = this;
-        const t = transformer({
+        const {transform, pivot} = this.manip;
+        const manip = transformer({
             type, 
             pointers, 
             transform,
             pivot
-        });      
-        this.transform = t.transform;
-        this.pointers = t.pointers;
-        this.action = t.action;
-        this.device = t.device;
-        this.message = t.message;
+        });   
+        this.manip = {...this.manip, ...manip};
         this.updateRendu();  
     }
 
@@ -106,7 +102,7 @@ export default class Controleur extends Component {
         /*
         - mettre le transform à l'échelle locale
         */
-        const {transform, pivot} = this;
+        const {transform, pivot} = this.manip;
         const {dX, dY} = transform.translate;
 
         // si pivot est l'un des deux : h ou v, rotate = 180 - t.rotate ;
@@ -149,7 +145,7 @@ export default class Controleur extends Component {
       const {rendu} = this.state;
       const {getPointerPosition, getConteneurSize, getPivot} = this;
     //   const {} = this;
-      const {conteneur, pointers, action, message} = this;
+      const {conteneur, pointers, action, message} = this.manip;
  
       return (
             <div className="manip-conteneur">
@@ -159,7 +155,7 @@ export default class Controleur extends Component {
                     <LayerCrop {...{rendu, ...conteneur, visuel, crop}}/>
                     <LayerInputs {...{getPointerPosition, ...conteneur}}/>
                 </Wrapper>
-                
+
                     <Reglages {...{getPivot}}/>
                     {/*<Transformers {...{rendu}} />*/}
                     <Pointers {...{rendu, pointers, action, message}} />
@@ -187,7 +183,7 @@ const Pointers = ({rendu: transform, pointers: {pointer, axe}, action, message})
         </div>
 );
 
-const Transformers =( {rendu: transform}) => (
+const Transformers = ( {rendu: transform}) => (
         <div className="pointers-infos">
             { transform.translate && 
             <div>translate : {transform.translate.dX}px, {transform.translate.dY}px </div>
