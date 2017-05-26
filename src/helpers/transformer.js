@@ -1,9 +1,10 @@
-const DEG = 180 / Math.PI;
+import {DEG, START, MOVE, END, DONE} from '../config/constantes'
+
 // position initiale
 let debut = {posX: 0, posY:0};
 
 // arrivee : position en fin d'action 
-let arrivee;
+let arrivee = {posX: 0, posY:0};
 
 // + : le decalage translation
 let translation;
@@ -14,36 +15,34 @@ let scalation; // ouais ca se dit
 // translate : valeur du déplacement en px
 let translate = {dX: 0, dY: 0};
 let rotate = 0;
-let scale = 0;
+let scale = 1;
 
 let rotateStart = 0;
-let scaleStart = 0;
+let scaleStart = 1;
 
-
+// attenuer l'amplitude de la mise à l'échelle
+const sensibilite = 2;
 
 export default function ({type, pointers, transform, pivot}) {
         const [device, action] = type.split(' ');
         const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
         const pointer = pointers[+modifier];
         const axe = modifier && pointers[0];
-
-        
+        const hasOrigin = modifier && (device=== 'mouse');
+              
         const {message, ...reste} = whatTransform({pointer, axe, action, transform, pivot});
-
+        const done = action === 'end' ? DONE : action;
         return {
             transform: reste,
             pointers: {pointer, axe}, 
-            action, 
+            action: done, 
             device,          
             message,
+            hasOrigin
         }
-
 }
 
-
 function whatTransform({pointer, axe, ...reste}) {
-  
-    
     return (axe) 
         ? rotateAndScaleImage({pointer, axe, ...reste})
         : translateImage({pointer, ...reste})
@@ -54,7 +53,7 @@ function translateImage({pointer, action, transform, pivot}){
     let message;
 
     switch (action) {
-        case 'start' :
+        case START :
            debut = pointer;
            translation = transform.translate || {dX: 0, dY: 0};
            rotate = transform.rotate || 0;
@@ -63,7 +62,7 @@ function translateImage({pointer, action, transform, pivot}){
            message = 'c’est parti!' 
         break;
     
-        case 'move' :
+        case MOVE :
             translate = { 
                 dX: translation.dX + (pointer.posX - debut.posX) * pivot.h,
                 dY: translation.dY + (pointer.posY - debut.posY) * pivot.v,
@@ -71,7 +70,7 @@ function translateImage({pointer, action, transform, pivot}){
             message = `ca bouge! move : ${translate.dX}, ${translate.dY}`;
         break;
     
-        case 'end' :
+        case END :
             arrivee = {
                 posX: debut.posX + pointer.posX,
                 posY: debut.posY + pointer.posY,
@@ -93,6 +92,7 @@ function translateImage({pointer, action, transform, pivot}){
         };
 
 }
+// L'axe doit etre le point central du crop -> remis à jour par resize.
 
 function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     let message;
@@ -102,27 +102,27 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
         }
 
         switch (action) {
-        case 'start' :
+        case START :
             translate = transform.translate || {dX: 0, dY: 0};            rotation = transform.rotate || 0;
             scalation = transform.scale || 1;
 
             rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
-
         break;
     
-        case 'move' :
+        case MOVE :
             const stepRotation = Math.atan2(d.dX, d.dY) * pivot.h * pivot.v ;
 
             const stepScale = Math.sqrt(d.dX * d.dX + d.dY * d.dY);
 
             rotate = rotation + Math.round((rotateStart - stepRotation) * DEG);
-            scale = scalation + (Math.round(stepScale - scaleStart) * 0.01);
+            scale = scalation + (Math.round(stepScale - scaleStart) * 0.01 / sensibilite);
 
-            message = `step : ${Math.round(stepRotation *100) /100}, rotate : ${rotate}, scale : ${scale}, D : ${d.dX}, ${d.dY}, `
+            // message = `step : ${Math.round(stepRotation *100) /100}, rotate : ${rotate}, scale : ${scale}, D : ${d.dX}, ${d.dY}, `
+            message = `axe : ${axe.posX}, ${axe.posY}, D : ${d.dX}, ${d.dY} `
         break;
     
-        case 'end' :
+        case END :
             message = `Fini de tourner et de scaler.`
         break;
     

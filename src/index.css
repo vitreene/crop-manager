@@ -42,6 +42,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .manip-edit-conteneur{
@@ -75,11 +76,21 @@ body {
 
 .layer-image-img{
   opacity: 0.5;
+    flex-grow: 1;
+  flex-shrink: 0;
 }
 
+.layer-crop-img,
 .layer-crop{
   width: 100%;
-  height: 100%
+  height: auto;
+  /*height: inherit;*/
+}
+
+.layer-crop-img{
+  flex-grow: 1;
+  flex-shrink: 0;
+  outline: 4px inset yellow;
 }
 
 .layer-crop-inner{
@@ -89,6 +100,7 @@ body {
   overflow: hidden;
   outline: 4px inset blueviolet;
 }
+
 .layer-crop-outer {
   position: relative;
   overflow: hidden;
@@ -98,14 +110,9 @@ body {
   outline: 4px inset red;
 }
 
-/*
-.layer-image-img-outer,
-.layer-crop-img-outer{
-}
 
-.layer-crop-img{
-}
-*/
+
+/*////////////////////////*/
 
 .manip-reglages-icons{
   display: flex;
@@ -114,6 +121,7 @@ body {
   height: 44px;
   border: thin solid cyan;
 }
+
 
 
 .plot{

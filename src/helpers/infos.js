@@ -14,11 +14,14 @@ export function Pointers ({
         }
         { pointer && 
             <div>
-                action :{action} - pointer x: {pointer.posX}, y: {pointer.posY} 
+                action :{action} -> axe x: {axe.posX}, y: {axe.posY} -> pointer x: {pointer.posX}, y: {pointer.posY} 
             </div> 
         } 
         { axe && 
             <div>axe x: {axe.posX}, y: {axe.posY} </div>
+        }
+        { transform.origin && 
+        <div>origin oX : {transform.origin.oX}, oY : {transform.origin.oY}</div>
         }
         </div>
     )
@@ -36,6 +39,9 @@ export function Transformers( {rendu: transform}) {
         { transform.scale && 
         <div>scale X : {transform.scale.x}, Y : {transform.scale.y}</div>
         }
+        { transform.origin && 
+        <div>origin oX : {transform.origin.oX}, oY : {transform.origin.oY}</div>
+        }
     </div>
 )
 }
@@ -45,7 +51,8 @@ export function Transformers( {rendu: transform}) {
 export function Plotters({
     axe, 
     pointer, 
-    containerSize
+    containerSize,
+    origin
 }) {
     const middle = {
         top: containerSize.height * 0.5, 
@@ -54,9 +61,12 @@ export function Plotters({
     };
     const point = {top: pointer.posY, left: pointer.posX};
     const pointAxe = {top: axe.posY, left: axe.posX};
+    const pOrigin = {top: origin.oY, left: origin.oX, color: 'green'};
+
     return (
     <div>
         <span className="plot" style={middle}>&#215;</span>
+        <span className="plot" style={pOrigin}>&#215;</span>
         <span className="plot" style={point}>&#x2299;</span>
         <span className="plot" style={pointAxe}>&#x22a1;</span>
     </div>

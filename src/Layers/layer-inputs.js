@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react'
+// bug : touch si l'on relache d'abord axe, 
+// -> pointer devient axe et decale l'image
 
 let mouseDown = false;
 
@@ -61,8 +63,8 @@ const Inputs = (props) => {
         const posY = Math.round( pageY - contDY );
 
         const pointers = [
-            {posX, posY},
-            shiftKey && {posX: midX, posY: midY}
+            shiftKey && {posX: midX, posY: midY}, // axe
+            {posX, posY}, // pointer
         ].filter(Boolean);
 
         getPointerPosition({type, pointers});

@@ -47,6 +47,8 @@ export default  class Wrapper extends Component {
                 containerSize: {width, height},
                 containerPos: {contDX, contDY},
             })
+            console.log('containerSize', width, height);
+            
             this.setState({isLoading: false});
         }
     }
