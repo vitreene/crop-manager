@@ -10,7 +10,7 @@ import transformer from './helpers/transformer'
 import {setCropWrapper, setCropper} from './helpers/cropper-size'
 import {/*DEG, START, MOVE, END, */DONE} from './config/constantes'
 
-
+// eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './helpers/infos'
 
 export default class Controleur extends Component {
@@ -151,7 +151,6 @@ export default class Controleur extends Component {
         
         // ne fonctionne pas.
         if (hasOrigin) {
-
             this.manip.origin = {
                 oX: ((width/2)  - translate.dX) * r , // ok en rotation
                 oY: ((height/2) - translate.dY) * r 
@@ -170,7 +169,7 @@ export default class Controleur extends Component {
     // console.log('rendu',  rendu);
       const {getPointerPosition, getConteneurSize, getPivot} = this;
       const {conteneur, cropper, cropWrapper} = this.manip;
- 
+ // eslint-disable-next-line
       const {pointers, action, message} = this.manip;
 
       return (
@@ -193,8 +192,10 @@ export default class Controleur extends Component {
 }
 
        
-    //    x' = cos(theta)*(x-xc) - sin(theta)*(y-yc) + xc
-    //    y' = sin(theta)*(x-xc) + cos(theta)*(y-yc) + yc
+//    x' = cos(theta)*(x-xc) - sin(theta)*(y-yc) + xc
+//    y' = sin(theta)*(x-xc) + cos(theta)*(y-yc) + yc
+
+// eslint-disable-next-line
 function rotation(cx, cy, x, y, angle) {
     const radians = (Math.PI / 180) * angle;
     const cos = Math.cos(radians);

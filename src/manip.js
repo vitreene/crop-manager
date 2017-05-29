@@ -3,8 +3,9 @@ import React, {Component, PropTypes} from 'react';
 import Controleur from './controleur'
 
 import initial from './config/initial'
+import manipImage from './store'
 
-const visuel = initial.proxy;
+const image = initial.proxy;
 const crop = {
     w: initial.crop.width,
     h: initial.crop.height,
@@ -22,7 +23,19 @@ export default class Manip extends Component {
         this.prep = this.prep.bind(this);
     }
 
-    state = {}
+    state = {img: null}
+
+    componentDidMount() {
+        
+        const cb = (img) => {
+            console.log('canvas', img);
+           this.setState({img: {...img}});
+        }
+        
+        // manipImage.create(visuel.src);
+        const img = manipImage.create(image.src, {}, cb);
+        
+    }
 
     prep(manip) {
         /*
@@ -35,8 +48,12 @@ export default class Manip extends Component {
 
     render() {
      const {prep} = this;
+     const {img} = this.state;
+     const visuel = (img) ? img : image;
+     
+
       return (
-           <Controleur {...{visuel, crop, prep}}/> 
+           <Controleur visuel={visuel} {...{crop, prep}}/> 
         );
     }
 }
@@ -50,10 +67,40 @@ width, height : dimensions appliquées
 */
 
 function recordTransform(manip, image, crop) {
-    const {transform, pivot, cropper: {ratio} }  = manip;
+    // const {transform, pivot, cropper: {ratio} }  = manip;
+
+    // D
+    function hypothenuse(width, height) {
+        return Math.sqrt( width * width + height * height )
+    }
+    function ratio(x, y) {
+        return x/y;
+    }
+
+
     /*
+a faire : 
+- le schéma d'enregistrement,
+- le schéma de lecture
+- les formules de transformation.
+
+    décision : les données seront le plus virtualisées possible.
+    -> l'image est le référent. Si l'image change, on repart de zéro.
+
 - image : dimensions;
 - crop : dimensions;
+C: {x: 0, y: 0}
+D: sqrt( img.x2 + img.y2)
+L= D
+H = r * L
+r = L/H
+img transform{
+scale : E,
+rotate: A,
+translate: T{dX,dY}
+}
+
+
 - en export :
     exprimer le rapport de l'image par rapport au crop.
     en calculant l'hypothenuse de chacun

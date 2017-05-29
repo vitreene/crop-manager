@@ -40,17 +40,15 @@ const LayerCrop = (props) => {
     return (
      <div className="layer-crop">
         <div 
-            className="layer-crop-outer"
-            style={cropLayer}>
+         className="layer-crop-outer"
+         style={cropLayer}>
             <div className="layer-crop-inner"
-                style={cropLayerInner}
-                >
+             style={cropLayerInner}>
                     <img 
-                style={transformation} 
-                    className="layer-crop-img"
                     src={visuel.src} 
+                    style={transformation} 
+                    className="layer-crop-img"
                     role="presentation"/>
- 
             </div>
         </div>
      </div>

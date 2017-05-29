@@ -22,11 +22,11 @@ const LayerImage = ({rendu: transform, visuel, cropper}) => {
     };
 
     return (
-     <div className="layer-image">
+     <div className="layer-fond">
             <img 
             src={visuel.src} 
-            className="layer-image-img"
             style={transformation} 
+            className="layer-fond-img"
             role="presentation"/>
      </div>
 )};
