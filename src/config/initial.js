@@ -2,19 +2,25 @@ const manip = {
     "image": {
         "src": process.env.PUBLIC_URL + '/DSC_0419.jpg',
         "naturalWidth": 3456, // pixels
-        "naturalHeight": 2304 // pixels
+        "naturalHeight": 2304, // pixels
+        "ratio": 1.5
         },
     "proxy": {
         "id": 'proxy',
         "src": process.env.PUBLIC_URL + '/DSC_0419-proxy.jpg',
         "width": 1000, // pixels
         "height": 667 // pixels
-        },
+    },
+    "cropper": {
+        "diagonale": 4153.5950,
+        "ratio": 1.25,
+        // padding : marge interieure en % entre le crop et le wrapper.
+        "padding": 5 // pixels
+    },
     "crop": {
         "id": "1",
-        "width": 300, // pixels
-        "height": 300, // pixels
-        // padding : marge interieure en % entre le crop et le wrapper.
+        "width": 400, // pixels
+        "height": 500, // pixels
         "padding": 5 // pixels
     },
      "transform": {

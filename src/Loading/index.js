@@ -1,13 +1,16 @@
 import React from "react"
 
-import styles from "./index.css"
+import "./index.css"
 
-const Loading = () => (
+const Loading = () => {
+  console.log('LOADING-------');
+  
+  return (
   <div>
-    <div className={ styles.loader }>
-      <div className={ styles.spinner } />
+    <div className="loader">
+      <div className="spinner" />
     </div>
   </div>
-)
+)}
 
 export default Loading

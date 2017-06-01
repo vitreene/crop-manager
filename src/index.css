@@ -86,6 +86,7 @@ body {
 .layer-fond-img{
   flex-grow: 0;
   flex-shrink: 0;
+  animation: fadeIn 0.5s;
 }
 
 .layer-fond{
@@ -101,7 +102,14 @@ body {
   outline: 4px inset yellow;
 }
 
-
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 /*////////////////////////*/
 

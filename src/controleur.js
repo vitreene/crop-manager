@@ -8,6 +8,7 @@ import Reglages from './reglages'
 
 import transformer from './helpers/transformer'
 import {setCropWrapper, setCropper} from './helpers/cropper-size'
+import proxySize from './helpers/proxy-size'
 import {/*DEG, START, MOVE, END, */DONE} from './config/constantes'
 
 // eslint-disable-next-line
@@ -16,8 +17,9 @@ import {Transformers, Plotters, Pointers} from './helpers/infos'
 export default class Controleur extends Component {
      static propTypes = {
         // id: PropTypes.string
-        visuel: PropTypes.object,
+        proxy: PropTypes.object,
         crop: PropTypes.object,
+        transform: PropTypes.object,
         prep: PropTypes.func,
      }
     constructor(props) {
@@ -48,6 +50,11 @@ export default class Controleur extends Component {
             h: 1,
             v: 1
         },
+        proxy: {
+            // src: null,
+            width: 0,
+            height: 0
+        },
         conteneur: {
             // dX: 0, dY: 0, width: 0, height: 0
             containerPos: {contDX: 0, contDY: 0}, 
@@ -69,30 +76,47 @@ export default class Controleur extends Component {
         message: ''
     }
 
-    componentDidMount() {
-  
+    componentWillReceiveProps(newProps) {
+        // disposition de l'image asynchrone.
+        const {transform, proxy, cadrage} = newProps;
+        this.manip.transform = newProps.transform;  
+        // cadrage par défaut.
+        const dims = proxySize(cadrage, this.manip.cropper);
+        this.manip.proxy = Object.assign( 
+            {},
+             dims,
+            {src: proxy.src}
+        );
+        // console.log('this.manip.proxy',dims,  this.manip.proxy);
+        this.updateRendu(); 
     }
 
     sendPosition(action){
         if (action !== DONE) return;
         const {prep} = this.props;
-        // const {transform, pivot} = this.manip;
-        // {transform, pivot}
         prep(this.manip);
     }
 
     getConteneurSize({containerPos, containerSize}) {
-        // console.log('this.manip.conteneur.containerSize',this.manip.conteneur.containerSize,  containerSize );
-        
         this.manip.conteneur = {containerPos, containerSize};
         this.getCropSize(containerSize);
-        // this.updateRendu();
     }
 
     getCropSize(size){
         const {crop} = this.props;
         this.manip.cropWrapper = setCropWrapper(size, crop);
         this.manip.cropper = setCropper(this.manip.cropWrapper, crop);
+
+///
+      const {proxy, cadrage} = this.props;
+        const dims = proxySize(cadrage, this.manip.cropper);
+        this.manip.proxy = Object.assign( 
+            {},
+             dims,
+            {src: proxy.src}
+        );
+
+///
         this.updateRendu();   
     }
 
@@ -114,8 +138,6 @@ export default class Controleur extends Component {
                 transform,
                 pivot
             }); 
-        // console.log('manip', manip);
-        
         this.manip = {...this.manip, ...manip};
         this.updateRendu(); 
         this.sendPosition(manip.action);
@@ -126,7 +148,9 @@ export default class Controleur extends Component {
         - mettre le transform à l'échelle locale
         */
         const {transform, pivot, cropper, hasOrigin} = this.manip;
-        const {width, height} = this.props.visuel;
+        // const {width, height} = this.props.proxy;
+        const {width, height} = this.manip.proxy;
+       console.log('updateRendu proxy', width, height,this.props.proxy );
        
         // console.log('updateRendu origin', origin);
         
@@ -163,7 +187,8 @@ export default class Controleur extends Component {
     }
 
     render() {
-      const {visuel} = this.props;
+    //   const {proxy} = this.props;
+      const {proxy} = this.manip;
       const {rendu} = this.state;
       const {origin} = rendu;
     // console.log('rendu',  rendu);
@@ -176,8 +201,8 @@ export default class Controleur extends Component {
             <div className="manip-conteneur">
 
                 <Wrapper {...{getConteneurSize}} >
-                    <LayerFond {...{rendu, visuel, cropper}}/>
-                    <LayerCrop {...{rendu, visuel, cropWrapper, cropper}}/>
+                    <LayerFond {...{rendu, proxy, cropper}}/>
+                    <LayerCrop {...{rendu, proxy, cropWrapper, cropper}}/>
                     <LayerInputs {...{getPointerPosition, ...conteneur}}/>
                 </Wrapper>
 

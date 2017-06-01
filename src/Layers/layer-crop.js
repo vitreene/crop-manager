@@ -1,7 +1,9 @@
 import React from 'react';
-
+import Loading from '../Loading'
+// tranlate est proportionnel à r ; 
+// ce n'est utile que pour le resize.
 const LayerCrop = (props) => {
-    const {rendu: transform, visuel, cropWrapper, cropper} = props;
+    const {rendu: transform, proxy, cropWrapper, cropper} = props;
 
     const cropLayer = {
         left: cropWrapper.x,
@@ -16,8 +18,8 @@ const LayerCrop = (props) => {
         width: cropper.w,
         height: cropper.h
     };
-    const r = cropper.ratio;
-
+    // const r = cropper.ratio;
+    const r = 1;
     const{
         translate: {dX = 0, dY = 0}, 
         rotate = 0, 
@@ -26,8 +28,8 @@ const LayerCrop = (props) => {
         } = transform;
     
     const transformation = {
-        width: `${visuel.width}px`,
-        height: `${visuel.height}px`,
+        width: `${proxy.width}px`,
+        height: `${proxy.height}px`,
         transform: `
         translate3d(${dX * r}px, ${dY * r}px, 0)
         rotate(${rotate}deg)
@@ -44,14 +46,23 @@ const LayerCrop = (props) => {
          style={cropLayer}>
             <div className="layer-crop-inner"
              style={cropLayerInner}>
-                    <img 
-                    src={visuel.src} 
+
+             { proxy.hasOwnProperty('src')
+              ?     <img 
+                    src={proxy.src} 
                     style={transformation} 
                     className="layer-crop-img"
                     role="presentation"/>
+              :    <Loading/>
+             }
             </div>
         </div>
      </div>
 )};
 
 export default LayerCrop;
+
+/*
+
+
+*/

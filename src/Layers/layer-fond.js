@@ -1,7 +1,8 @@
 import React from 'react';
 
-const LayerImage = ({rendu: transform, visuel, cropper}) => {
-    const r = cropper.ratio;
+const LayerImage = ({rendu: transform, proxy, cropper}) => {
+    // const r = cropper.ratio;
+    const r = 1;
     const{
         translate: {dX = 0, dY = 0 }, 
         // translate,
@@ -11,8 +12,8 @@ const LayerImage = ({rendu: transform, visuel, cropper}) => {
     } = transform;
     
     const transformation = {
-        width: `${visuel.width}px`,
-        height: `${visuel.height}px`,
+        width: `${proxy.width}px`,
+        height: `${proxy.height}px`,
         transform: `
         translate3d(${dX * r}px, ${dY * r}px, 0)
         rotate(${rotate}deg)
@@ -23,11 +24,13 @@ const LayerImage = ({rendu: transform, visuel, cropper}) => {
 
     return (
      <div className="layer-fond">
+           {proxy.hasOwnProperty('src') &&
             <img 
-            src={visuel.src} 
+            src={proxy.src} 
             style={transformation} 
             className="layer-fond-img"
             role="presentation"/>
+            }
      </div>
 )};
 

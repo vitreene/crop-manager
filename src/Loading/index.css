@@ -6,7 +6,7 @@
 }
 
 :root {
-  --spinner-Color: #000;
+  --spinner-Color: #fff;
   --spinner-Color-front: color(var(--spinner-Color) a(0.8));
   --spinner-Color-back: color(var(--spinner-Color) a(0.2));
 }
@@ -16,8 +16,10 @@
   min-height: 5rem;
   width: 5vh;
   min-width: 5rem;
-  border: 6px solid var(--spinner-Color-back);
-  border-top-color: var(--spinner-Color-front);
+  border: 6px solid grey;
+  border-top-color: white;
+  /*border: 6px solid var(--spinner-Color-back);
+  border-top-color: var(--spinner-Color-front);*/
   border-radius: 100%;
   animation: rotation 0.6s infinite linear 0.25s;
 
@@ -30,7 +32,9 @@
     opacity: 1;
     transform: rotate(0);
   }
-
+  50% {
+    opacity: 0.5;
+  }
   to {
     opacity: 1;
     transform: rotate(359deg);

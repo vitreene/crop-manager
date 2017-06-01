@@ -1,11 +1,13 @@
+/* eslint-disable */
 import React, {Component, PropTypes} from 'react';
 
 import Controleur from './controleur'
 
 import initial from './config/initial'
-import manipImage from './store'
+import manipImage from './Store'
 
-const image = initial.proxy;
+const image = initial.image;
+
 const crop = {
     w: initial.crop.width,
     h: initial.crop.height,
@@ -23,17 +25,22 @@ export default class Manip extends Component {
         this.prep = this.prep.bind(this);
     }
 
-    state = {img: null}
-
+    state = {
+        proxy:{},
+        cadrage:{},
+        transform:{}
+    }
+        
     componentDidMount() {
         
-        const cb = (img) => {
-            console.log('canvas', img);
-           this.setState({img: {...img}});
+        const cb = (manip) => {
+            console.log('canvas', manip);
+           this.setState({...manip});
         }
         
         // manipImage.create(visuel.src);
-        const img = manipImage.create(image.src, {}, cb);
+        const cadre = {width: crop.w, height: crop.h};
+        const img = manipImage.create(image.src, cadre, cb);
         
     }
 
@@ -48,12 +55,15 @@ export default class Manip extends Component {
 
     render() {
      const {prep} = this;
-     const {img} = this.state;
-     const visuel = (img) ? img : image;
+    //  const {proxy, cadrage, transform} = this.state;
+    //  const visuel = (proxy) ? proxy : image;
+    //  const visuel = proxy ;
+     /*
+        faire : passer state entièrement, et mette un loading à visuel.
+     */
      
-
       return (
-           <Controleur visuel={visuel} {...{crop, prep}}/> 
+           <Controleur {...{crop, prep, ...this.state}}/> 
         );
     }
 }
