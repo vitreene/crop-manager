@@ -1,10 +1,10 @@
 import React from 'react';
-import Loading from '../Loading'
+// import Loading from '../Loading'
 // tranlate est proportionnel à r ; 
 // ce n'est utile que pour le resize.
 const LayerCrop = (props) => {
     const {rendu: transform, proxy, cropWrapper, cropper} = props;
-
+    
     const cropLayer = {
         left: cropWrapper.x,
         top: cropWrapper.y,
@@ -46,15 +46,12 @@ const LayerCrop = (props) => {
          style={cropLayer}>
             <div className="layer-crop-inner"
              style={cropLayerInner}>
-
-             { proxy.hasOwnProperty('src')
-              ?     <img 
-                    src={proxy.src} 
-                    style={transformation} 
-                    className="layer-crop-img"
-                    role="presentation"/>
-              :    <Loading/>
-             }
+             <img 
+                src={proxy.src} 
+                style={transformation} 
+                className="layer-crop-img"
+                role="presentation"
+            />
             </div>
         </div>
      </div>

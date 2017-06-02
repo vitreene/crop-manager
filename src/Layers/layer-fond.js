@@ -1,6 +1,8 @@
 import React from 'react';
+// import Loading from '../Loading'
 
 const LayerImage = ({rendu: transform, proxy, cropper}) => {
+    
     // const r = cropper.ratio;
     const r = 1;
     const{
@@ -23,15 +25,14 @@ const LayerImage = ({rendu: transform, proxy, cropper}) => {
     };
 
     return (
-     <div className="layer-fond">
-           {proxy.hasOwnProperty('src') &&
+        <div className="layer-fond">
             <img 
-            src={proxy.src} 
-            style={transformation} 
-            className="layer-fond-img"
-            role="presentation"/>
-            }
-     </div>
+                src={proxy.src} 
+                style={transformation} 
+                className="layer-fond-img"
+                role="presentation"
+                />
+        </div>
 )};
 
 export default LayerImage;

@@ -56,6 +56,8 @@ function translateImage({pointer, action, transform, pivot}){
         case START :
            debut = pointer;
            translation = transform.translate || {dX: 0, dY: 0};
+
+           translate = transform.translate || {dX: 0, dY: 0};
            rotate = transform.rotate || 0;
            scale = transform.scale || 1;
 
@@ -99,13 +101,17 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     const d = {
         dX: pointer.posX - axe.posX,
         dY: pointer.posY - axe.posY,
-        }
-
+    };
+    
         switch (action) {
         case START :
-            translate = transform.translate || {dX: 0, dY: 0};            rotation = transform.rotate || 0;
+            rotate = transform.rotate || 0;
+            scale = transform.scale || 1;
+            translate = transform.translate || {dX: 0, dY: 0}; 
+            
+            rotation = transform.rotate || 0;
             scalation = transform.scale || 1;
-
+            
             rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
         break;
