@@ -1,5 +1,5 @@
-export default function (cadrage, image, marge = 5) {
-    const res = cover(cadrage, image, marge);
+export default function (cadrage, image) {
+    const res = cover(cadrage, image);
     const scale = res.x;
     return {
         translate: {dX:0, dY:0},
@@ -8,14 +8,14 @@ export default function (cadrage, image, marge = 5) {
     }
 }
 
-export function cover(cadrage, image, marge){
+export function cover(cadrage, image){
     // renvoie l'échelle nécessaire pour que l'image couvre entièrement le cadre et la marge.
     // image : width, height
     // cadrage : diagonale, ratio
     // marge : %;
     // sortie : echelle. 
     const {width, height} = image;
-    const {diagonale, ratio} = cadrage;
+    const {diagonale, ratio, marge} = cadrage;
 
     const d = diagonale + (diagonale * (marge /100)); 
     const wZ = d; 

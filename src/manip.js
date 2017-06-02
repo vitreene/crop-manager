@@ -7,13 +7,7 @@ import initial from './config/initial'
 import manipImage from './Store'
 
 const image = initial.image;
-
-const crop = {
-    w: initial.crop.width,
-    h: initial.crop.height,
-    padding: initial.crop.padding,
-};
-
+const preset = initial.preset;
 
 export default class Manip extends Component {
      static propTypes = {
@@ -34,13 +28,10 @@ export default class Manip extends Component {
     componentDidMount() {
         
         const cb = (manip) => {
-            console.log('canvas', manip);
+            // console.log('canvas', manip);
            this.setState({...manip});
         }
-        
-        // manipImage.create(visuel.src);
-        const cadre = {width: crop.w, height: crop.h};
-        const img = manipImage.create(image.src, cadre, cb);
+        const img = manipImage.create(image.src, preset, cb);
         
     }
 
@@ -55,15 +46,8 @@ export default class Manip extends Component {
 
     render() {
      const {prep} = this;
-    //  const {proxy, cadrage, transform} = this.state;
-    //  const visuel = (proxy) ? proxy : image;
-    //  const visuel = proxy ;
-     /*
-        faire : passer state entièrement, et mette un loading à visuel.
-     */
-     
       return (
-           <Controleur {...{crop, prep, ...this.state}}/> 
+           <Controleur {...{prep, ...this.state}}/> 
         );
     }
 }
@@ -76,16 +60,6 @@ w, h : largeur hauteur de référence
 width, height : dimensions appliquées
 */
 
-function recordTransform(manip, image, crop) {
-    // const {transform, pivot, cropper: {ratio} }  = manip;
-
-    // D
-    function hypothenuse(width, height) {
-        return Math.sqrt( width * width + height * height )
-    }
-    function ratio(x, y) {
-        return x/y;
-    }
 
 
     /*
@@ -130,34 +104,3 @@ translate: T{dX,dY}
 
 tranform et pivot : mettre à l'echelle, puis appliquer 
     */
-    
-}
-/*
-       manip = {
-        transform:  {
-            translate: {dX: 0, dY: 0},
-            rotate: 0,
-            scale: 1
-        },
-        pivot: {
-            h: 1,
-            v: 1
-        },
-        conteneur: {
-            // dX: 0, dY: 0, width: 0, height: 0
-            containerPos: {contDX: 0, contDY: 0}, 
-            containerSize: {width: 0, height: 0},
-        },
-        cropper: {
-            x: 0, y: 0, w: 0, h: 0            
-        }        
-    }
-*/
-
-/*
-const hydrate = { 
-    translate: {dX: 50, dY: -50},
-    rotate: 60,
-    scale: 1.4    
-}
-*/

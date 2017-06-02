@@ -5,7 +5,7 @@ const isClient = typeof window !== "undefined";
         
 export default  class Wrapper extends Component {
      static propTypes = {
-        getConteneurSize: PropTypes.func,
+        onConteneurResize: PropTypes.func,
      }
     constructor(props) {
         super(props)
@@ -37,17 +37,17 @@ export default  class Wrapper extends Component {
 
     getRect(el) {
         if (isClient && el) {
-            const {getConteneurSize} = this.props;
+            const {onConteneurResize} = this.props;
             const {width, height, left, top} = el.getBoundingClientRect();
 
             const contDX = left + window.scrollX;
             const contDY = top + window.scrollY;
 
-            getConteneurSize({
+            onConteneurResize({
                 containerSize: {width, height},
                 containerPos: {contDX, contDY},
             })
-            console.log('containerSize', width, height);
+            // console.log('containerSize', width, height);
             
             this.setState({isLoading: false});
         }

@@ -14,22 +14,32 @@ import {/*DEG, START, MOVE, END, */DONE} from './config/constantes'
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './helpers/infos'
 
+import Instance from './Instance'
+
 export default class Controleur extends Component {
      static propTypes = {
         // id: PropTypes.string
         proxy: PropTypes.object,
         crop: PropTypes.object,
+        cadrage: PropTypes.object,
         transform: PropTypes.object,
         prep: PropTypes.func,
      }
     constructor(props) {
         super(props);
+        // const {crop} = props;
+        
         this.getPointerPosition = this.getPointerPosition.bind(this);
         this.getPivot = this.getPivot.bind(this);
-        this.getConteneurSize = this.getConteneurSize.bind(this);
-        this.getCropSize = this.getCropSize.bind(this);
+        this.onConteneurResize = this.onConteneurResize.bind(this);
+        // this.cropResize = this.cropResize.bind(this);
+        //  this.imageResize =  this.imageResize.bind(this);
         this.updateRendu = this.updateRendu.bind(this);
         this.sendPosition = this.sendPosition.bind(this);
+
+        this.manip = new Instance({
+            action: 'Ta-Da-dammm'
+        });
     }
     state = {
         rendu: {
@@ -39,6 +49,8 @@ export default class Controleur extends Component {
             origin: {oX: 0, oY: 0},
         }
     }
+    /*
+    // creer une classe à part, avec données et functions
     manip = {
         transform:  {
             translate: {dX: 0, dY: 0},
@@ -75,70 +87,77 @@ export default class Controleur extends Component {
         device: null,
         message: ''
     }
+*/
+    componentWillMount() {
+        this.manip.log();
+    }
 
     componentWillReceiveProps(newProps) {
-        // disposition de l'image asynchrone.
+        // mise à disposition asynchrone 
+        // de l'image et de sa transform initiale.
+
         const {transform, proxy, cadrage} = newProps;
-        this.manip.transform = newProps.transform;  
-        // cadrage par défaut.
-        const dims = proxySize(cadrage, this.manip.cropper);
-        this.manip.proxy = Object.assign( 
-            {},
-             dims,
-            {src: proxy.src}
-        );
-        // console.log('this.manip.proxy',dims,  this.manip.proxy);
+        this.manip.init(transform, cadrage, proxy);
+
         this.updateRendu(); 
     }
 
     sendPosition(action){
+        console.log('sendPosition', action);
+        
         if (action !== DONE) return;
         const {prep} = this.props;
         prep(this.manip);
     }
 
-    getConteneurSize({containerPos, containerSize}) {
-        this.manip.conteneur = {containerPos, containerSize};
-        this.getCropSize(containerSize);
+    onConteneurResize(conteneur) {
+        const {cadrage, proxy}  = this.props;
+        
+        this.manip.resize(conteneur, cadrage, proxy);
+
+        this.updateRendu();   
+    }
+/*
+    cropResize(size, cadrage){
+        // const {cadrage} = this.props;
+        console.log('cadrage', cadrage);
+        
+        this.manip.cropWrapper = setCropWrapper(size, cadrage);
+        console.log('this.manip.cropWrapper', this.manip.cropWrapper);
+
+        this.manip.cropper = setCropper(this.manip.cropWrapper, cadrage);
     }
 
-    getCropSize(size){
-        const {crop} = this.props;
-        this.manip.cropWrapper = setCropWrapper(size, crop);
-        this.manip.cropper = setCropper(this.manip.cropWrapper, crop);
-
-///
-      const {proxy, cadrage} = this.props;
+    imageResize(){
+        const {proxy, cadrage} = this.props;
         const dims = proxySize(cadrage, this.manip.cropper);
         this.manip.proxy = Object.assign( 
             {},
              dims,
             {src: proxy.src}
         );
-
-///
-        this.updateRendu();   
     }
-
+    translateResize(){
+        // mettre à l'echelle la translation
+    }
+*/
     getPivot({h,v}){
-        // transformer true/false en (-1)/(+1) (true = checked)
-        this.manip.pivot = {
-            h: h ? -1 : 1,
-            v: v ? -1 : 1,
-        };
+        this.manip.pivoter(h,v);
         this.updateRendu();
         this.sendPosition(DONE);
     }
     
     getPointerPosition({type, pointers}) {
-        const {transform, pivot} = this.manip;
+        const {transform, pivot, proxy} = this.manip;
         const manip = transformer({
-                type, 
-                pointers, 
-                transform,
-                pivot
-            }); 
-        this.manip = {...this.manip, ...manip};
+            proxy,
+            type, 
+            pointers, 
+            transform,
+            pivot
+        }); 
+   
+        this.manip.updatePosition(manip);
         this.updateRendu(); 
         this.sendPosition(manip.action);
     }
@@ -150,7 +169,7 @@ export default class Controleur extends Component {
         const {transform, pivot, cropper, hasOrigin} = this.manip;
         // const {width, height} = this.props.proxy;
         const {width, height} = this.manip.proxy;
-       console.log('updateRendu proxy', width, height,this.props.proxy );
+    //    console.log('updateRendu proxy', width, height,this.props.proxy );
        
         // console.log('updateRendu origin', origin);
         
@@ -171,6 +190,13 @@ export default class Controleur extends Component {
             dY:  Math.round(dY * pivot.v)
         };
         
+// expression en pourcentage de 
+/* 
+        const translate = {
+            dX:  Math.round((dX * pivot.h) * width),
+            dY:  Math.round((dY * pivot.v) * height)
+        };
+ */       
         const r = cropper.ratio;
         
         // ne fonctionne pas.
@@ -192,7 +218,7 @@ export default class Controleur extends Component {
       const {rendu} = this.state;
       const {origin} = rendu;
     // console.log('rendu',  rendu);
-      const {getPointerPosition, getConteneurSize, getPivot} = this;
+      const {getPointerPosition, onConteneurResize, getPivot} = this;
       const {conteneur, cropper, cropWrapper} = this.manip;
  // eslint-disable-next-line
       const {pointers, action, message} = this.manip;
@@ -200,7 +226,7 @@ export default class Controleur extends Component {
       return (
             <div className="manip-conteneur">
 
-                <Wrapper {...{getConteneurSize}} >
+                <Wrapper {...{onConteneurResize}} >
                     <LayerFond {...{rendu, proxy, cropper}}/>
                     <LayerCrop {...{rendu, proxy, cropWrapper, cropper}}/>
                     <LayerInputs {...{getPointerPosition, ...conteneur}}/>
@@ -229,4 +255,22 @@ function rotation(cx, cy, x, y, angle) {
         rX : (cos * (x - cx)) + (sin * (y - cy)) + cx,
         rY : (cos * (y - cy)) - (sin * (x - cx)) + cy
     }
+}
+
+
+function translateEnPourcents({dX, dY}, {width, height}) {
+    console.log('translateEnPourcents', dX, width);
+    
+    return {
+        dX: dX ? width / dX : dX,
+        dY: dY ? height / dY : dY
+    } ;
+}
+
+function translateEnPixels({dX, dY}, {width, height}) {
+
+    return {
+        dX: width * dX,
+        dY: height * dY
+    } ;
 }

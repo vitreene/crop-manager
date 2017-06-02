@@ -23,23 +23,23 @@ let scaleStart = 1;
 // attenuer l'amplitude de la mise à l'échelle
 const sensibilite = 2;
 
-export default function ({type, pointers, transform, pivot}) {
-        const [device, action] = type.split(' ');
-        const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
-        const pointer = pointers[+modifier];
-        const axe = modifier && pointers[0];
-        const hasOrigin = modifier && (device=== 'mouse');
-              
-        const {message, ...reste} = whatTransform({pointer, axe, action, transform, pivot});
-        const done = action === 'end' ? DONE : action;
-        return {
-            transform: reste,
-            pointers: {pointer, axe}, 
-            action: done, 
-            device,          
-            message,
-            hasOrigin
-        }
+export default function ({proxy, type, pointers, transform, pivot}) {
+    const [device, action] = type.split(' ');
+    const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
+    const pointer = pointers[+modifier];
+    const axe = modifier && pointers[0];
+    const hasOrigin = modifier && (device=== 'mouse');
+            
+    const {message, ...reste} = whatTransform({pointer, axe, action, transform, pivot});
+    const done = action === 'end' ? DONE : action;
+    return {
+        transform: reste,
+        pointers: {pointer, axe}, 
+        action: done, 
+        device,          
+        message,
+        hasOrigin
+    }
 }
 
 function whatTransform({pointer, axe, ...reste}) {

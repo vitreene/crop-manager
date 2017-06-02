@@ -1,3 +1,5 @@
+// cree un cadrage à partir d'un cadre en px. 
+
 export default function (
     cadre = {width: 150, height: 100}, 
     image = {width: 150, height: 100},

@@ -11,6 +11,7 @@ const manip = {
         "width": 1000, // pixels
         "height": 667 // pixels
     },
+    "preset": "p4x3",
     "cropper": {
         "diagonale": 4153.5950,
         "ratio": 1.25,
@@ -20,7 +21,7 @@ const manip = {
     "crop": {
         "id": "1",
         "width": 400, // pixels
-        "height": 500, // pixels
+        "height": 300, // pixels
         "padding": 5 // pixels
     },
      "transform": {
@@ -44,7 +45,17 @@ const manip = {
 export default manip
 
 
+export const presets = {
+    "p4x3": {
+        ratio: 1.3333,
+        name: "4:3",
+    },
+    "p15x10": {
+        ratio: 1.5,
+        name: "15:10",
+    },
 
+}
 
 const manipModel = {
     "image": {

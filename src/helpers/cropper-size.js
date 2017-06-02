@@ -1,5 +1,63 @@
+/*
+// taille du conteneur
+ size : width, height
+ cadrage : {
+        diagonale, 
+        ratio, 
+        marge: PADDING, 
+        image: {width, height} 
+    }
+*/
+export function setCropWrapper(size, {marge}) {
+    if (!size || marge > 49) return false;
+    const sizeMin = Math.min(size.width, size.height);
+    const padding = sizeMin * (marge/100) *2;
+    const w = size.width - padding;
+    const h = size.height - padding;
 
-export function setCropWrapper(size, crop) {
+    const x = (size.width - w ) * 0.5;
+    const y = (size.height - h) * 0.5;
+    
+    return {
+        x,
+        y,
+        w,
+        h,
+    }
+}
+
+
+export function setCropper(cropWrapper, cadrage) {  
+    if (!(cadrage.diagonale && cadrage.ratio)) return false;
+    const cw = cadrage.diagonale;
+    const ch = cw/ cadrage.ratio;
+    const wZ = cw / (ch / cropWrapper.h);
+    const hZ = ch * (cropWrapper.w / cw); 
+
+    const h = (hZ > cropWrapper.h) 
+        ? cropWrapper.h
+        : hZ;
+
+    const w = (hZ > cropWrapper.h) 
+        ? wZ
+        : cropWrapper.w;
+
+    const x = (cropWrapper.w - w) * 0.5;
+    const y = (cropWrapper.h - h) * 0.5;
+    const ratio = w / cw ;
+
+    return {
+        x,
+        y,
+        w,
+        h,
+        ratio
+    }
+}
+
+
+/*
+export function ZsetCropWrapper(size, crop) {
     if (!size || crop.padding > 49) return false;
     const sizeMin = Math.min(size.width, size.height);
     const padding = sizeMin * (crop.padding/100) *2;
@@ -17,7 +75,7 @@ export function setCropWrapper(size, crop) {
     }
 }
 
-export function setCropper(cropWrapper, crop) {  
+export function ZsetCropper(cropWrapper, crop) {  
     if (!(crop.w && crop.h && cropWrapper.w && cropWrapper.h)) return false;
     const wZ = crop.w / (crop.h / cropWrapper.h);
     const hZ = crop.h * (cropWrapper.w / crop.w); 
@@ -77,3 +135,4 @@ export function XXsetCropper(cropWrapper, crop) {
         ratio
     }
 }
+*/
