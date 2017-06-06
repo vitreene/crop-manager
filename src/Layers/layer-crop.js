@@ -18,26 +18,34 @@ const LayerCrop = (props) => {
         width: cropper.w,
         height: cropper.h
     };
-    // const r = cropper.ratio;
-    const r = 1;
+
     const{
         translate: {dX = 0, dY = 0}, 
         rotate = 0, 
         scale = {x: 1, y: 1},
-        // origin: {oX = 0, oY = 0}
+        origin: {oX = 0, oY = 0}
         } = transform;
     
     const transformation = {
         width: `${proxy.width}px`,
         height: `${proxy.height}px`,
         transform: `
-        translate3d(${dX * r}px, ${dY * r}px, 0)
+        translate3d(${dX}px, ${dY}px, 0)
         rotate(${rotate}deg)
-        scale(${scale.x * r}, ${scale.y * r})
+        scale(${scale.x}, ${scale.y})
        `,
     //    transformOrigin: `${oX}px  ${oY}px`,
 };
 
+    const soX = Math.round(oX *100) /100;
+    const soY = Math.round(oY *100) /100;
+    const sdX = Math.round(dX *100) /100;
+    const sdY = Math.round(dY *100) /100;
+// console.log('origin', soX, soY);
+// console.log('translate', sdX, sdY);
+
+     const pOrigin = {top: oY, left: oX, color: 'cyan'};
+    //  const pOrigin = {top: 0, left: 0, color: 'cyan'};
 
     return (
      <div className="layer-crop">
@@ -46,12 +54,15 @@ const LayerCrop = (props) => {
          style={cropLayer}>
             <div className="layer-crop-inner"
              style={cropLayerInner}>
+             <div className="img-wrap" >
              <img 
                 src={proxy.src} 
                 style={transformation} 
                 className="layer-crop-img"
                 role="presentation"
             />
+            <span className="plot" style={pOrigin}>&#215;</span>
+            </div>
             </div>
         </div>
      </div>

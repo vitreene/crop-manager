@@ -57,6 +57,7 @@ export const presets = {
 
 }
 
+// eslint-disable-next-line
 const manipModel = {
     "image": {
         "src": String,

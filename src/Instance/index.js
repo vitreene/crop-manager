@@ -1,6 +1,6 @@
 /* eslint-disable */
 import defaults from '../config/instance-init'
-import {DONE} from '../config/constantes'
+import {RAD, DONE} from '../config/constantes'
 
 import transformer from '../helpers/transformer'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
@@ -53,7 +53,6 @@ export default class {
         Object.keys(manip).map(  key => this[key] = manip[key] );
 
         this.translatePc = translateEnPourcents(manip.transform.translate, this.cropper);
-        // console.log('this.translatePc ', this.translatePc );
         
         this.updateRendu(); 
         cb && cb(manip.action);
@@ -123,30 +122,66 @@ export default class {
         const scale = {
             x: transform.scale * pivot.v, 
             y: transform.scale * pivot.h
+            // x: 1, 
+            // y: 1,
         };
 
-        const translate = {
+        
+        if (! hasOrigin) this.shoot = {
+            dX:  Math.round(dX * pivot.h),
+            dY:  Math.round(dY * pivot.v),
+            scale: scale.x,
+            rotate: rotate,
+            oX: Math.round(dX * pivot.h) * scale.x,
+            oY: Math.round(dY * pivot.v) * scale.x,
+        };
+
+
+        const trO = rotatePoint(
+            // this.shoot.oX, 
+            // this.shoot.oY, 
+            this.shoot.dX, 
+            this.shoot.dY, 
+            0, 0, 
+            this.shoot.dX, 
+            this.shoot.dY, 
+            this.shoot.rotate,
+            scale.x
+            );
+
+        const tr = {
             dX:  Math.round(dX * pivot.h),
             dY:  Math.round(dY * pivot.v)
         };
-        
-        // expression en pourcentage de 
-        /* 
-                const translate = {
-                    dX:  Math.round((dX * pivot.h) * width),
-                    dY:  Math.round((dY * pivot.v) * height)
-                };
-        */       
-        const r = cropper.ratio;
-        
-        // ne fonctionne pas.
-        if (hasOrigin) {
-            this.origin = {
-                oX: ((width/2)  - translate.dX) * r , // ok en rotation
-                oY: ((height/2) - translate.dY) * r 
-            };
+        const trB = {
+            dX: this.shoot.oX, 
+            dY: this.shoot.oY, 
         }
+        // const translate = hasOrigin ? trO : tr;
+        // const translate = hasOrigin ? this.shoot : tr;
+        // const translate = hasOrigin ? trB : tr;
+        const translate =  {dX, dY};
+
+        this.origin = {
+            // oX: (width * 0.5)  - (trO.dX * hasOrigin),
+            // oY: (height * 0.5) - (trO.dY * hasOrigin),
+            // oX: (width * 0.5)  - (trB.dX * hasOrigin),
+            // oY: (height * 0.5) - (trB.dY * hasOrigin),
+            // oX: (width * 0.5)  - (this.shoot.oX * hasOrigin),
+            // oY: (height * 0.5) - (this.shoot.oY * hasOrigin),
+            oX: (width * 0.5) ,
+            oY: (height * 0.5) 
+        };
+      
         const {origin} = this;
+
+        const oX = Math.round(origin.oX *100) /100;
+        const oY = Math.round(origin.oY *100) /100;
+        const ddX = Math.round(translate.dX *100) /100;
+        const ddY = Math.round(translate.dY *100) /100;
+        console.log('origin', oX, oY );
+        console.log('translate', ddX, ddY );
+
 
         return this.callback({
             rendu: {
@@ -161,21 +196,25 @@ export default class {
 }
 
 
-
-/*
        
 //    x' = cos(theta)*(x-xc) - sin(theta)*(y-yc) + xc
 //    y' = sin(theta)*(x-xc) + cos(theta)*(y-yc) + yc
 
 // eslint-disable-next-line
-function rotation(cx, cy, x, y, angle) {
-    const radians = (Math.PI / 180) * angle;
-    const cos = Math.cos(radians);
-    const sin = Math.sin(radians);
+function rotatePoint(cx, cy, x, y, tx, ty, angle, scale) {
+    // cx, cy : point d'axe,
+    // x,y : point à tourner
+    // tx, ty : decalage à ajouter
+    // angle : angle de otation
+    // scale : facteurd'échelle
+    const radian = angle * RAD;
+    const cos = Math.cos(radian);
+    const sin = Math.sin(radian);
+    
     return{
-        rX : (cos * (x - cx)) + (sin * (y - cy)) + cx,
-        rY : (cos * (y - cy)) - (sin * (x - cx)) + cy
+        dX: tx + cx + (( cos * (x - cx) - sin * (y - cy) )) * scale,
+        dY: ty + cy + (( sin * (x - cx) + cos * (y - cy) )) * scale
     }
 }
 
-*/
+

@@ -81,6 +81,7 @@ export default class Controleur extends Component {
         const {origin} = rendu;
         const {getPointerPosition, onConteneurResize, getPivot} = this;
         const {conteneur, cropper, cropWrapper} = this.manip;
+        
         // eslint-disable-next-line
         const {pointers, action, message} = this.manip;
 
@@ -99,7 +100,7 @@ export default class Controleur extends Component {
                     <Reglages {...{getPivot}}/>
                     <Transformers {...{rendu}} />
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                    <Plotters {...{...pointers, ...conteneur, origin}}/>        
+                    <Plotters {...{...pointers, conteneur, cropper, origin}}/>        
             </div>
         );
     }

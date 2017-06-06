@@ -99,7 +99,14 @@ body {
   opacity: 0.5;
 }
 .layer-crop-img{
+  opacity: 0.7;
   outline: 4px inset yellow;
+}
+
+.img-wrap{
+  position: relative;
+  width: auto;
+  outline: 4px cyan solid;
 }
 
 @keyframes fadeIn {

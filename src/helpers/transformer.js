@@ -1,4 +1,4 @@
-import {DEG, START, MOVE, END, DONE} from '../config/constantes'
+import {RAD, START, MOVE, END, DONE} from '../config/constantes'
 
 // position initiale
 let debut = {posX: 0, posY:0};
@@ -19,6 +19,7 @@ let scale = 1;
 
 let rotateStart = 0;
 let scaleStart = 1;
+let translateStart = {dX: 0, dY: 0};
 
 // attenuer l'amplitude de la mise à l'échelle
 const sensibilite = 2;
@@ -26,11 +27,20 @@ const sensibilite = 2;
 export default function ({proxy, type, pointers, transform, pivot}) {
     const [device, action] = type.split(' ');
     const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
+    // console.log('ACTION', action, modifier);
+
     const pointer = pointers[+modifier];
     const axe = modifier && pointers[0];
-    const hasOrigin = modifier && (device=== 'mouse');
+    const hasOrigin = modifier && (device === 'mouse');
             
-    const {message, ...reste} = whatTransform({pointer, axe, action, transform, pivot});
+    const {message, ...reste} = whatTransform({
+        modifier, 
+        pointer, 
+        axe, 
+        action, 
+        transform, 
+        pivot
+    });
     const done = action === 'end' ? DONE : action;
     return {
         transform: reste,
@@ -42,24 +52,25 @@ export default function ({proxy, type, pointers, transform, pivot}) {
     }
 }
 
-function whatTransform({pointer, axe, ...reste}) {
-    return (axe) 
-        ? rotateAndScaleImage({pointer, axe, ...reste})
-        : translateImage({pointer, ...reste})
+function whatTransform({modifier, ...reste}) {
+    return (modifier) 
+        ? rotateAndScaleImage(reste)
+        : translateImage(reste)
 }
 
 
 function translateImage({pointer, action, transform, pivot}){
     let message;
+// console.log('translateImage');
 
     switch (action) {
         case START :
-           debut = pointer;
-           translation = transform.translate || {dX: 0, dY: 0};
-
            translate = transform.translate || {dX: 0, dY: 0};
            rotate = transform.rotate || 0;
            scale = transform.scale || 1;
+
+           debut = pointer;
+           translation = transform.translate || {dX: 0, dY: 0};
 
            message = 'c’est parti!' 
         break;
@@ -97,6 +108,8 @@ function translateImage({pointer, action, transform, pivot}){
 // L'axe doit etre le point central du crop -> remis à jour par resize.
 
 function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
+    // console.log('rotateAndScaleImage');
+    
     let message;
     const d = {
         dX: pointer.posX - axe.posX,
@@ -105,15 +118,17 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     
         switch (action) {
         case START :
+            translate = transform.translate || {dX: 0, dY: 0}; 
             rotate = transform.rotate || 0;
             scale = transform.scale || 1;
-            translate = transform.translate || {dX: 0, dY: 0}; 
             
+            translation = transform.translate || {dX: 0, dY: 0};
             rotation = transform.rotate || 0;
             scalation = transform.scale || 1;
             
             rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
+            translateStart = translate;
         break;
     
         case MOVE :
@@ -121,7 +136,7 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
 
             const stepScale = Math.sqrt(d.dX * d.dX + d.dY * d.dY);
 
-            rotate = rotation + Math.round((rotateStart - stepRotation) * DEG);
+            rotate = rotation + Math.round((rotateStart - stepRotation) * RAD);
             scale = scalation + (Math.round(stepScale - scaleStart) * 0.01 / sensibilite);
 
             // message = `step : ${Math.round(stepRotation *100) /100}, rotate : ${rotate}, scale : ${scale}, D : ${d.dX}, ${d.dY}, `
@@ -129,7 +144,11 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
         break;
     
         case END :
-            message = `Fini de tourner et de scaler.`
+         // appliquer une rotation à translate
+            const angle = rotation - rotate;
+            // translate = rotatePoint(d.dX, d.dY, 0, 0, d.dX, d.dY, angle, 1);
+
+            message = `rotation : ${angle} °`
         break;
     
         default:
@@ -140,7 +159,26 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
         message,
         translate,
         rotate,
+        // angle: rotation - rotate,
         scale
     };
     
 }
+
+function rotatePoint(cx, cy, x, y, tx, ty, angle, scale) {
+    // cx, cy : point d'axe,
+    // x,y : point à tourner
+    // tx, ty : decalage à ajouter
+    // angle : angle de otation
+    // scale : facteurd'échelle
+    const radian = angle * RAD;
+    const cos = Math.cos(radian);
+    const sin = Math.sin(radian);
+    
+    return{
+        dX: tx + cx + (( cos * (x - cx) - sin * (y - cy) )) * scale,
+        dY: ty + cy + (( sin * (x - cx) + cos * (y - cy) )) * scale
+    }
+}
+
+

@@ -3,23 +3,20 @@ import React from 'react';
 
 const LayerImage = ({rendu: transform, proxy, cropper}) => {
     
-    // const r = cropper.ratio;
-    const r = 1;
     const{
         translate: {dX = 0, dY = 0 }, 
-        // translate,
         rotate = 0, 
         scale = {x: 1, y: 1},
-        // origin: {oX = 0, oY = 0}
+        origin: {oX = 0, oY = 0}
     } = transform;
     
     const transformation = {
         width: `${proxy.width}px`,
         height: `${proxy.height}px`,
         transform: `
-        translate3d(${dX * r}px, ${dY * r}px, 0)
+        translate3d(${dX}px, ${dY}px, 0)
         rotate(${rotate}deg)
-        scale(${scale.x * r}, ${scale.y * r})
+        scale(${scale.x}, ${scale.y})
        `,
         // transformOrigin: `${oX}px  ${oY}px`
     };

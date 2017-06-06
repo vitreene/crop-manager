@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react'
 // bug : touch si l'on relache d'abord axe, 
 // -> pointer devient axe et decale l'image
+// bug shift+ clic, relacher le shitft et deplacer -> erreur,
 
 let mouseDown = false;
 
@@ -52,12 +53,14 @@ const Inputs = (props) => {
         e.stopPropagation();
         e.preventDefault();
 
+
         const {pageX, pageY, shiftKey} = e;
         const {contDX, contDY} = containerPos;
         const {width, height} = containerSize;
-        
+
         const midX = Math.round( (width * 0.5) );
         const midY = Math.round( (height * 0.5) );  
+
 
         const posX = Math.round( pageX - contDX );
         const posY = Math.round( pageY - contDY );
