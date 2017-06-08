@@ -6,6 +6,8 @@ const instance = {
             translate: {dX: 0, dY: 0},
             rotate: 0,
             scale: 1,
+            angle: 0,
+            origin: {dX: 0, dY: 0},
         },
     translatePc: {dX: 0, dY: 0},
     origin: {oX: 0, oY: 0},

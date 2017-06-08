@@ -18,6 +18,15 @@ export default class {
     log() {
         console.log('this', this);
     }
+    report(action) {
+        if (action !== DONE) return;
+        const {origin, transform:{translate, rotate, angle}} = this;
+        const oX = Math.round(origin.oX *100) /100;
+        const oY = Math.round(origin.oY *100) /100;
+        const ddX = Math.round(translate.dX *100) /100;
+        const ddY = Math.round(translate.dY *100) /100;
+        console.log('origin', oX, oY, '---- translate', ddX, ddY ,'rotate', rotate, 'angle',angle);
+    }
 
     init(transform, cadrage, proxy) {
         this.transform = transform;
@@ -55,6 +64,9 @@ export default class {
         this.translatePc = translateEnPourcents(manip.transform.translate, this.cropper);
         
         this.updateRendu(); 
+
+        
+        this.report(manip.action);
         cb && cb(manip.action);
     }
 
@@ -107,9 +119,6 @@ export default class {
     }
     
     updateRendu(callback){
-        /*
-        - mettre le transform à l'échelle locale
-        */
         const {transform, pivot, proxy, cropper, hasOrigin} = this;
         const {width, height} = proxy;
         const {dX, dY} = transform.translate;
@@ -123,64 +132,20 @@ export default class {
             x: transform.scale * pivot.v, 
             y: transform.scale * pivot.h
             // x: 1, 
-            // y: 1,
+            // y: 1
         };
 
-        
-        if (! hasOrigin) this.shoot = {
-            dX:  Math.round(dX * pivot.h),
-            dY:  Math.round(dY * pivot.v),
-            scale: scale.x,
-            rotate: rotate,
-            oX: Math.round(dX * pivot.h) * scale.x,
-            oY: Math.round(dY * pivot.v) * scale.x,
-        };
-
-
-        const trO = rotatePoint(
-            // this.shoot.oX, 
-            // this.shoot.oY, 
-            this.shoot.dX, 
-            this.shoot.dY, 
-            0, 0, 
-            this.shoot.dX, 
-            this.shoot.dY, 
-            this.shoot.rotate,
-            scale.x
-            );
-
-        const tr = {
-            dX:  Math.round(dX * pivot.h),
-            dY:  Math.round(dY * pivot.v)
-        };
-        const trB = {
-            dX: this.shoot.oX, 
-            dY: this.shoot.oY, 
-        }
-        // const translate = hasOrigin ? trO : tr;
-        // const translate = hasOrigin ? this.shoot : tr;
-        // const translate = hasOrigin ? trB : tr;
         const translate =  {dX, dY};
 
         this.origin = {
-            // oX: (width * 0.5)  - (trO.dX * hasOrigin),
-            // oY: (height * 0.5) - (trO.dY * hasOrigin),
-            // oX: (width * 0.5)  - (trB.dX * hasOrigin),
-            // oY: (height * 0.5) - (trB.dY * hasOrigin),
-            // oX: (width * 0.5)  - (this.shoot.oX * hasOrigin),
-            // oY: (height * 0.5) - (this.shoot.oY * hasOrigin),
-            oX: (width * 0.5) ,
-            oY: (height * 0.5) 
+            // oX: (width * 0.5) + transform.origin.dX, // decalage ok
+            // oY: (height * 0.5) + transform.origin.dY,
+            oX: (width * 0.5) - (dX * hasOrigin), // centre rotation ok
+            oY: (height * 0.5) - (dY * hasOrigin),
         };
       
         const {origin} = this;
 
-        const oX = Math.round(origin.oX *100) /100;
-        const oY = Math.round(origin.oY *100) /100;
-        const ddX = Math.round(translate.dX *100) /100;
-        const ddY = Math.round(translate.dY *100) /100;
-        console.log('origin', oX, oY );
-        console.log('translate', ddX, ddY );
 
 
         return this.callback({
