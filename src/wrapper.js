@@ -12,7 +12,7 @@ export default  class Wrapper extends Component {
         this.getRect = this.getRect.bind(this);
         this.resizeContainer = this.resizeContainer.bind(this);
     }
-    state = { isLoading: true}
+    // state = { isLoading: true}
 
     debounceResizeContainer = null
 
@@ -49,12 +49,12 @@ export default  class Wrapper extends Component {
             })
             // console.log('containerSize', width, height);
             
-            this.setState({isLoading: false});
+            // this.setState({isLoading: false});
         }
     }
 
     render() {
-        const {isLoading} = this.state;
+        // const {isLoading} = this.state;
         const {children} = this.props;
 
         return (
@@ -62,13 +62,16 @@ export default  class Wrapper extends Component {
                 className="manip-wrapper" 
                 ref={ref => this.wrapper = ref}  >
 
-                    { isLoading 
-                        ? <Loading/>
-                        : children
-                    }
+                    { children}
             </div>
 
         );
     }
 }
 
+/*
+                    { isLoading 
+                        ? <Loading/>
+                        : children
+                    }
+*/

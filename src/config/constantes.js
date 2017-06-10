@@ -4,5 +4,6 @@ export const START = 'start'
 export const MOVE = 'move'
 export const END = 'end'
 export const DONE = 'done'
+export const IDLE = 'idle'
 
 export const PADDING = 5

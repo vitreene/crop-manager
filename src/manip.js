@@ -3,9 +3,9 @@ import React, {Component, PropTypes} from 'react';
 
 import Controleur from './controleur'
 
-import initial from './config/initial'
 import manipImage from './Store'
 
+import initial from './config/initial'
 const image = initial.image;
 const preset = initial.preset;
 
@@ -19,6 +19,11 @@ export default class Manip extends Component {
         this.prep = this.prep.bind(this);
     }
 
+// utiliser le state que pour déclencher les mises à jour :
+// -> upload,
+// -> change preset,
+// ->  reglages 
+// pas lorsque la position est mise à jour  depuis Instance
     state = {
         proxy:{},
         cadrage:{},
@@ -36,6 +41,9 @@ export default class Manip extends Component {
     }
 
     prep(manip) {
+
+        console.log('PREP',manip); 
+
         /*
         prep pourrait etre le point d'entrée commun de plusieurs opérations d'export.
         il recevrait des données composées d'une action et de datas.

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {RAD, DEG, START, MOVE, END, DONE} from '../config/constantes'
 
 // position initiale

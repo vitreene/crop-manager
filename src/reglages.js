@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component, PropTypes} from 'react';
 
 import Icon from './UI/icones'
@@ -7,7 +8,8 @@ import Text from './UI/text'
 
 export default class Reglages extends Component {
      static propTypes = {
-        getPivot: PropTypes.func,
+         pivot: PropTypes.object,
+         getPivot: PropTypes.func,
      }    
     state = { 
         h : false,
@@ -20,6 +22,16 @@ export default class Reglages extends Component {
         this.onCover = this.onCover.bind(this);
     }
 
+    componentWillReceiveProps({pivot}) {
+        const {h, v} = this.state;
+        // transformer (-1)/(+1) en true/false (true = checked)
+        const newPivot = {
+            h: (pivot.h === -1),
+            v: (pivot.v === -1),
+        };
+        if ( newPivot.h === h && newPivot.v === v) return;
+        this.setState({...newPivot});
+    }
     onPivot(e){
         const {checked, name} = e.target;
         const {getPivot} = this.props;
@@ -34,22 +46,8 @@ export default class Reglages extends Component {
     }
 
     onCover(e){
-        // si re-clic sur un bouton radio, la valeur passe à hiddenvalue
-        const hiddenValue = 'libre' ;
-        const {name, type, value} = e.target ;
-        const {zone, placement='', onSaisie} = this.props ;
-        const newValue = (placement === value) ? hiddenValue : value ;
-
-        // AJOUTER l'action !
-
-        // const out = {
-        // target:{
-        //     name,
-        //     type,
-        //     value:newValue
-        // }
-        // };
-        // onSaisie(out) ;
+        const {transformPreset} = this.props;
+        return transformPreset(e.target.name);
     }
 
     render() {
@@ -101,7 +99,7 @@ export default class Reglages extends Component {
                 <Text small color={'white'}>Tourner</Text>
                 </label>
 
-                <div margin="auto"/>
+                <div style={{margin: 'auto'}}/>
 
                 <input
                 className="input-hidden"

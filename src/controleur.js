@@ -8,12 +8,16 @@ import Reglages from './reglages'
 import Loading from './Loading'
 
 
-import {DONE} from './config/constantes'
+import {DONE, IDLE} from './config/constantes'
 
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './helpers/infos'
 
 import Instance from './Instance'
+
+const manip = new Instance({
+    action: 'Ta-Da-dammm'
+});
 
 export default class Controleur extends Component {
      static propTypes = {
@@ -23,67 +27,81 @@ export default class Controleur extends Component {
         transform: PropTypes.object,
         prep: PropTypes.func,
      }
+
     constructor(props) {
         super(props);
-
         this.getPointerPosition = this.getPointerPosition.bind(this);
         this.getPivot = this.getPivot.bind(this);
+        this.transformPreset = this.transformPreset.bind(this);
         this.onConteneurResize = this.onConteneurResize.bind(this);
-        this.sendPosition = this.sendPosition.bind(this);
-
-        this.setState = this.setState.bind(this);
-        this.manip = new Instance({
-            callback: this.setState,
-            action: 'Ta-Da-dammm'
-        });
     }
+
     state = {
         rendu: {
             translate: {dX: 0, dY: 0},
             rotate: 0,
             scale: 1,
             origin: {oX: 0, oY: 0},
-        }
+        },
+        action: IDLE
     }
   
     componentWillMount() {
-        this.manip.log();
+        manip.log();
     }
 
     componentWillReceiveProps(newProps) {
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
         const {transform, proxy, cadrage} = newProps;
-        this.manip.init(transform, cadrage, proxy);
+        this.setState( manip.init(transform, cadrage, proxy) );
     }
 
-    sendPosition(action){
-        if (action !== DONE) return;
-        console.log('sendPosition', action);
-        this.props.prep(this.manip);
+    componentDidUpdate() {
+        if (this.state.action !== DONE) return;
+        
+        console.log('sendPosition', this.state.action);
+        this.props.prep(manip.export());
+        this.setState({action: IDLE});
     }
 
     onConteneurResize(conteneur) {
-        this.manip.resize(conteneur);
+        this.setState( 
+            manip.resize(conteneur) 
+        );
     }
 
     getPivot({h,v}){
-        this.manip.pivoter(h,v, this.sendPosition );   
+       this.setState( 
+           manip.pivoter(h,v) 
+        );   
     }
     
     getPointerPosition({type, pointers}) {
-        this.manip.updatePosition(type, pointers, this.sendPosition);
+        this.setState( 
+            manip.updatePosition(type, pointers) 
+        );
     }
     
+    transformPreset(action){
+        this.setState( 
+            manip.transformPreset(action) 
+        );
+    }
     render() {
-        const {proxy, isLoading} = this.manip;
+        const {proxy, isLoading} = manip;
         const {rendu} = this.state;
         const {origin} = rendu;
-        const {getPointerPosition, onConteneurResize, getPivot} = this;
-        const {conteneur, cropper, cropWrapper} = this.manip;
+        const {
+            getPointerPosition, 
+            onConteneurResize, 
+            getPivot, 
+            transformPreset
+        } = this;
+        const {conteneur, cropper, cropWrapper, pivot} = manip;
         
         // eslint-disable-next-line
-        const {pointers, action, message} = this.manip;
+        const {pointers, action, message} = manip;
 
         return (
             <div className="manip-conteneur">
@@ -97,10 +115,10 @@ export default class Controleur extends Component {
                     </div> )
                 }
                 </Wrapper>
-                    <Reglages {...{getPivot}}/>
+                    <Reglages {...{getPivot, pivot, transformPreset}}/>
                     <Transformers {...{rendu}} />
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                    <Plotters {...{...pointers, conteneur, cropper, origin}}/>        
+                    <Plotters {...{...pointers, conteneur, cropper, origin}}/> 
             </div>
         );
     }

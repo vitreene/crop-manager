@@ -1,12 +1,11 @@
 /* eslint-disable */
 import defaults from '../config/instance-init'
-import {RAD, DONE} from '../config/constantes'
+import {DONE} from '../config/constantes'
 
 import transformer from '../helpers/transformer'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
 import {translateEnPourcents, translateEnPixels} from '../helpers/translate-pc-px'
-import initTransform from '../Store/transform'
 
 
 export default class {
@@ -19,15 +18,6 @@ export default class {
     log() {
         console.log('this', this);
     }
-    report(action) {
-        if (action !== DONE) return;
-        const {origin, transform:{translate, rotate, angle}} = this;
-        const oX = Math.round(origin.oX *100) /100;
-        const oY = Math.round(origin.oY *100) /100;
-        const ddX = Math.round(translate.dX *100) /100;
-        const ddY = Math.round(translate.dY *100) /100;
-        console.log('origin', oX, oY, '---- translate', ddX, ddY ,'rotate', rotate, 'angle',angle);
-    }
 
     init(transform, cadrage, proxy) {
         this.transform = transform;
@@ -38,10 +28,10 @@ export default class {
         this._cropResize();      
         this._imageResize();
         // this._translateResize();
-        return this.updateRendu(); 
+        this.updateRendu(); 
     }
 
-    updatePosition(type, pointers){
+    updatePosition(type, pointers, cb){
         const {proxy, transform, pivot} = this;
         const manip = transformer({
             proxy,
@@ -62,41 +52,30 @@ export default class {
         */
         Object.keys(manip).map(  key => this[key] = manip[key] );
 
-        // this.report(manip.action);        
-        return this.updateRendu(manip.action);      
+        this.translatePc = translateEnPourcents(manip.transform.translate, this.cropper);
+        
+        this.updateRendu(); 
+        cb && cb(manip.action);
     }
 
     resize(conteneur) {
         this.conteneur = conteneur;
-        if (this.isLoading) return {rendu: this.transform}
+        if (this.isLoading) return false
         
         this._cropResize();
         this._imageResize();
         this._translateResize();
-        return this.updateRendu(); 
+        this.updateRendu(); 
     }
 
-    pivoter(h,v) {
+    pivoter(h,v, cb) {
         // transformer true/false en (-1)/(+1) (true = checked)
         this.pivot = {
             h: h ? -1 : 1,
             v: v ? -1 : 1,
         };
-        return this.updateRendu(DONE); 
-    }
-
-    transformPreset(action) {
-        const {image, ...cadrage} = this.cadrage;
-        switch (action) {
-            case 'cover':
-                this.transform = initTransform(cadrage, image) ;
-                this.pivot = {h: 1, v: 1};
-                break;
-        
-            default:
-                break;
-        }
-        return this.updateRendu(DONE); 
+        this.updateRendu(); 
+        cb && cb(DONE);
     }
 
     _cropResize() {
@@ -127,18 +106,10 @@ export default class {
         );
     }
     
-    export(){
-        const {transform: {rotate,scale}, pivot} = this;
-        const translate = translateEnPourcents(this.transform.translate, this.cropper);
-        return {
-            translate,
-            rotate,
-            scale, 
-            pivot,
-        }
-    }
-
-    updateRendu(action){
+    updateRendu(callback){
+        /*
+        - mettre le transform à l'échelle locale
+        */
         const {transform, pivot, proxy, cropper, hasOrigin} = this;
         const {width, height} = proxy;
         const {dX, dY} = transform.translate;
@@ -151,33 +122,76 @@ export default class {
         const scale = {
             x: transform.scale * pivot.v, 
             y: transform.scale * pivot.h
-            // x: 1, 
-            // y: 1
         };
 
-      const translate = {
+        // const tr = {
+        //     dX:  Math.round(dX * pivot.h),
+        //     dY:  Math.round(dY * pivot.v)
+        // };
+        
+        const translate = {
+            // dX: Math.round(dX * pivot.h) * !hasOrigin,
+            // dY: Math.round(dY * pivot.v) * !hasOrigin,
             dX:  Math.round(dX * pivot.h),
             dY:  Math.round(dY * pivot.v)
          };
+        
+        if (! hasOrigin) this.shoot = {
+            scale: scale.x,
+            dX:  Math.round(dX * pivot.h),
+            dY:  Math.round(dY * pivot.v),
+            rotate,
+            oX: Math.round(dX * pivot.h) / scale.x,
+            oY: Math.round(dY * pivot.v) / scale.x,
+        };
 
         this.origin = {
-            // oX: (width * 0.5) + transform.origin.dX, // decalage ok
-            // oY: (height * 0.5) + transform.origin.dY,
-            oX: (width * 0.5) - (dX * hasOrigin), // centre rotation ok
-            oY: (height * 0.5) - (dY * hasOrigin),
+            oX: (width * 0.5)  - (this.shoot.oX * hasOrigin),
+            oY: (height * 0.5) - (this.shoot.oY * hasOrigin) 
+            // oX: ((width/2)  - (tr.dX * scale.x  * hasOrigin)),
+            // oY: ((height/2) - (tr.dY* scale.x * hasOrigin)) 
+            // oX: width/2 - dec,
+            // oY: height/2 - dec
         };
       
         const {origin} = this;
 
-        return {
+        // const oX = Math.round(origin.oX *100) /100;
+        // const oY = Math.round(origin.oY *100) /100;
+
+    //   console.log('origin', oX, oY );
+    //   console.log('translate',translate.dX, translate.dY,tr.dX, tr.dY );
+    //   console.log('proxy',width, height, scale.x, width*scale.x,  );
+      // 624,416 // 437,291
+
+        return this.callback({
             rendu: {
                 translate, 
                 rotate, 
                 scale, 
                 origin
-            },
-            action
-        };
+            }
+        });
 
     }
 }
+
+
+
+/*
+       
+//    x' = cos(theta)*(x-xc) - sin(theta)*(y-yc) + xc
+//    y' = sin(theta)*(x-xc) + cos(theta)*(y-yc) + yc
+
+// eslint-disable-next-line
+function rotation(cx, cy, x, y, angle) {
+    const radians = (Math.PI / 180) * angle;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+    return{
+        rX : (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        rY : (cos * (y - cy)) - (sin * (x - cx)) + cy
+    }
+}
+
+*/

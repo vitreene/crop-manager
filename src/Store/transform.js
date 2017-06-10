@@ -3,8 +3,8 @@ export default function (cadrage, image) {
     const scale = res.x;
     return {
         origin: {dX:0, dY:0},
-        translate: {dX:50, dY:40},
-        rotate: 25,
+        translate: {dX:0, dY:0},
+        rotate: 0,
         scale
     }
 }
