@@ -227,6 +227,7 @@ export function tourneEtDecale() {
         const cos = Math.cos(radian);
         const sin = Math.sin(radian);
         return{
+            // attention au sens de progression de y html = + vers le bas
             // x' = x*cos b - y*sin b
             // y' = x*sin b + y*cos b
             dX: centre.dX + ( cos * rx - sin * ry ) * scale,

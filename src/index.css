@@ -118,15 +118,30 @@ body {
   }
 }
 
-/*////////////////////////*/
+/*//  UI  //////////////////////*/
 
 .manip-reglages-icons{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   height: 44px;
-  border: thin solid cyan;
+  /*border: thin solid cyan;*/
 }
+
+.label-reglage {
+    color: cadetblue;
+    margin: 0.5rem;
+}
+.icon-small {
+  width: 2rem;
+  height: 2rem;
+}
+
+.input-hidden{
+  display: none;
+  }
+
+/*////////////////////////*/
 
 
 

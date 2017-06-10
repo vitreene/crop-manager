@@ -1,12 +1,6 @@
-/* eslint-disable */
 import React, {Component, PropTypes} from 'react';
 
-import {
-  MiroirH,
-  MiroirV,
-  Cover,
-  Contains
-} from './UI'
+import Icon from './UI/icones'
 
 import Text from './UI/text'
 
@@ -61,11 +55,10 @@ export default class Reglages extends Component {
     render() {
         const params = {maxScale:2.8, minScale:0.4} ;
         const miroir = this.state ;
-        const {zone, placement=''} = this.props ;
-        const placementPath = `metas.ikono.$[zone:${zone}].placement` ;
+        const {placement=''} = this.props ;
 
         return (
-            <div className="manip-reglages-icons">
+            <div className="manip-reglages-icons" >
               <input
                 className="input-hidden"
                 id="miroir-h"
@@ -74,8 +67,9 @@ export default class Reglages extends Component {
                 checked={this.state.h}
                 onChange={this.onPivot}
                 />
-                <label htmlFor="miroir-h">
-                <MiroirH checked={this.state.h}/>
+                <label htmlFor="miroir-h"
+                className="label-reglage">
+                    <Icon name="pivotH" checked={this.state.h} />
                 <Text small color={'white'}>Miroir hztl</Text>
                 </label>
 
@@ -87,36 +81,56 @@ export default class Reglages extends Component {
                 checked={this.state.v}
                 onChange={this.onPivot}
                 />
-                <label htmlFor="miroir-v">
-                <MiroirV checked={this.state.v} />
+                <label htmlFor="miroir-v"
+                className="label-reglage">
+                    <Icon name="pivotV" checked={this.state.v} />
                 <Text small color={'white'}>Miroir vtcl</Text>
                 </label>
+               
+                <input
+                className="input-hidden"
+                id="rotate90"
+                name="rotate90"
+                type="checkbox"
+                checked={ ()=>{} }
+                onChange={ ()=>{} }
+                />
+                <label htmlFor="rotate90"
+                className="label-reglage">
+                    <Icon name="rotate90" checked={this.state.v} />    
+                <Text small color={'white'}>Tourner</Text>
+                </label>
+
+                <div margin="auto"/>
 
                 <input
                 className="input-hidden"
-                name={placementPath}
+                name="cover"
                 id="visuel-cover"
                 value='cover'
                 type="radio"
                 checked={placement === 'cover'}
                 onChange={this.onCover}
                 />
-                <label htmlFor="visuel-cover">
-                <Cover  checked={placement === 'cover'} />
+                <label 
+                htmlFor="visuel-cover"
+                className="label-reglage">
+                     <Icon name="cover" checked={placement === 'cover'} />
                 <Text small color={'white'}>Couvrir</Text>
                 </label>
 
                 <input
                 className="input-hidden"
-                name={placementPath}
+                name="contains"
                 id="visuel-contains"
                 value='contains'
                 type="radio"
                 checked={placement === 'contains'}
                 onChange={this.onCover}
                 />
-                <label htmlFor="visuel-contains">
-                <Contains  checked={placement === 'contains'} />
+                <label htmlFor="visuel-contains"
+                className="label-reglage">
+                      <Icon name="contains" checked={placement === 'contains'} />
                 <Text small color={'white'}>Contenir</Text>
                 </label>
 
