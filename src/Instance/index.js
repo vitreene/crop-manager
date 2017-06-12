@@ -2,7 +2,8 @@
 import defaults from '../config/instance-init'
 import {RAD, DONE} from '../config/constantes'
 
-import transformer from '../helpers/transformer'
+import transformer from '../helpers/transformer-origin'
+// import transformer from '../helpers/transformer'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
 import {translateEnPourcents, translateEnPixels} from '../helpers/translate-pc-px'
@@ -87,15 +88,9 @@ export default class {
 
     transformPreset(action) {
         const {image, ...cadrage} = this.cadrage;
-        switch (action) {
-            case 'cover':
-                this.transform = initTransform(cadrage, image) ;
-                this.pivot = {h: 1, v: 1};
-                break;
-        
-            default:
-                break;
-        }
+        this.transform = initTransform(cadrage, image, action);
+        this.pivot = {h: 1, v: 1};
+
         return this.updateRendu(DONE); 
     }
 

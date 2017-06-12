@@ -42,7 +42,7 @@ export default class Manip extends Component {
 
     prep(manip) {
 
-        console.log('PREP',manip); 
+        // console.log('PREP',manip); 
 
         /*
         prep pourrait etre le point d'entrée commun de plusieurs opérations d'export.

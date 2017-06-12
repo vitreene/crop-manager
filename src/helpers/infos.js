@@ -58,25 +58,20 @@ export function Plotters({
     cropper,
     origin
 }) {
-    const {containerSize, containerPos} = conteneur;
+    const {containerSize/*, containerPos*/} = conteneur;
     if (containerSize.height === 0 && containerSize.width === 0 ) return null;
     const middle = {
         top: containerSize.height * 0.5, 
         left: containerSize.width * 0.5, 
         color: 'blue'
     };
-    // console.log('middle', cropper, middle, containerSize);
-    
-    // const oX = origin.oX + cropper.x;
-    // const oY = origin.oY + cropper.y;
-    const oX = origin.oX;
-    const oY = origin.oY;
-    // const oX = origin.oX + containerPos.contDX;
-    // const oY = origin.oY + containerPos.contDY;
+
+    // const oX = origin.oX;
+    // const oY = origin.oY;
+
     const point = {top: pointer.posY, left: pointer.posX};
     const pointAxe = {top: axe.posY, left: axe.posX};
-    const pOrigin = {top: oY, left: oX, color: 'green'};
-    // const pOrigin = {top: origin.oY, left: origin.oX, color: 'green'};
+    // const pOrigin = {top: oY, left: oX, color: 'green'};
 
     return (
     <div>

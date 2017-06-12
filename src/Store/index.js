@@ -26,10 +26,12 @@ const manipImage = (function() {
         })
     }
     // update transform
+    // eslint-disable-next-line
     function update(params) {
         
     }
     // update Cropper
+    // eslint-disable-next-line
     function updateCropper(params) {
         
     }

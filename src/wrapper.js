@@ -1,10 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import Loading from './Loading'
 
 const isClient = typeof window !== "undefined";
         
 export default  class Wrapper extends Component {
-     static propTypes = {
+    static propTypes = {
         onConteneurResize: PropTypes.func,
      }
     constructor(props) {
@@ -12,7 +11,6 @@ export default  class Wrapper extends Component {
         this.getRect = this.getRect.bind(this);
         this.resizeContainer = this.resizeContainer.bind(this);
     }
-    // state = { isLoading: true}
 
     debounceResizeContainer = null
 
@@ -47,31 +45,19 @@ export default  class Wrapper extends Component {
                 containerSize: {width, height},
                 containerPos: {contDX, contDY},
             })
-            // console.log('containerSize', width, height);
-            
-            // this.setState({isLoading: false});
+
         }
     }
 
     render() {
-        // const {isLoading} = this.state;
         const {children} = this.props;
-
         return (
-            <div 
-                className="manip-wrapper" 
-                ref={ref => this.wrapper = ref}  >
-
-                    { children}
+            <div
+            className="manip-wrapper" 
+            ref={ref => this.wrapper = ref}>
+                {children}
             </div>
 
         );
     }
 }
-
-/*
-                    { isLoading 
-                        ? <Loading/>
-                        : children
-                    }
-*/

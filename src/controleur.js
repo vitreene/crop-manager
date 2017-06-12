@@ -60,7 +60,7 @@ export default class Controleur extends Component {
     componentDidUpdate() {
         if (this.state.action !== DONE) return;
         
-        console.log('sendPosition', this.state.action);
+        // console.log('sendPosition', this.state.action);
         this.props.prep(manip.export());
         this.setState({action: IDLE});
     }

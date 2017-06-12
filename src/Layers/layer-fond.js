@@ -7,7 +7,6 @@ const LayerImage = ({rendu: transform, proxy, cropper}) => {
         translate: {dX = 0, dY = 0 }, 
         rotate = 0, 
         scale = {x: 1, y: 1},
-        origin: {oX = 0, oY = 0}
     } = transform;
     
     const transformation = {
@@ -17,17 +16,15 @@ const LayerImage = ({rendu: transform, proxy, cropper}) => {
         translate3d(${dX}px, ${dY}px, 0)
         rotate(${rotate}deg)
         scale(${scale.x}, ${scale.y})
-       `,
-        // transformOrigin: `${oX}px  ${oY}px`
+       `
     };
 
     return (
         <div className="layer-fond">
-            <img 
+            <img role="presentation"
                 src={proxy.src} 
                 style={transformation} 
                 className="layer-fond-img"
-                role="presentation"
                 />
         </div>
 )};

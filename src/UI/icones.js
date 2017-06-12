@@ -4,19 +4,6 @@ const fond = (classe) => (
     <path className={'icon-fond ' + classe} d="M1 1h50v50.2H1z"/>
 );
 
-export default function Icon(props) {
-  const {name, classe='', checked=false} = props ;
-  const iconClassName = `icon-${name}`
-  return(
-<svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 53" clipRule="evenodd" strokeLinejoin="round"  >
-
-    {checked && fond(classe)}
-    {icones[name]}
-
-</svg>
-
-)}
-
 
 const icones = {
   pivotH: (
@@ -53,3 +40,17 @@ const icones = {
   )
 
 }
+
+export default function Icon(props) {
+  const {name, classe='', checked=false} = props ;
+  const iconClassName = `icon-${name}`
+  return(
+<svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 53" clipRule="evenodd" strokeLinejoin="round"  >
+
+    {checked && fond(classe)}
+    {icones[name]}
+
+</svg>
+
+)}
+

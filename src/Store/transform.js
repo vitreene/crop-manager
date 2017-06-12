@@ -1,13 +1,38 @@
-export default function (cadrage, image) {
-    const res = cover(cadrage, image);
+export default function (cadrage, image, preset = 'cover') {
+
+    let res;
+
+    switch (preset) {
+        case 'cover':
+            res = cover(cadrage, image); 
+            break;
+    
+        case 'contains':
+            res = contains(cadrage, image); 
+            break;
+    
+        default:
+            break;
+    }
+
+    // eslint-disable-next-line
     const scale = res.x;
     return {
         origin: {dX:0, dY:0},
         translate: {dX:0, dY:0},
         rotate: 0,
-        scale
+         scale
     }
+    // return {
+    //     origin: {dX:0, dY:0},
+    //     translate: {dX:125, dY:-45},
+    //     rotate: 0,
+    //     scale: 1
+    // }
 }
+
+export function contains(cadrage, image){}
+
 
 export function cover(cadrage, image){
     // renvoie l'échelle nécessaire pour que l'image couvre entièrement le cadre et la marge.
