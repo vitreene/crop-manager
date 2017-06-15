@@ -20,16 +20,12 @@ export function Pointers ({
         { axe && 
             <div>axe x: {axe.posX}, y: {axe.posY} </div>
         }
-        { transform.origin && 
-        <div>origin oX : {transform.origin.oX}, oY : {transform.origin.oY}</div>
-        }
+      
         </div>
     )
 }
 
 export function Transformers( {rendu: transform}) {
-    const oX = Math.round(transform.origin.oX *100) /100;
-    const oY = Math.round(transform.origin.oY *100) /100;
     const scale = Math.round(transform.scale.x *100) /100;
     return (
     <div className="pointers-infos">
@@ -42,9 +38,6 @@ export function Transformers( {rendu: transform}) {
         { transform.scale && 
         <div>scale: {scale}</div>
         }
-        { transform.origin && 
-        <div>origin oX : {oX}, oY : {oY}</div>
-        }
     </div>
 )
 }
@@ -56,7 +49,6 @@ export function Plotters({
     pointer, 
     conteneur,
     cropper,
-    origin
 }) {
     const {containerSize/*, containerPos*/} = conteneur;
     if (containerSize.height === 0 && containerSize.width === 0 ) return null;
@@ -66,17 +58,12 @@ export function Plotters({
         color: 'blue'
     };
 
-    // const oX = origin.oX;
-    // const oY = origin.oY;
-
     const point = {top: pointer.posY, left: pointer.posX};
     const pointAxe = {top: axe.posY, left: axe.posX};
-    // const pOrigin = {top: oY, left: oX, color: 'green'};
 
     return (
     <div>
         <span className="plot" style={middle}>&#215;</span>
-        {/*<span className="plot" style={pOrigin}>&#215;</span>*/}
         <span className="plot" style={point}>&#x2299;</span>
         <span className="plot" style={pointAxe}>&#x22a1;</span>
     </div>

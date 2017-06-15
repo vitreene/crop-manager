@@ -25,7 +25,9 @@ export default class Controleur extends Component {
         proxy: PropTypes.object,
         cadrage: PropTypes.object,
         transform: PropTypes.object,
+        updatePosition: PropTypes.func,
         prep: PropTypes.func,
+        action: PropTypes.string,
      }
 
     constructor(props) {
@@ -53,7 +55,9 @@ export default class Controleur extends Component {
     componentWillReceiveProps(newProps) {
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
-        const {transform, proxy, cadrage} = newProps;
+        const {action, transform, proxy, cadrage} = newProps;
+        // console.log('transform, proxy, cadrage', action, transform, proxy, cadrage);
+        (action === DONE) &&
         this.setState( manip.init(transform, cadrage, proxy) );
     }
 
@@ -61,7 +65,7 @@ export default class Controleur extends Component {
         if (this.state.action !== DONE) return;
         
         // console.log('sendPosition', this.state.action);
-        this.props.prep(manip.export());
+        this.props.updatePosition(manip.export());
         this.setState({action: IDLE});
     }
 
@@ -91,7 +95,6 @@ export default class Controleur extends Component {
     render() {
         const {proxy, isLoading} = manip;
         const {rendu} = this.state;
-        const {origin} = rendu;
         const {
             getPointerPosition, 
             onConteneurResize, 
@@ -118,7 +121,7 @@ export default class Controleur extends Component {
                     <Reglages {...{getPivot, pivot, transformPreset}}/>
                     <Transformers {...{rendu}} />
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                    <Plotters {...{...pointers, conteneur, cropper, origin}}/> 
+                    <Plotters {...{...pointers, conteneur, cropper}}/> 
             </div>
         );
     }

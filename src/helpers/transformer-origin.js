@@ -26,12 +26,9 @@ let scale = 1;
 
 let rotateStart = 0;
 let scaleStart = 1;
-let translateStart = {dX: 0, dY: 0};
+// let translateStart = {dX: 0, dY: 0};
 
 const ted = tourneEtDecale();
-let origin = {dX: 0, dY: 0};
-let cp = {dX: 0, dY: 0};
-let pp = {dX: 0, dY: 0};
 
 let unit = {dX: 0, dY: 0};
 
@@ -40,12 +37,12 @@ const sensibilite = 2;
 
 export default function ({proxy, type, pointers, transform, pivot}) {
     const [device, action] = type.split(' ');
-    const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
-    // console.log('ACTION', action, modifier);
 
+    const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
     const pointer = pointers[+modifier];
     const axe = modifier && pointers[0];
-    const hasOrigin = modifier && (device === 'mouse');
+
+    // const hasOrigin = modifier && (device === 'mouse');
     // angle = 0;
             
     const {message, ...reste} = whatTransform({
@@ -56,15 +53,14 @@ export default function ({proxy, type, pointers, transform, pivot}) {
         transform, 
         pivot
     });
-    
     const done = action === 'end' ? DONE : action;
+
     return {
         transform: reste,
         pointers: {pointer, axe}, 
         action: done, 
         device,          
         message,
-        hasOrigin
     }
 }
 
@@ -114,12 +110,9 @@ function translateImage({pointer, action, transform, pivot}){
 
     return {
         message,
-        origin,
         translate,
         rotate,
-        scale,
-        angle: 0
-        // info: {debut, arrivee}
+        scale
         };
 
 }
@@ -127,7 +120,6 @@ function translateImage({pointer, action, transform, pivot}){
 
 function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     // console.log('rotateAndScaleImage');
-    let angle = 0;
     let message;
     const d = {
         dX: pointer.posX - axe.posX,
@@ -135,27 +127,26 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     };
 
 
-        switch (action) {
+    switch (action) {
         case START :
-
         // simuler transform-origin
 
-        unit = {
-            dX: transform.translate.dX / transform.scale,
-            dY: transform.translate.dY / transform.scale,
-        };
+            unit = {
+                dX: transform.translate.dX / transform.scale,
+                dY: transform.translate.dY / transform.scale,
+            };
 
             translate = transform.translate || 0;
             rotate = transform.rotate || 0;
             scale = transform.scale || 1;
             
-            translation = transform.translate || {dX: 0, dY: 0};
+            // translation = transform.translate || {dX: 0, dY: 0};
             rotation = transform.rotate || 0;
             scalation = transform.scale || 1;
             
             rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
-            translateStart = transform.translate || {dX: 0, dY: 0};
+            // translateStart = transform.translate || {dX: 0, dY: 0};
         break;
     
         case MOVE :
@@ -168,18 +159,11 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
             scale = scalation + relScale;
             rotate = rotation + relRotate;
 
-            const translated =  ted.decaleAndScale(unit, scale);
-            const tOrigin = ted.decale({dX: 0, dY: 0},translated, -1);
-            const centerPoint =
-                ted.tourne(
-                    tOrigin,
-                    pp,
-                    relRotate,
-                   0
-                    // relScale
-                );
-                // console.log('translated, origin', translated, origin,translateStart );
-                
+            const translated = ted.decaleAndScale(unit, scale);
+            const origin = ted.decale({dX: 0, dY: 0},translated, -1);
+            const centre = {dX: 0, dY: 0};
+            const centerPoint = ted.tourne(origin, centre, relRotate);
+
             translate = ted.decale(translated, centerPoint, 1);
 
             message = `axe : ${axe.posX}, ${axe.posY}, D : ${d.dX}, ${d.dY} `
@@ -194,9 +178,6 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     
     return {
         message,
-        origin,
-        angle,
-
         translate,
         rotate,
         scale
@@ -206,48 +187,40 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
 
 
 export function tourneEtDecale() {
-    function tourne (centre, point, angle, scale) {
+    function tourne (centre, point, angle) {
         // centre: point d'axe,
         // point : point à tourner
         // angle : angle de rotation
-        // scale : facteurd'échelle
         const radian = angle * RAD;
         const cos = Math.cos(radian);
         const sin = Math.sin(radian);
 
         const rx = point.dX - centre.dX;
         const ry = point.dY - centre.dY;
-
         return{
-            // attention au sens de progression de y html = + vers le bas
-            // et les valeurs de rotation inversées
             // x' = x*cos b - y*sin b
             // y' = x*sin b + y*cos b
-            dX: centre.dX + ( cos * rx - sin * ry ) * (1 + scale),
-            dY: centre.dY + ( sin * rx + cos * ry ) * (1 + scale)
+            dX: centre.dX + ( cos * rx - sin * ry ),
+            dY: centre.dY + ( sin * rx + cos * ry )
         }
     }
-    // function reTourne (centre, point, angle, scale) {
-    //     return tourne(centre, point, -angle, 1/scale)
-    // }
 
     function decale(point, translate, sens = 1) {
-      return{
-        dX: point.dX + (translate.dX * sens),
-        dY: point.dY + (translate.dY * sens)
-        }
+        return{
+            dX: point.dX + (translate.dX * sens),
+            dY: point.dY + (translate.dY * sens)
+            }
     }
 
     function decaleAndScale(unit, scale) {
-      return{
-        dX: unit.dX * scale,
-        dY: unit.dY * scale
-        }
+        return{
+            dX: unit.dX * scale,
+            dY: unit.dY * scale
+            }
     }
 
     return {
         tourne,
-        // reTourne,
         decale,
         decaleAndScale
     }

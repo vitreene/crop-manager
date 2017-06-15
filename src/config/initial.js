@@ -1,4 +1,4 @@
-const manip = {
+const initial = {
     "image": {
         "src": process.env.PUBLIC_URL + '/DSC_0419.jpg',
         "naturalWidth": 3456, // pixels
@@ -42,7 +42,7 @@ const manip = {
         "local-scale": 1
     }
 }
-export default manip
+export default initial
 
 
 export const presets = {

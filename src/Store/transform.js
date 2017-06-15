@@ -18,10 +18,10 @@ export default function (cadrage, image, preset = 'cover') {
     // eslint-disable-next-line
     const scale = res.x;
     return {
-        origin: {dX:0, dY:0},
-        translate: {dX:0, dY:0},
+        translate: {dX: 0, dY: 0},
+        pivot: {h: 1, v: 1},
         rotate: 0,
-         scale
+        scale
     }
     // return {
     //     origin: {dX:0, dY:0},

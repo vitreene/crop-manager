@@ -3,59 +3,63 @@ import React, {Component, PropTypes} from 'react';
 
 import Controleur from './controleur'
 
-import manipImage from './Store'
+import ManipImage from './Store'
+const manipImage = new ManipImage();
 
-import initial from './config/initial'
-const image = initial.image;
-const preset = initial.preset;
+// let projet = {
+//         proxy:{},
+//         cadrage:{},
+//         transform:{}
+//     };
+
+import {IDLE, DONE} from './config/constantes'
 
 export default class Manip extends Component {
-     static propTypes = {
-        id: PropTypes.string
+    static propTypes = {
+        image: PropTypes.shape({
+            src: PropTypes.string,
+        }),
+        cadrage: PropTypes.shape({
+            ratio: PropTypes.number,
+        }),
+        toCanvas: PropTypes.func
      }
-    // eslint-disable-next-line
+
     constructor(props) {
         super(props);
         this.prep = this.prep.bind(this);
+        this.updatePosition = this.updatePosition.bind(this);
     }
 
-// utiliser le state que pour déclencher les mises à jour :
-// -> upload,
-// -> change preset,
-// ->  reglages 
-// pas lorsque la position est mise à jour  depuis Instance
-    state = {
-        proxy:{},
-        cadrage:{},
-        transform:{}
-    }
+    // utiliser le state que pour déclencher les mises à jour :
+    // -> upload,
+    // -> change preset,
+    // ->  reglages 
+    // pas lorsque la position est mise à jour  depuis Instance
+    state = {action: IDLE}
         
     componentDidMount() {
+        console.log('Mount');
         
-        const cb = (manip) => {
-            // console.log('canvas', manip);
-           this.setState({...manip});
-        }
-        const img = manipImage.create(image.src, preset, cb);
-        
+        const {image, cadrage} = this.props;
+        // this.setState( manipImage.create(image.src, preset) );
+        manipImage.create(image.src, cadrage.ratio)
+        .then(res => this.setState(res) );  
     }
 
-    prep(manip) {
+    prep(manip) { }
 
-        // console.log('PREP',manip); 
-
-        /*
-        prep pourrait etre le point d'entrée commun de plusieurs opérations d'export.
-        il recevrait des données composées d'une action et de datas.
-        ces datas doivent auparavant etre transformées pour l'export.
-        */
-        // console.log('PREP',manip.transform, manip.pivot); 
+    updatePosition(manip) {
+        manipImage.update(manip);
+        console.log('updatePosition',manipImage.read()); 
+        this.props.toCanvas( manipImage.read() );
     }
 
     render() {
-     const {prep} = this;
-      return (
-           <Controleur {...{prep, ...this.state}}/> 
+        const {prep, updatePosition} = this;
+        const projet = manipImage.read();
+        return (
+            <Controleur {...{prep, updatePosition, ...projet, ...this.state}}/> 
         );
     }
 }

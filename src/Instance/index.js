@@ -22,21 +22,27 @@ export default class {
     }
     report(action) {
         if (action !== DONE) return;
-        const {origin, transform:{translate, rotate, angle}} = this;
-        const oX = Math.round(origin.oX *100) /100;
-        const oY = Math.round(origin.oY *100) /100;
+        const {translate, rotate} = this.transform;
         const ddX = Math.round(translate.dX *100) /100;
         const ddY = Math.round(translate.dY *100) /100;
-        console.log('origin', oX, oY, '---- translate', ddX, ddY ,'rotate', rotate, 'angle',angle);
+        console.log('---- translate', ddX, ddY ,'rotate', rotate);
     }
 
     init(transform, cadrage, proxy) {
-        this.transform = transform;
-        this.proxy = proxy;
-        this.cadrage = cadrage;
         this.isLoading = false;
-
+        this.cadrage = cadrage;
         this._cropResize();      
+        // translateEnPixels
+        const translate = translateEnPixels(transform.translate, this.cropper);
+        this.transform = Object.assign( 
+            {},
+            transform,
+            {translate}
+        );
+
+        console.log('transform', this.transform, translate);
+        
+        this.proxy = proxy;
         this._imageResize();
         // this._translateResize();
         return this.updateRendu(); 
@@ -58,7 +64,6 @@ export default class {
                 action, 
                 device,          
                 message,
-                hasOrigin
             }
         */
         Object.keys(manip).map(  key => this[key] = manip[key] );
@@ -134,7 +139,7 @@ export default class {
     }
 
     updateRendu(action){
-        const {transform, pivot, proxy, cropper, hasOrigin} = this;
+        const {transform, pivot, proxy, cropper} = this;
         const {width, height} = proxy;
         const {dX, dY} = transform.translate;
 
@@ -146,8 +151,6 @@ export default class {
         const scale = {
             x: transform.scale * pivot.v, 
             y: transform.scale * pivot.h
-            // x: 1, 
-            // y: 1
         };
 
       const translate = {
@@ -155,21 +158,11 @@ export default class {
             dY:  Math.round(dY * pivot.v)
          };
 
-        this.origin = {
-            // oX: (width * 0.5) + transform.origin.dX, // decalage ok
-            // oY: (height * 0.5) + transform.origin.dY,
-            oX: (width * 0.5) - (dX * hasOrigin), // centre rotation ok
-            oY: (height * 0.5) - (dY * hasOrigin),
-        };
-      
-        const {origin} = this;
-
         return {
             rendu: {
                 translate, 
                 rotate, 
                 scale, 
-                origin
             },
             action
         };
