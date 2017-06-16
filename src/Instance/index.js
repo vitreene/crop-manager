@@ -40,8 +40,6 @@ export default class {
             {translate}
         );
 
-        console.log('transform', this.transform, translate);
-        
         this.proxy = proxy;
         this._imageResize();
         // this._translateResize();

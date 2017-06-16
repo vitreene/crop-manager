@@ -19,6 +19,19 @@ export default class App extends Component {
     this.toCanvas = this.toCanvas.bind(this);
   }
 
+  state = {
+    rendu : {
+      width: 0,
+      height: 0
+    },
+    image: null, 
+    transform: {
+      translate: { dX: 0, dY: 0},
+      rotate: 0,
+      scale: 1
+    }
+  }
+
   toCanvas(manip){
     this.setState(manip);
   }
@@ -31,14 +44,16 @@ export default class App extends Component {
     const {toCanvas} = this;
     return (
       <div className="container">
-        <div className="App-header">
-          <h2>Manip'image</h2>
-        </div>
-        <div className="element-wrapper">
-          <Manip {...{...data, toCanvas}} />
-        </div>
-        <div id="canvas">
-          <DrawCanvas {...this.state} />
+          <div className="App-header">
+            <h2>Manip'image</h2>
+          </div>
+          <div className="element">
+            <main className="element-wrapper">
+              <Manip {...{...data, toCanvas}} />
+            </main>
+            <aside id="canvas" className="element-rendu">
+              <DrawCanvas {...this.state} />
+            </aside>
         </div>
       </div>
     );

@@ -51,8 +51,7 @@ export default class Manip extends Component {
 
     updatePosition(manip) {
         manipImage.update(manip);
-        console.log('updatePosition',manipImage.read()); 
-        this.props.toCanvas( manipImage.read() );
+        this.props.toCanvas( manipImage.rendu(200, 150) );
     }
 
     render() {
