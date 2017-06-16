@@ -89,6 +89,14 @@ export default class {
         return this.updateRendu(DONE); 
     }
 
+    rotate90(sens) {
+        console.log('this.rotate', this.transform.rotate);
+        this.transform.rotate = (this.transform.rotate + (90 * sens)) % 360; 
+        console.log('this.rotate', this.transform.rotate);
+        
+        return this.updateRendu(DONE); 
+    }
+
     transformPreset(action) {
         const {image, ...cadrage} = this.cadrage;
         this.transform = initTransform(cadrage, image, action);

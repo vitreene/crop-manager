@@ -34,6 +34,7 @@ export default class Controleur extends Component {
         super(props);
         this.getPointerPosition = this.getPointerPosition.bind(this);
         this.getPivot = this.getPivot.bind(this);
+        this.rotate90 = this.rotate90.bind(this);
         this.transformPreset = this.transformPreset.bind(this);
         this.onConteneurResize = this.onConteneurResize.bind(this);
     }
@@ -92,6 +93,14 @@ export default class Controleur extends Component {
             manip.transformPreset(action) 
         );
     }
+    
+    rotate90(sens){
+        console.log('rotate', sens);
+        
+        this.setState( 
+            manip.rotate90(sens) 
+        );
+    }
     render() {
         const {proxy, isLoading} = manip;
         const {rendu} = this.state;
@@ -99,6 +108,7 @@ export default class Controleur extends Component {
             getPointerPosition, 
             onConteneurResize, 
             getPivot, 
+            rotate90,
             transformPreset
         } = this;
         const {conteneur, cropper, cropWrapper, pivot} = manip;
@@ -118,7 +128,7 @@ export default class Controleur extends Component {
                     </div> )
                 }
                 </Wrapper>
-                    <Reglages {...{getPivot, pivot, transformPreset}}/>
+                    <Reglages {...{rotate90, getPivot, pivot, transformPreset}}/>
                     <Transformers {...{rendu}} />
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
                     <Plotters {...{...pointers, conteneur, cropper}}/> 

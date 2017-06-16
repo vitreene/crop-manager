@@ -1,6 +1,7 @@
 const initial = {
     "image": {
-        "src": process.env.PUBLIC_URL + '/DSC_0419.jpg',
+        "src": process.env.PUBLIC_URL + '/vintage-travel-posters-1-20.jpg',
+        // "src": process.env.PUBLIC_URL + '/DSC_0419.jpg',
         "naturalWidth": 3456, // pixels
         "naturalHeight": 2304, // pixels
         "ratio": 1.5

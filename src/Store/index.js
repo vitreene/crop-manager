@@ -77,21 +77,35 @@ export default class {
         */
         const rendu = {width, height};
         
-        const {image, cadrage} = this;
-        const {diagonale, ratio} = cadrage;
-        const {rotate, scale} = this.transform;
+        const {image, cadrage, transform} = this;
+        const {dX, dY} = transform.translate;
+        const {pivot} = transform;
+        const {diagonale} = cadrage;
 
-        const echelle = (width / diagonale) * scale; 
+        // 180 - pour instance/rendu ?
+         const rotate = ((pivot.h + pivot.v) === 0) 
+            ? 180 + transform.rotate
+            : transform.rotate;
+
+        const scale = {
+            x: (width / diagonale) * transform.scale * pivot.v, 
+            y: (width / diagonale) * transform.scale * pivot.h
+        };
+
         const translate = translateEnPixels(
-            this.transform.translate, 
+            {dX: dX * pivot.h, dY: dY * pivot.v}, 
             {w: width}
-            );
-        const transform = {
-            translate, 
-            rotate,
-            scale: echelle
+        );
+
+        return {
+            rendu, 
+            image, 
+            transform: {
+                translate, 
+                rotate,
+                scale
+            }
         }
-        return {rendu, image, transform}
     }
 }
 

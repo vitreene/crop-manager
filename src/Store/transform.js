@@ -31,7 +31,16 @@ export default function (cadrage, image, preset = 'cover') {
     // }
 }
 
-export function contains(cadrage, image){}
+export function contains(cadrage, image){
+    const {width, height} = image;
+    const {diagonale, ratio} = cadrage;
+
+    const scale = ((width / height) > 1) 
+    ? diagonale / width
+    : (diagonale / ratio) / height;
+
+    return {x: scale};
+}
 
 
 export function cover(cadrage, image){

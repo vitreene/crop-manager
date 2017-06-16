@@ -10,6 +10,7 @@ export default class Reglages extends Component {
      static propTypes = {
          pivot: PropTypes.object,
          getPivot: PropTypes.func,
+         rotate90: PropTypes.func,
      }    
     state = { 
         h : false,
@@ -20,6 +21,7 @@ export default class Reglages extends Component {
         super(props);
         this.onPivot = this.onPivot.bind(this);
         this.onCover = this.onCover.bind(this);
+        this.onRotate = this.onRotate.bind(this);
     }
 
     componentWillReceiveProps({pivot}) {
@@ -50,10 +52,13 @@ export default class Reglages extends Component {
         return transformPreset(e.target.name);
     }
 
+    onRotate(){
+        this.props.rotate90(1);
+    }
     render() {
-        const params = {maxScale:2.8, minScale:0.4} ;
-        const miroir = this.state ;
-        const {placement=''} = this.props ;
+        const params = {maxScale:2.8, minScale:0.4};
+        const miroir = this.state;
+        const {placement=''} = this.props;
 
         return (
             <div className="manip-reglages-icons" >
@@ -89,13 +94,12 @@ export default class Reglages extends Component {
                 className="input-hidden"
                 id="rotate90"
                 name="rotate90"
-                type="checkbox"
-                checked={ ()=>{} }
-                onChange={ ()=>{} }
+                type="button"
+                onClick={ this.onRotate }
                 />
                 <label htmlFor="rotate90"
                 className="label-reglage">
-                    <Icon name="rotate90" checked={this.state.v} />    
+                    <Icon name="rotate90" />    
                 <Text small color={'white'}>Tourner</Text>
                 </label>
 
