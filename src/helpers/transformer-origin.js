@@ -2,7 +2,7 @@
 
 // todo : adapter en fonctionnel
 
-import {RAD, DEG, START, MOVE, END, DONE} from '../config/constantes'
+import {R90, RAD, DEG, START, MOVE, END, DONE} from '../config/constantes'
 
 // position initiale
 let debut = {posX: 0, posY:0};
@@ -35,39 +35,49 @@ let unit = {dX: 0, dY: 0};
 // attenuer l'amplitude de la mise à l'échelle
 const sensibilite = 2;
 
-export default function ({proxy, type, pointers, transform, pivot}) {
+export default function ({type, pointers, transform, pivot, sens}) {
     const [device, action] = type.split(' ');
 
     const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
+    
     const pointer = pointers[+modifier];
     const axe = modifier && pointers[0];
 
-    // const hasOrigin = modifier && (device === 'mouse');
-    // angle = 0;
+    const what = (action === R90) 
+    ? R90
+    : modifier
             
     const {message, ...reste} = whatTransform({
-        modifier, 
+        what, 
         pointer, 
         axe, 
         action, 
         transform, 
-        pivot
+        pivot,
+        sens
     });
-    const done = action === 'end' ? DONE : action;
+    const done = (action === 'end') ? DONE : action;
 
     return {
         transform: reste,
-        pointers: {pointer, axe}, 
         action: done, 
         device,          
+        pointers: {pointer, axe}, 
         message,
     }
 }
 
-function whatTransform({modifier, ...reste}) {
-    return (modifier) 
-        ? rotateAndScaleImage(reste)
-        : translateImage(reste)
+function whatTransform({what, ...reste}) {
+    switch (what) {
+        case false :
+        return  translateImage(reste);
+        case true :
+        return rotateAndScaleImage(reste);  
+        case R90 :
+        return rotate90(reste)  
+        default:
+            break;
+    }
 }
 
 
@@ -171,6 +181,10 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     
         case END :
         break;
+
+        case 'R90' :
+        // pivoter de 90°
+        break;
     
         default:
         break;
@@ -183,6 +197,32 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
         scale
     };
     
+}
+
+function rotate90({action, transform, pivot, sens}) {
+    const scale = transform.scale;
+    const rotation = (90 * pivot.h * pivot.v * sens);
+    const rotate = (transform.rotate + rotation) % 360;
+    
+    const unit = {
+        dX: transform.translate.dX / transform.scale,
+        dY: transform.translate.dY / transform.scale,
+    };
+    const translated = ted.decaleAndScale(unit, scale);
+    const origin = ted.decale({dX: 0, dY: 0},translated, -1);
+    const centre = {dX: 0, dY: 0};
+    const centerPoint = ted.tourne(origin, centre, rotation);
+
+    const translate = ted.decale(translated, centerPoint, 1);
+
+    const message = 'rotation de 90°';
+    
+    return {
+        message,
+        translate,
+        rotate,
+        scale
+    };
 }
 
 

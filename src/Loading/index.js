@@ -3,7 +3,7 @@ import React from "react"
 import "./index.css"
 
 const Loading = () => {
-  console.log('LOADING-------');
+  console.log('LOADING : -------');
   
   return (
   <div>

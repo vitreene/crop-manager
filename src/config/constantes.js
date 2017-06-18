@@ -5,5 +5,6 @@ export const MOVE = 'move'
 export const END = 'end'
 export const DONE = 'done'
 export const IDLE = 'idle'
+export const R90 = 'R90'
 
 export const PADDING = 5

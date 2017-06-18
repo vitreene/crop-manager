@@ -44,6 +44,6 @@ function paint(ctx, props) {
 	ctx.scale(scale.x, scale.y);
 	ctx.rotate(rotate * RAD);
 	ctx.drawImage(image, -(image.width/2), -(image.height/2));
-    sharpen(ctx, width, height, 0.9)
+    sharpen(ctx, width, height, 0.5)
     ctx.restore(); 
 }

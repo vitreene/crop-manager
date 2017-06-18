@@ -9,13 +9,6 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 
 
 export default class {
-        /*
-    constructor(props) {
-      Object.keys(defaults = {} ).map( 
-          key => this[key] = props[key] || defaults[key]
-          )
-    }
-          */
     proxy = {}
     image = {}
     cadrage = {}
@@ -26,20 +19,18 @@ export default class {
         return getImage(url)
         .then( img => makeProxy(img) )
         .then(( {image, proxy}) => {
-            this.cadrage = creerCadrage(ratio, image);
-            this.transform = initTransform(this.cadrage, image);
-            this.image = image;
-            this.proxy = proxy;
             // construire l’objet à partir de l’image
             // -> proxy, si pas de proxy, utiliser la hd.
             // -> crop,
             // -> transform            
-            // return ({proxy, cadrage, transform});
+            this.cadrage = creerCadrage(ratio, image);
+            this.transform = initTransform(this.cadrage, image);
+            this.image = image;
+            this.proxy = proxy;
             return ( {action: DONE });
         })
     }
     update(params) {
-        // {translate, rotate, scale, pivot }
         this.transform = params;
     }
         
@@ -57,7 +48,7 @@ export default class {
     export(){
         //  retourner un objet comme initial.js
     }
-    rendu(width, height) {
+    rendu({width, height}) {
         // en entree : dimensions du canvas
         // -> données pour la sortie
         // image,

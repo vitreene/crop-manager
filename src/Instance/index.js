@@ -46,14 +46,14 @@ export default class {
         return this.updateRendu(); 
     }
 
-    updatePosition(type, pointers){
-        const {proxy, transform, pivot} = this;
+    updatePosition(type, pointers, sens = 1){
+        const {transform, pivot} = this;
         const manip = transformer({
-            proxy,
             type, 
             pointers, 
             transform,
-            pivot
+            pivot, 
+            sens
         }); 
         /*
             manip : {
@@ -90,10 +90,9 @@ export default class {
     }
 
     rotate90(sens) {
-        console.log('this.rotate', this.transform.rotate);
-        this.transform.rotate = (this.transform.rotate + (90 * sens)) % 360; 
-        console.log('this.rotate', this.transform.rotate);
-        
+        // ajouter sens
+        const pointers = Object.keys(this.pointers).map( p => this.pointers[p]);
+        this.updatePosition('reglage R90', pointers, sens);
         return this.updateRendu(DONE); 
     }
 

@@ -27,7 +27,6 @@ export default class Manip extends Component {
 
     constructor(props) {
         super(props);
-        this.prep = this.prep.bind(this);
         this.updatePosition = this.updatePosition.bind(this);
     }
 
@@ -36,29 +35,33 @@ export default class Manip extends Component {
     // -> change preset,
     // ->  reglages 
     // pas lorsque la position est mise à jour  depuis Instance
-    state = {action: IDLE}
+    state = {
+        action: IDLE,
+    }
         
-    componentDidMount() {
-        console.log('Mount');
-        
-        const {image, cadrage} = this.props;
-        // this.setState( manipImage.create(image.src, preset) );
+    // componentDidMount() {
+    componentWillReceiveProps(nextProps) {
+        const {image, cadrage} = nextProps;
+
+        if (image.src === this.props.image.src ) return;
+        console.log('componentWillReceiveProps', image, this.props.image);
+
         manipImage.create(image.src, cadrage.ratio)
+        // .then(res => this.manip = res );  
         .then(res => this.setState(res) );  
     }
 
-    prep(manip) { }
-
     updatePosition(manip) {
+        const {cadre} = this.props;
         manipImage.update(manip);
-        this.props.toCanvas( manipImage.rendu(200, 150) );
+        this.props.toCanvas( manipImage.rendu(cadre) );
     }
 
-    render() {
-        const {prep, updatePosition} = this;
+    render() {        
+        const {updatePosition} = this;
         const projet = manipImage.read();
         return (
-            <Controleur {...{prep, updatePosition, ...projet, ...this.state}}/> 
+            <Controleur {...{updatePosition, ...projet, ...this.state}}/> 
         );
     }
 }

@@ -26,7 +26,7 @@ export default class Controleur extends Component {
         cadrage: PropTypes.object,
         transform: PropTypes.object,
         updatePosition: PropTypes.func,
-        prep: PropTypes.func,
+        // prep: PropTypes.func,
         action: PropTypes.string,
      }
 
@@ -94,9 +94,7 @@ export default class Controleur extends Component {
         );
     }
     
-    rotate90(sens){
-        console.log('rotate', sens);
-        
+    rotate90(sens){        
         this.setState( 
             manip.rotate90(sens) 
         );
