@@ -9,25 +9,23 @@ import Loading from './Loading'
 
 
 import {DONE, IDLE} from './config/constantes'
+import {rendu} from './config/initial'
 
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './helpers/infos'
 
 import Instance from './Instance'
-
 const manip = new Instance({
     action: 'Ta-Da-dammm'
 });
 
 export default class Controleur extends Component {
      static propTypes = {
-        // id: PropTypes.string
         proxy: PropTypes.object,
         cadrage: PropTypes.object,
         transform: PropTypes.object,
         updatePosition: PropTypes.func,
-        // prep: PropTypes.func,
-        action: PropTypes.string,
+        // action: PropTypes.string,
      }
 
     constructor(props) {
@@ -40,12 +38,7 @@ export default class Controleur extends Component {
     }
 
     state = {
-        rendu: {
-            translate: {dX: 0, dY: 0},
-            rotate: 0,
-            scale: 1,
-            origin: {oX: 0, oY: 0},
-        },
+        rendu,
         action: IDLE
     }
   
@@ -56,9 +49,7 @@ export default class Controleur extends Component {
     componentWillReceiveProps(newProps) {
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
-        const {action, transform, proxy, cadrage} = newProps;
-        // console.log('transform, proxy, cadrage', action, transform, proxy, cadrage);
-        (action === DONE) &&
+        const {transform, proxy, cadrage} = newProps;   
         this.setState( manip.init(transform, cadrage, proxy) );
     }
 
@@ -101,6 +92,8 @@ export default class Controleur extends Component {
     }
     render() {
         const {proxy, isLoading} = manip;
+        // console.log('proxy', proxy);
+        
         const {rendu} = this.state;
         const {
             getPointerPosition, 
@@ -116,10 +109,10 @@ export default class Controleur extends Component {
 
         return (
             <div className="manip-conteneur">
-                <Wrapper {...{onConteneurResize}} >
-                { ( isLoading) 
-                ? (<Loading/>)
-                : ( <div>
+                    <Wrapper {...{onConteneurResize}} >
+                { isLoading
+                    ? (proxy.src && <Loading/>)
+                    : ( <div>
                         <LayerFond {...{rendu, proxy, cropper}}/>
                         <LayerCrop {...{rendu, proxy, cropWrapper, cropper}}/>
                         <LayerInputs {...{getPointerPosition, ...conteneur}}/>

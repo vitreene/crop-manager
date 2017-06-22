@@ -8,3 +8,4 @@ export const IDLE = 'idle'
 export const R90 = 'R90'
 
 export const PADDING = 5
+export const isClient = typeof window !== "undefined";

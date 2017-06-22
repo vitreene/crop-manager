@@ -3,7 +3,6 @@ import defaults from '../config/instance-init'
 import {RAD, DONE} from '../config/constantes'
 
 import transformer from '../helpers/transformer-origin'
-// import transformer from '../helpers/transformer'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
 import {translateEnPourcents, translateEnPixels} from '../helpers/translate-pc-px'
@@ -20,6 +19,7 @@ export default class {
     log() {
         console.log('this', this);
     }
+
     report(action) {
         if (action !== DONE) return;
         const {translate, rotate} = this.transform;
@@ -144,7 +144,7 @@ export default class {
     }
 
     updateRendu(action){
-        const {transform, pivot, proxy, cropper} = this;
+        const {transform, pivot, proxy, /*cropper*/} = this;
         const {width, height} = proxy;
         const {dX, dY} = transform.translate;
 

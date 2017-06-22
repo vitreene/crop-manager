@@ -19,22 +19,25 @@ draw image ;
 
 import React from 'react';
 import {RAD} from '../config/constantes'
-// import {translateEnPixels} from '../helpers/translate-pc-px'
 import sharpen from './sharpen'
 
 let ref = null;
 
 export default function DrawCanvas(props) {
-    const {width = 0, height = 0} = props.rendu;
-    if (ref) paint(ref.getContext('2d'), props)
+    const {cadre} = props;
+    const width = (cadre) ? cadre.width : 0;
+    const height = (cadre) ? cadre.height : 0;
+    if (ref && props) paint(ref.getContext('2d'), props)
+    
     return(
         <canvas ref={e => ref = e} width={width} height={height} />
     )
 }
 
-function paint(ctx, props) {
-    const {image, rendu, transform} = props;
-    const {width, height} =rendu;
+function paint(ctx, props) {  
+    // console.log('ctx', ctx);      
+    const {image, cadre, transform} = props;
+    const {width, height} = cadre;
     const {translate, rotate, scale} = transform;
     const {dX, dY} = translate;
 

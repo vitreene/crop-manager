@@ -1,7 +1,7 @@
 import React from 'react';
 
 const fond = (classe) => (
-    <path className={'icon-fond ' + classe} d="M1 1h50v50.2H1z"/>
+    <path className={'icon-fond ' + classe} d="M1 1h50v50H1z"/>
 );
 
 
@@ -37,6 +37,14 @@ const icones = {
       <path fill="currentcolor" d="M8.07 11.85h36v28h-36z"/>
       <path strokeDasharray="2" stroke="#fff"  d="M16.07 16.1h20v20h-20z"/>
   </g>
+  ),
+  upload:(
+    <g fill="currentcolor" stroke="#fff"  strokeWidth="2">
+        <path  d="M14 12c0-3.33 2.7-6 6-6h12c3.3 0 6 2.67 6 6h5.5c4.15 0 7.5 3.36 7.5 7.5v15c0 4.13-3.36 7.5-7.5 7.5h-35C4.36 42 1 38.62 1 34.5v-15C1 15.35 4.35 12 8.5 12H14z"/>
+        <circle cx="36" cy="27.72" r="10"/>
+        <path d="M7.03 17.72h10v5h-10z"/>
+        <path fill="#fff" strokeWidth="0" d="M40.92 32.36c2.86-2.57 3.1-6.97.54-9.83-2.57-2.86-6.98-3.1-9.84-.53 1.95.44 4.35 1.72 6.2 3.78 1.86 2.07 2.88 4.6 3.1 6.58z"/>
+    </g>
   )
 
 }
@@ -45,7 +53,7 @@ export default function Icon(props) {
   const {name, classe='', checked=false} = props ;
   const iconClassName = `icon-${name}`
   return(
-<svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 53" clipRule="evenodd" strokeLinejoin="round"  >
+<svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 52" clipRule="evenodd" strokeLinejoin="round"  >
 
     {checked && fond(classe)}
     {icones[name]}

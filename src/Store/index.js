@@ -9,14 +9,15 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 
 
 export default class {
-    proxy = {}
-    image = {}
-    cadrage = {}
-    transform = {}
+    proxy = null
+    image = null
+    cadrage = null
+    // cadre = {}
+    transform = null
 
     // create object
-    create(url, ratio ) {
-        return getImage(url)
+    create(src, ratio ) {
+        return getImage(src)
         .then( img => makeProxy(img) )
         .then(( {image, proxy}) => {
             // construire l’objet à partir de l’image
@@ -27,17 +28,16 @@ export default class {
             this.transform = initTransform(this.cadrage, image);
             this.image = image;
             this.proxy = proxy;
+
             return ( {action: DONE });
         })
     }
     update(params) {
         this.transform = params;
     }
-        
-    // update Cropper
-    // eslint-disable-next-line
-    updateCropper(params) {
-        
+
+    updateCadre(ratio) {
+        this.cadrage.ratio = ratio;
     }
 
     read() {
@@ -66,14 +66,14 @@ export default class {
         dX, dY * width
 
         */
-        const rendu = {width, height};
+        const cadre = {width, height};
         
         const {image, cadrage, transform} = this;
         const {dX, dY} = transform.translate;
         const {pivot} = transform;
         const {diagonale} = cadrage;
 
-        // 180 - pour instance/rendu ?
+        // "180 - transform.rotate" dans instance/rendu, pourquoi ?
          const rotate = ((pivot.h + pivot.v) === 0) 
             ? 180 + transform.rotate
             : transform.rotate;
@@ -88,20 +88,17 @@ export default class {
             {w: width}
         );
 
+
         return {
-            rendu, 
-            image, 
-            transform: {
-                translate, 
-                rotate,
-                scale
+            rendu: {
+                cadre,
+                image, 
+                transform: {
+                    translate, 
+                    rotate,
+                    scale
+                }
             }
         }
     }
 }
-
-
-        // console.log('image', image);
-        // console.log('cadrage', cadrage);
-
-        // console.log('transform', transform);

@@ -43,3 +43,58 @@ Les point d'origine des transformations est le point central de l'image
     - fixer le rapport crop -> crop présenté à l'ecran (responsive). Adapter à l'image. Revoir si resize.
     - appliquer les modifications enregistrées, appliquer celles saisies.
 
+
+
+
+/*
+dimensions :
+x, y pour le top et left de l'élément,
+dX, dY : décalage
+w, h : largeur hauteur de référence
+width, height : dimensions appliquées
+*/
+
+
+
+    /*
+a faire : 
+- le schéma d'enregistrement,
+- le schéma de lecture
+- les formules de transformation.
+
+    décision : les données seront le plus virtualisées possible.
+    -> l'image est le référent. Si l'image change, on repart de zéro.
+
+- image : dimensions;
+- crop : dimensions;
+C: {x: 0, y: 0}
+D: sqrt( img.x2 + img.y2)
+L= D
+H = r * L
+r = L/H
+img transform{
+scale : E,
+rotate: A,
+translate: T{dX,dY}
+}
+
+
+- en export :
+    exprimer le rapport de l'image par rapport au crop.
+    en calculant l'hypothenuse de chacun
+    h = Math.sqrt( width * width + height * heigth )
+    rapport = hypImg / hypCrop
+    dx: translate.dX - cropper.w * 0.5 / cropper.w
+    dy: translate.dy - cropper.wh * 0.5 / cropper.h
+    scale: (scale * hypImg) / hypCrop
+    rotation et pivot tels quels.
+
+    ai-je besoin d'une conversion ? j'ai ejà un systeme de conversion à l'échelle dans le rendu qui n'existait pas dans la premiere version.
+    seul le passage des pixels à pourcents est clean pour un export.
+
+    j'ai besoin d'une conversion pour le passage du proxy à l'original.
+    echelle et decalage sont enregistrés selon le rapport à l'image reelle
+    -> rapport = hypImg / hypProx 
+
+tranform et pivot : mettre à l'echelle, puis appliquer 
+    */

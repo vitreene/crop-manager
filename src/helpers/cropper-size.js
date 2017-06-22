@@ -44,14 +44,14 @@ export function setCropper(cropWrapper, cadrage) {
 
     const x = (cropWrapper.w - w) * 0.5;
     const y = (cropWrapper.h - h) * 0.5;
-    const ratio = w / cw ;
+    // const echelle = w / cw ;
 
     return {
         x,
         y,
         w,
         h,
-        ratio
+        // echelle
     }
 }
 

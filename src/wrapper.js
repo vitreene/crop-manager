@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-const isClient = typeof window !== "undefined";
+import {isClient} from './config/constantes'
         
 export default  class Wrapper extends Component {
     static propTypes = {

@@ -2,7 +2,6 @@
 import React, {Component, PropTypes} from 'react';
 
 import Icon from './UI/icones'
-
 import Text from './UI/text'
 
 
