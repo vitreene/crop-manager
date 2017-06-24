@@ -8,7 +8,6 @@ export const presets = {
         ratio: 1.5,
         name: "15:10",
     },
-
 }
 
 
