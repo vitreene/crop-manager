@@ -65,6 +65,8 @@ export default class {
         obtenir le translate
         dX, dY * width
 
+        ? performance ? 
+        selon l'echelle, il suffit d'envoyer le proxy à la place de l'original.
         */
         const cadre = {width, height};
         
@@ -82,7 +84,9 @@ export default class {
             x: (width / diagonale) * transform.scale * pivot.v, 
             y: (width / diagonale) * transform.scale * pivot.h
         };
-
+        
+        // console.log('scale', scale.x);
+        
         const translate = translateEnPixels(
             {dX: dX * pivot.h, dY: dY * pivot.v}, 
             {w: width}
