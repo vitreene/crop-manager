@@ -14,3 +14,7 @@ build
 .env
 npm-debug.log
 .vscode
+
+#precedent
+src-v1
+src-v2
