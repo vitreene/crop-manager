@@ -1,3 +1,40 @@
+export const storage = {
+  "image": {
+    // "src": "blob:http://localhost:3002/1eb52173-39e5-4960-a2e5-c7d5daf8e53f",
+    "src": "https://www.ecranlarge.com/uploads/image/000/990/spider-man-homecoming-photo-affiche-spider-man-homecoming-990356.jpg",
+    "width": 199,
+    "height": 180
+  },
+  "proxy": {
+    "src": "blob:http://localhost:3002/34071c94-998c-4367-8cad-e3bccef803ed",
+    "width": 1000,
+    "height": 904
+  },
+  "cadrage": {
+    "diagonale": 268.33002068348594,
+    "ratio": 0.8
+  },
+  "cadre": {
+    "width": 160,
+    "height": 200
+  },
+  "transform": {
+    "translate": {
+      "dX": -0.6084317012352488,
+      "dY": 0.19824906007493773
+    },
+    "rotate": 17,
+    "scale": 3.8515730674837516,
+    "pivot": {
+      "h": 1,
+      "v": 1
+    }
+  },
+  "meta": {
+    "pristine": false
+  }
+};
+
 
 export const presets = {
     "p4x3": {
@@ -68,7 +105,7 @@ const initial = {
         "height": 667 // pixels
     },
     "preset": "p4x3",
-    "cropper": {
+    "cadrage": {
         "diagonale": 4153.5950,
         "ratio": 1.25,
         // padding : marge interieure en % entre le crop et le wrapper.
@@ -95,7 +132,7 @@ const initial = {
     },
     "meta": {
         "pristine": true,
-        "local-scale": 1
+        "local-scale": 1 // ?
     }
 }
 export default initial

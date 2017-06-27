@@ -4,9 +4,10 @@ import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
 import Manip from './Manip'
 
-// import initial, {presets, cadreDefaults} from './config/initial'
 import {cadreDefaults} from './config/initial'
 import {isClient} from './config/constantes'
+
+// import {storage} from './config/initial'
 
 
 export default class Sources extends PureComponent {
@@ -42,7 +43,7 @@ export default class Sources extends PureComponent {
     render(){
         const {getUrl, getCadre} = this;
         const {src, cadre} = this.state;
-        const {toCanvas} = this.props;
+        const {toCanvas, toExport} = this.props;
 
         return(
             <main className="element-wrapper">
@@ -50,8 +51,13 @@ export default class Sources extends PureComponent {
                     <Upload {...{getUrl}}/>
                     <ChoixCadrage {...{getCadre}}/>
                 </aside>
-                <Manip {...{src, cadre, toCanvas}} />
+                <Manip 
+                    {...{src, cadre}}
+                    handleRendu={toCanvas} 
+                    handleExport={toExport}
+                />
             </main>
         )
     }
 }
+                    // importer={storage}

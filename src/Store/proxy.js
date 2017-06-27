@@ -2,7 +2,6 @@
 import pica from 'pica/dist/pica.min.js'
 
 export default async function (image) {
-   // window.URL.revokeObjectURL();
     const {width: naturalWidth, height: naturalHeight} = image;
     const options = {
         unsharpAmount: 70,
@@ -23,7 +22,6 @@ export default async function (image) {
      
 }
 
-
 function makeCanvas(width, height) {
     const size = sizeCanvas(width, height);    
     const canvas = document.createElement('canvas');
@@ -32,7 +30,6 @@ function makeCanvas(width, height) {
     return canvas;
 }
 
-// width: 3456 , height: 2304
 function sizeCanvas(width, height, cible = 1000) {
     const ratio = (width/height > 1);
     return {

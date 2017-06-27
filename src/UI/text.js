@@ -1,9 +1,14 @@
 import React from 'react';
 
 const Text = (props) => (
-    <span style={ { color: props.color, fontSize: props.small ? 10 : 14 } }>
-        {props.content}
-        </span>
+    <p style={  {
+        color: props.color || 'currentcolor', 
+        fontSize: props.small ? 10 : 14 ,
+        margin: 0,
+        lineHeight: 0
+        } }>
+        {props.children}
+        </p>
 );
 
 export default Text;

@@ -16,17 +16,26 @@ export default class Manip extends PureComponent {
             height: PropTypes.number,
             ratio: PropTypes.number,
         }),
-        toCanvas: PropTypes.func
+        importer: PropTypes.object,
+        handleRendu: PropTypes.func,
+        handleExport: PropTypes.func
      }
 
     constructor(props) {
         super(props);
         this.updatePosition = this.updatePosition.bind(this);
+        this._update = this._update.bind(this);
     }
 
     state = modele
         
-    // componentDidMount() {
+    componentDidMount() {
+        const {importer} = this.props;
+        if (importer) {
+            manipImage.import(importer);
+            this._update(cadre);
+        }
+    }
     componentWillReceiveProps(nextProps) {
         console.log('nextProps', nextProps);
         
@@ -34,37 +43,31 @@ export default class Manip extends PureComponent {
         const {ratio} = cadre;
 
         if (src !== this.props.src) {
-            console.log('manipImage.create');
-            
-            manipImage.create(src, ratio)
-            // -> action: DONE  
-            .then( () => {
-                this.setState( manipImage.read() );
-                this.props.toCanvas( manipImage.rendu(cadre) );
-                });  
+            manipImage.create(src, ratio) 
+            .then( () => this._update(cadre) );  
             return;
         }
         
-        if (ratio !== this.props.cadre.ratio) {
-            
+        if (ratio !== this.props.cadre.ratio) {           
             manipImage.updateCadre(ratio);
-            // const action = (res) ? DONE : IDLE ;
-            this.setState( manipImage.read() );
-            this.props.toCanvas( manipImage.rendu(cadre) );
-            console.log('manipImage.updateCadre');
+            this._update(cadre);
         }
     }
 
     updatePosition(manip) {
         const {cadre} = this.props;
         manipImage.update(manip);
+        this._update(cadre);
+    }
+
+    _update(cadre) {
         this.setState( manipImage.read() );
-        this.props.toCanvas( manipImage.rendu(cadre) );
+        this.props.handleRendu( manipImage.rendu(cadre) );
+        this.props.handleExport( manipImage.export() );
     }
 
     render() {        
         const {updatePosition, state} = this;
-
         return (
             <Controleur {...{updatePosition, ...state}}/> 
         );

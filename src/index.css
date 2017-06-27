@@ -8,6 +8,11 @@ body {
   font-family: sans-serif;
 }
 
+.label-reglage{
+  text-align: center;
+  /*text-transform: uppercase;*/
+}
+
 .container{
   box-sizing: content-box;
   display: flex;

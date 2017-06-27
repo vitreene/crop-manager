@@ -72,7 +72,7 @@ export default class Reglages extends Component {
                 <label htmlFor="miroir-h"
                 className="label-reglage">
                     <Icon name="pivotH" checked={this.state.h} />
-                <Text small color={'white'}>Miroir hztl</Text>
+                <Text small >Miroir H</Text>
                 </label>
 
                 <input
@@ -86,7 +86,7 @@ export default class Reglages extends Component {
                 <label htmlFor="miroir-v"
                 className="label-reglage">
                     <Icon name="pivotV" checked={this.state.v} />
-                <Text small color={'white'}>Miroir vtcl</Text>
+                <Text small >Miroir V</Text>
                 </label>
                
                 <input
@@ -99,7 +99,7 @@ export default class Reglages extends Component {
                 <label htmlFor="rotate90"
                 className="label-reglage">
                     <Icon name="rotate90" />    
-                <Text small color={'white'}>Tourner</Text>
+                <Text small >Tourner</Text>
                 </label>
 
                 <div style={{margin: 'auto'}}/>
@@ -117,7 +117,7 @@ export default class Reglages extends Component {
                 htmlFor="visuel-cover"
                 className="label-reglage">
                      <Icon name="cover" checked={placement === 'cover'} />
-                <Text small color={'white'}>Couvrir</Text>
+                <Text small >Couvrir</Text>
                 </label>
 
                 <input
@@ -132,7 +132,7 @@ export default class Reglages extends Component {
                 <label htmlFor="visuel-contains"
                 className="label-reglage">
                       <Icon name="contains" checked={placement === 'contains'} />
-                <Text small color={'white'}>Contenir</Text>
+                <Text small >Contenir</Text>
                 </label>
 
                 </div>

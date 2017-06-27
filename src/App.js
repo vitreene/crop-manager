@@ -1,9 +1,8 @@
 /* eslint-disable */
 import React, {Component} from 'react';
 
-import Sources from './sources'
+import Sources from './Sources'
 import DrawCanvas from './Rendu'
-
 
 // const image = initial.image;
 // const cadrage = presets[initial.preset];
@@ -17,6 +16,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.toCanvas = this.toCanvas.bind(this);
+    this.toExport = this.toExport.bind(this);
     // this.getUrl = this.getUrl.bind(this);
     // this.getCadre = this.getCadre.bind(this);
   }
@@ -36,10 +36,14 @@ export default class App extends Component {
   toCanvas(rendu){
     this.setState({...rendu});
   }
+  toExport(rendu) {
+    console.log('export', rendu);
+    
+  }
 
   render() {
     const {rendu} = this.state;
-    const {toCanvas} = this;
+    const {toCanvas, toExport} = this;
     // console.log('rendu', rendu);
     
     return (
@@ -49,7 +53,7 @@ export default class App extends Component {
           </div>
 
           <div className="element">
-              <Sources {...{toCanvas}}/>
+              <Sources {...{toCanvas, toExport}}/>
               <aside id="canvas" className="element-rendu">
                 <DrawCanvas {...rendu} />
               </aside>
