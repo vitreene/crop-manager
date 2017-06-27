@@ -52,7 +52,7 @@ export default class App extends Component {
             <h2>Crop manager</h2>
           </div>
 
-          <div className="element">
+          <div className="crop-manager">
               <Sources {...{toCanvas, toExport}}/>
               <aside id="canvas" className="element-rendu">
                 <DrawCanvas {...rendu} />

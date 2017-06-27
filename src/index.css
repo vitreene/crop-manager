@@ -9,6 +9,7 @@ body {
 }
 
 .label-reglage{
+  /*margin: 0 auto;*/
   text-align: center;
   /*text-transform: uppercase;*/
 }
@@ -33,20 +34,33 @@ body {
 }
 */
 
-.element{
+.crop-manager{
   margin: 0 4%;
   display: flex;
   height: 100%;
   flex-flow: row;
   flex-wrap:  nowrap;
+  color: cadetblue;
 }
-.element-cadre,
-.element-upload{
+.gestion-crop-size,
+.gestion-crop{
   display: flex;
   flex-flow: row;
   flex-wrap:  nowrap;
-  justify-content: flex-start;
+  align-items: center;
+}
 
+.gestion-upload{
+  text-align: center;
+}
+
+.element-sources{
+  display: flex;
+  flex-flow: row;
+  flex-wrap:  nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+      color: cadetblue;
 }
 
 .element-rendu{
@@ -99,6 +113,9 @@ body {
   background-color: aqua;
 }
 
+.manip-reglages-icons{
+  margin-bottom: 1rem;
+}
 /* LAYERS */
 
 .layer-crop,
@@ -181,7 +198,7 @@ body {
 }
 
 .label-reglage {
-    color: cadetblue;
+    /*color: cadetblue;*/
     margin: 0.5rem;
 }
 .icon-small {
@@ -193,11 +210,40 @@ body {
   display: none;
   }
 
-.crop-size-input{
-
+.crop-label{
+  margin-left: 1rem; 
+  margin-right: 0.4rem;
+  color: currentColor;
+  font-size: 10px;
+  text-transform: uppercase;
 }
+
+.crop-presets{
+  color: currentColor;
+  font-size: 1rem;
+  height: 2rem;
+  width: 6rem;
+}
+.crop-size-input{
+  color: currentColor;
+  text-align: right;
+  margin-right: 1rem;
+  font-size: 1rem;
+  height: 2rem;
+  width: 4rem;
+}
+
+.crop-presets:focus,
+.crop-size-input:focus{
+  color: black;
+  border: thin solid currentColor;
+  outline: none;
+  box-shadow: none;
+  background: #EEE;
+}
+
 .crop-size-permute{
-  
+
 }
 
 /*////////////////////////*/

@@ -1,7 +1,7 @@
 import React, {PureComponent, PropTypes} from 'react';
 
 import{presets, cadreDefaults} from './config/initial'
-
+import Icon from './UI/icones'
 /*
 3 champs :
 - une liste des presets,
@@ -73,14 +73,18 @@ export default class ChoixCadrage extends PureComponent {
         const plW = Math.round(this.state.height * this.state.ratio);
         const plH = Math.round(this.state.width / this.state.ratio);
         return (
-            <div className="element-cadre">
-                <label htmlFor="cadrage-presets"> presets </label>
+            <div className="gestion-crop">
+                <label className="crop-label"  
+                htmlFor="cadrage-presets"> aspect </label>
                 <select 
+                    className="crop-presets"
                     id="cadrage-presets"
                     onChange={this.handleSelect}>
                     {options}
                 </select>
-                <div>
+                <div className="gestion-crop-size">
+                    <label className="crop-label" 
+                    htmlFor="crop-width"> L </label>
                     <input
                         className="crop-size-input"
                         name="width"
@@ -91,10 +95,12 @@ export default class ChoixCadrage extends PureComponent {
                         step="1"
                         onChange={this.handleCheck}
                     /> 
-                    <button className="crop-size-permute" 
+                    <span className="crop-size-permute" 
                     onClick={this.handlePermute}> 
-                    X  
-                    </button>                                              
+                    <Icon name="permuter"/>
+                    </span>   
+                    <label className="crop-label" 
+                    htmlFor="crop-width"> H </label>            
                     <input
                         className="crop-size-input"
                         name="height"

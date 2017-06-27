@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {isClient} from './config/constantes'
+// import {isClient} from './config/constantes'
 
 import Icon from './UI/icones'
 import Text from './UI/text'
@@ -16,15 +16,35 @@ export default class Upload  extends Component {
     state = {  }
     
      upload(e){
-        if (isClient) {
-         const objUrl = window.URL.createObjectURL(e.target.files[0]);
-         this.props.getUrl(objUrl);
+        const upFile = e.target.files[0];
+        
+        // if (isClient) {
+        //  const objUrl = window.URL.createObjectURL(upFile);
+        //  this.props.getUrl(objUrl);
+        //  }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const imgFile = {
+                name: upFile.name,
+                type: upFile.type,
+                size: Math.round(upFile.size / 1000),
+                base64: reader.result,
+                // file: upFile
+            };
+            this.props.getUrl(imgFile);
+
+        const image = new Image();
+        image.onload = () => console.log('image uploaded', image);
+        ;
+        image.src = reader.result;   
         }
+        reader.readAsDataURL(upFile);
      }
 
     render() {
         return (
-            <div>
+            <div className="gestion-upload">
                 <input 
                 className="input-hidden"
                 id="upload-file"
@@ -35,7 +55,7 @@ export default class Upload  extends Component {
                 <label htmlFor="upload-file"
                 className="label-reglage">
                     <Icon name="upload"  />
-                    <Text small >upload file</Text>
+                    <Text small >Choisir image</Text>
                 </label>
             </div>            
         );

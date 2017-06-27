@@ -10,7 +10,8 @@ const manipImage = new ManipImage();
 
 export default class Manip extends PureComponent {
     static propTypes = {
-        src: PropTypes.string,
+        // src: PropTypes.string,
+        src: PropTypes.object,
         cadrage: PropTypes.shape({
             width: PropTypes.number,
             height: PropTypes.number,

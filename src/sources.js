@@ -29,11 +29,14 @@ export default class Sources extends PureComponent {
         },
     }
 
-    getUrl(src) {
-        isClient && 
-        this.state.src && 
-        window.URL.revokeObjectURL(this.state.src);
-        this.setState({src});
+    getUrl(imgFile) {
+        console.log('', imgFile);
+        
+        // isClient && 
+        // this.state.src && 
+        // window.URL.revokeObjectURL(this.state.src);
+        this.setState({src: imgFile.base64});
+        // this.setState({src: imgFile.file});
     }
 
     getCadre({width, height, ratio}){
@@ -47,7 +50,7 @@ export default class Sources extends PureComponent {
 
         return(
             <main className="element-wrapper">
-                <aside className="element-upload">
+                <aside className="element-sources">
                     <Upload {...{getUrl}}/>
                     <ChoixCadrage {...{getCadre}}/>
                 </aside>
