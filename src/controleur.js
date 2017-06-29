@@ -4,6 +4,7 @@ import Wrapper from './wrapper'
 import LayerInputs from './Layers/layer-inputs'
 import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
+import LayerReticule from './Layers/layer-reticule'
 import Reglages from './reglages'
 import Loading from './Loading'
 
@@ -18,6 +19,7 @@ import Instance from './Instance'
 const manip = new Instance({
     action: 'Ta-Da-dammm'
 });
+
 
 export default class Controleur extends Component {
      static propTypes = {
@@ -116,11 +118,12 @@ export default class Controleur extends Component {
                         <LayerFond {...{rendu, proxy, cropper}}/>
                         <LayerCrop {...{rendu, proxy, cropWrapper, cropper}}/>
                         <LayerInputs {...{getPointerPosition, ...conteneur}}/>
+                        <LayerReticule {...{...conteneur}}/>
                     </div> )
                 }
                 </Wrapper>
                     <Reglages {...{rotate90, getPivot, pivot, transformPreset}}/>
-                    <Transformers {...{rendu}} />
+                    {/*<Transformers {...{rendu}} />*/}
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
                     <Plotters {...{...pointers, conteneur, cropper}}/> 
             </div>

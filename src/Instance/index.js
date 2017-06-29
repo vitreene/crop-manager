@@ -1,6 +1,6 @@
 /* eslint-disable */
 import defaults from '../config/instance-init'
-import {RAD, DONE} from '../config/constantes'
+import {RAD, IDLE, DONE} from '../config/constantes'
 
 import transformer from '../helpers/transformer-origin'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
@@ -144,7 +144,10 @@ export default class {
     }
 
     updateRendu(action){
-        const {transform, pivot, proxy, /*cropper*/} = this;
+    const {transform, pivot, proxy} = this;
+    
+        if (!proxy.src) return {action: IDLE};
+        
         const {width, height} = proxy;
         const {dX, dY} = transform.translate;
 

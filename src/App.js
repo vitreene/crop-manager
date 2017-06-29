@@ -35,7 +35,9 @@ export default class App extends Component {
   }
 
   getCadre({width, height, ratio}){
-      this.setState({ cadre: {width, height, ratio} })
+    // bloquer si pas d'image
+    this.state.src && 
+    this.setState({ cadre: {width, height, ratio} })
   }
 
   setCadre() {

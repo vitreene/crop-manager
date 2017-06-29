@@ -50,6 +50,14 @@ const icones = {
     <g fill="none" stroke="currentcolor"  strokeWidth="4">
       <path d="M35.3 14.1l4.6 5.98-4.3 5.03m-25.5-5.5h29.8M14.7 36.1l-4.6-5.97 4.3-5.03m25.5 5.5H10.1"/>
     </g>
+  ),
+  reticule: (
+      <g fill="none" stroke="currentcolor"  strokeWidth="2">
+          <path stroke="currentcolor" strokeWidth="3" d="M26 1v50m25-25H1"/>
+          <path stroke="white"  strokeWidth="1" d="M26 1v50m25-25H1"/>
+          <circle stroke="currentcolor" strokeWidth="3" cx="26" cy="26" r="14.87"/>
+          <circle stroke="white"  strokeWidth="1" cx="26" cy="26" r="14.87"/>
+      </g>
   )
 
 }
@@ -58,12 +66,12 @@ export default function Icon(props) {
   const {name, classe='', checked=false} = props ;
   const iconClassName = `icon-${name}`
   return(
-<svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 52" clipRule="evenodd" strokeLinejoin="round"  >
+    <svg className={'icon-small ' + iconClassName} xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeMiterlimit="1.5" viewBox="0 0 52 52" clipRule="evenodd" strokeLinejoin="round"  >
 
-    {checked && fond(classe)}
-    {icones[name]}
+        {checked && fond(classe)}
+        {icones[name]}
 
-</svg>
+    </svg>
 
 )}
 

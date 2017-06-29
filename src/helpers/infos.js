@@ -57,15 +57,16 @@ export function Plotters({
         left: containerSize.width * 0.5, 
         color: 'blue'
     };
-
+    const hasPoint = !!(pointer.posX && pointer.posY);
+    const hasPointAxe = !!(axe.posX && axe.posY);
     const point = {top: pointer.posY, left: pointer.posX};
     const pointAxe = {top: axe.posY, left: axe.posX};
 
     return (
     <div>
-        <span className="plot" style={middle}>&#215;</span>
-        <span className="plot" style={point}>&#x2299;</span>
-        <span className="plot" style={pointAxe}>&#x22a1;</span>
+        {/*<span className="plot" style={middle}>&#215;</span>*/}
+        {hasPoint && <span className="plot" style={point}>&#x2299;</span>}
+        {hasPointAxe && <span className="plot" style={pointAxe}>&#x22a1;</span>}
     </div>
     );
 }

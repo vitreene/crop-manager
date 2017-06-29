@@ -214,6 +214,11 @@ body {
   height: 2rem;
 }
 
+.icon-reticule{
+  width: 3rem;
+  height: 3rem;
+}
+
 .input-hidden{
   display: none;
   }
