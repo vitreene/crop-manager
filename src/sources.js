@@ -1,66 +1,16 @@
-import React, {PureComponent, PropTypes} from 'react';
-
+import React from 'react';
 import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
-import Manip from './Manip'
 
-import {cadreDefaults} from './config/initial'
-import {isClient} from './config/constantes'
-
-// import {storage} from './config/initial'
-
-
-export default class Sources extends PureComponent {
-    static propTypes = {
-        toCanvas: PropTypes.func
-     }
-    constructor(props) {
-        super(props);
-        this.getUrl = this.getUrl.bind(this);
-        this.getCadre = this.getCadre.bind(this);
-    }
-    
-    state = {
-        src: null, 
-        cadre: {
-            width: cadreDefaults.width,
-            height: cadreDefaults.height,
-            ratio: cadreDefaults.ratio,
-        },
-    }
-
-    getUrl(imgFile) {
-        console.log('', imgFile);
-        
-        // isClient && 
-        // this.state.src && 
-        // window.URL.revokeObjectURL(this.state.src);
-        this.setState({src: imgFile.base64});
-        // this.setState({src: imgFile.file});
-    }
-
-    getCadre({width, height, ratio}){
-        this.setState({ cadre: {width, height, ratio} })
-    }
-
-    render(){
-        const {getUrl, getCadre} = this;
-        const {src, cadre} = this.state;
-        const {toCanvas, toExport} = this.props;
-
+export default function Sources({children, seCadre, getUrl, getCadre}) {
         return(
             <main className="element-wrapper">
                 <aside className="element-sources">
                     <Upload {...{getUrl}}/>
-                    <ChoixCadrage {...{getCadre}}/>
+                    <ChoixCadrage {...{seCadre, getCadre}}/>
                 </aside>
-                <Manip 
-                    {...{src, cadre}}
-                    handleRendu={toCanvas} 
-                    handleExport={toExport}
-                />
+                {children}
             </main>
         )
     }
-}
-                    // importer={storage}
+

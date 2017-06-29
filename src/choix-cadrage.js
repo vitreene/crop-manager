@@ -13,6 +13,7 @@ si  les valeurs w et h sont renseignes, et leur ratio n'existe pas en preset, af
 export default class ChoixCadrage extends PureComponent {
     static propTypes = {
          getCadre: PropTypes.func,
+         seCadre: PropTypes.func,
     }
     constructor(props){
         super(props);
@@ -27,6 +28,9 @@ export default class ChoixCadrage extends PureComponent {
         ratio: cadreDefaults.ratio
      }
      
+     componentWillReceiveProps(nextProps) {
+         this.setState(nextProps);
+     }
      componentDidUpdate() {
         const cadre = {
             width: Math.round(
@@ -61,28 +65,37 @@ export default class ChoixCadrage extends PureComponent {
             height: width,
             ratio: 1 / ratio
         })
-
     }
-    render() {
-        const options = Object.keys(presets).map( key => {
+
+    get selectOptions() {
+        return Object.keys(presets).map( key => {
             const value = presets[key].ratio;
             const label = presets[key].name;
             return (<option {...{key, value, label}}/>)
         });
+    }
 
-        const plW = Math.round(this.state.height * this.state.ratio);
-        const plH = Math.round(this.state.width / this.state.ratio);
+    get placeholder() {
+        return {
+            width: Math.round(this.state.height * this.state.ratio),
+            height: Math.round(this.state.width / this.state.ratio)
+        }
+    }
+    render() {
         return (
             <div className="gestion-crop">
+
                 <label className="crop-label"  
                 htmlFor="cadrage-presets"> aspect </label>
                 <select 
                     className="crop-presets"
                     id="cadrage-presets"
                     onChange={this.handleSelect}>
-                    {options}
+                    {this.selectOptions}
                 </select>
+
                 <div className="gestion-crop-size">
+
                     <label className="crop-label" 
                     htmlFor="crop-width"> L </label>
                     <input
@@ -91,14 +104,16 @@ export default class ChoixCadrage extends PureComponent {
                         id="crop-width"
                         type="number"
                         value={this.state.width}
-                        placeholder={plW}
+                        placeholder={this.placeholder['width']}
                         step="1"
                         onChange={this.handleCheck}
                     /> 
+
                     <span className="crop-size-permute" 
                     onClick={this.handlePermute}> 
                     <Icon name="permuter"/>
-                    </span>   
+                    </span> 
+
                     <label className="crop-label" 
                     htmlFor="crop-width"> H </label>            
                     <input
@@ -107,13 +122,11 @@ export default class ChoixCadrage extends PureComponent {
                         id="crop-height"
                         type="number"
                         value={this.state.height}
-                        placeholder={plH}
+                        placeholder={this.placeholder['height']}
                         step="1"
                         onChange={this.handleCheck}
                     />  
-            
                 </div>
-
             </div>
         );
     }

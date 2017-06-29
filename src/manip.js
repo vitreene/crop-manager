@@ -4,14 +4,15 @@ import React, {PureComponent, PropTypes} from 'react';
 import Controleur from './controleur'
 import ManipImage from './Store'
 import {IDLE, DONE} from './config/constantes'
+
 import {modele} from './config/initial'
 
 const manipImage = new ManipImage();
 
 export default class Manip extends PureComponent {
     static propTypes = {
-        // src: PropTypes.string,
-        src: PropTypes.object,
+        src: PropTypes.string,
+        // src: PropTypes.object,
         cadrage: PropTypes.shape({
             width: PropTypes.number,
             height: PropTypes.number,
@@ -29,16 +30,19 @@ export default class Manip extends PureComponent {
     }
 
     state = modele
-        
+        /*
     componentDidMount() {
         const {importer} = this.props;
         if (importer) {
-            manipImage.import(importer);
-            this._update(cadre);
+            console.log('imorter', importer);
+            
+            manipImage.import(importer)
+            .then( () => this._update(importer.cadre) );
         }
     }
+    */
     componentWillReceiveProps(nextProps) {
-        console.log('nextProps', nextProps);
+        // console.log('nextProps', nextProps);
         
         const {src, cadre} = nextProps;
         const {ratio} = cadre;

@@ -33,11 +33,6 @@ export default class Upload  extends Component {
                 // file: upFile
             };
             this.props.getUrl(imgFile);
-
-        const image = new Image();
-        image.onload = () => console.log('image uploaded', image);
-        ;
-        image.src = reader.result;   
         }
         reader.readAsDataURL(upFile);
      }

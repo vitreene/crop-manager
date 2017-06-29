@@ -50,8 +50,9 @@ export default class {
     }
 
     import(obj) {
-        const {image, cadrage, cadre, transform} = obj;
-        return getImage(image.src)
+        const {image: {src}, cadrage, cadre, transform} = obj;
+        // console.log('import image', src);
+        return getImage(src)
         .then( image => makeProxy(image) )
         .then( ({image, proxy}) => {            
             this.image = image;
@@ -61,7 +62,8 @@ export default class {
             this.pristine = true;
             this.cadre = cadre || {width: 0, height: 0};
         })
-        .then( () => this.read() );
+        // .then( () => this.read() );
+        .then( () => console.log('import', this) );
     }
     export(){
         return {
@@ -129,7 +131,7 @@ export default class {
 
         return {
             rendu: {
-                cadre: this.cadre,
+                cadre: {width, height},
                 image, 
                 transform: {
                     translate, 

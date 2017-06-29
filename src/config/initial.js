@@ -1,7 +1,9 @@
+import source from './img64-demo'
+
 export const storage = {
   "image": {
-    // "src": "blob:http://localhost:3002/1eb52173-39e5-4960-a2e5-c7d5daf8e53f",
-    "src": "https://www.ecranlarge.com/uploads/image/000/990/spider-man-homecoming-photo-affiche-spider-man-homecoming-990356.jpg",
+    // eslint-disable-next-line
+    "src": source,
     "width": 199,
     "height": 180
   },
@@ -15,8 +17,8 @@ export const storage = {
     "ratio": 0.8
   },
   "cadre": {
-    "width": 160,
-    "height": 200
+    "width": 320,
+    "height": 400
   },
   "transform": {
     "translate": {
@@ -175,3 +177,5 @@ const manipModel = {
         "local-scale": Number
     }
 }
+
+// eslint-disable-next-line
