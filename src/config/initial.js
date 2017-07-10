@@ -43,9 +43,21 @@ export const presets = {
         ratio: 1.3333,
         name: "4:3",
     },
-    "p15x10": {
+    "p3x2": {
         ratio: 1.5,
-        name: "15:10",
+        name: "3:2",
+    },
+    "p5x7": {
+        ratio: 0.7142,
+        name: "5:7",
+    },
+    "p16x9": {
+        ratio: 1.7777,
+        name: "16:9",
+    },
+    "p1x1": {
+        ratio: 1,
+        name: "carré",
     },
 }
 

@@ -22,7 +22,13 @@ body {
   flex-flow: column;
   background-color: ghostwhite;
 }
-
+.App-logo{
+  display: block;
+  margin-left: 2rem;
+  padding: 1rem;
+  /*margin: 0 auto;*/
+  width: 15%;
+}
 /*
 .container{
   margin: 0 auto;

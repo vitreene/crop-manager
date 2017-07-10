@@ -8,6 +8,8 @@ import Manip from './Manip'
 import {storage} from './config/initial'
 import {cadreDefaults} from './config/initial'
 
+import logo from './UI/crop-manager-logo3.svg';
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -59,7 +61,7 @@ export default class App extends Component {
     return (
       <div className="container">
           <div className="App-header">
-            <h2>Crop manager</h2>
+             <img src={logo} className="App-logo" alt="crop-manager" />
           </div>
 
           <div className="crop-manager">

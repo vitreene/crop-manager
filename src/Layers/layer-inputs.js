@@ -30,6 +30,11 @@ const Inputs = (props) => {
             eventMouse(e, 'mouse end');
         }
     };
+    const handleMouseWheel = (e) => {
+        
+        // e.nativeEvent.deltaY
+        // deltaMode, deltaX, deltaY, deltaZ
+    };
 
     function eventTouch(e, type) {
         e.stopPropagation();
@@ -84,6 +89,7 @@ const Inputs = (props) => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
             onMouseMove={handleMouseMove}
+            onWheel={handleMouseWheel}
             />
     )
 };
