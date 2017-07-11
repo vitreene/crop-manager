@@ -71,7 +71,7 @@ export default class ChoixCadrage extends PureComponent {
         return Object.keys(presets).map( key => {
             const value = presets[key].ratio;
             const label = presets[key].name;
-            return (<option {...{key, value, label}}/>)
+            return (<option {...{key, value, label}}>{label}</option>)
         });
     }
 
@@ -88,16 +88,16 @@ export default class ChoixCadrage extends PureComponent {
                 <label className="crop-label"  
                 htmlFor="cadrage-presets"> aspect </label>
                 <select 
-                    className="crop-presets"
-                    id="cadrage-presets"
-                    onChange={this.handleSelect}>
+                className="crop-presets"
+                id="cadrage-presets"
+                onChange={this.handleSelect}>
                     {this.selectOptions}
                 </select>
 
                 <div className="gestion-crop-size">
 
-                    <label className="crop-label" 
-                    htmlFor="crop-width"> L </label>
+                    <label className="crop-label label-px" 
+                    htmlFor="crop-width"> L 
                     <input
                         className="crop-size-input"
                         name="width"
@@ -108,14 +108,15 @@ export default class ChoixCadrage extends PureComponent {
                         step="1"
                         onChange={this.handleCheck}
                     /> 
+                    </label>
 
                     <span className="crop-size-permute" 
                     onClick={this.handlePermute}> 
                     <Icon name="permuter"/>
                     </span> 
 
-                    <label className="crop-label" 
-                    htmlFor="crop-width"> H </label>            
+                    <label className="crop-label label-px" 
+                    htmlFor="crop-width"> H 
                     <input
                         className="crop-size-input"
                         name="height"
@@ -125,7 +126,8 @@ export default class ChoixCadrage extends PureComponent {
                         placeholder={this.placeholder['height']}
                         step="1"
                         onChange={this.handleCheck}
-                    />  
+                    /> 
+                    </label>            
                 </div>
             </div>
         );

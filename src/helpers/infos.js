@@ -52,11 +52,13 @@ export function Plotters({
 }) {
     const {containerSize/*, containerPos*/} = conteneur;
     if (containerSize.height === 0 && containerSize.width === 0 ) return null;
+    /*
     const middle = {
         top: containerSize.height * 0.5, 
         left: containerSize.width * 0.5, 
         color: 'blue'
     };
+    */
     const hasPoint = !!(pointer.posX && pointer.posY);
     const hasPointAxe = !!(axe.posX && axe.posY);
     const point = {top: pointer.posY, left: pointer.posX};

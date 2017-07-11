@@ -22,12 +22,22 @@ body {
   flex-flow: column;
   background-color: ghostwhite;
 }
+.App-header{
+  width: 100%;
+  height: 100px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color:#a1dff7;
+}
+
 .App-logo{
   display: block;
+  height: 100%;
   margin-left: 2rem;
-  padding: 1rem;
+  /* padding: 1rem; */
   /*margin: 0 auto;*/
-  width: 15%;
+  /* width: 160px; */
+  /* background-color:#a1dff7; */
 }
 /*
 .container{
@@ -63,10 +73,11 @@ body {
 .element-sources{
   display: flex;
   flex-flow: row;
-  flex-wrap:  nowrap;
+  flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: space-between;
-      color: cadetblue;
+  color: cadetblue;
+  height: 3rem;
 }
 
 .element-rendu{
@@ -74,8 +85,9 @@ body {
   /*min-width: 30%;*/
   padding: 2rem;
   /*border: thin solid blueviolet;*/
-  background-color: antiquewhite;
+  background-color: #a1dff7;
   overflow: hidden;
+  margin: 1rem 0 2rem 2rem;
 }
 
 .element-wrapper{
@@ -231,10 +243,21 @@ body {
 
 .crop-label{
   margin-left: 1rem; 
-  margin-right: 0.4rem;
+  margin-right: 1rem;
   color: currentColor;
   font-size: 10px;
   text-transform: uppercase;
+}
+
+.label-px:after{
+  content: 'px';
+  padding-left: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .label-px:after{
+    content: '';
+  }
 }
 
 .crop-presets{
@@ -244,15 +267,18 @@ body {
   width: 6rem;
 }
 .crop-size-input{
+   margin-left: 0.4rem;
   color: currentColor;
   text-align: right;
-  margin-right: 1rem;
   font-size: 1rem;
   height: 2rem;
   width: 4rem;
 }
 
-.crop-presets:focus,
+.crop-presets:focus{
+    outline: none;
+  box-shadow: none;
+}
 .crop-size-input:focus{
   color: black;
   border: thin solid currentColor;

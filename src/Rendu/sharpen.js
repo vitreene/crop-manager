@@ -1,6 +1,7 @@
 // https://gist.github.com/mikecao/65d9fc92dc7197cb8a7c
 
 export default function sharpen(ctx, w, h, mix) {
+    // eslint-disable-next-line
     let x, sx, sy, r, g, b, a, dstOff, srcOff, wt, cx, cy, scy, scx,
         dstData = ctx.createImageData(w, h),
         dstBuff = dstData.data,
