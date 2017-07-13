@@ -10,7 +10,7 @@ import Loading from './Loading'
 
 
 import {DONE, IDLE} from './config/constantes'
-import {rendu} from './config/initial'
+import rendu from './config/rendu'
 
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './helpers/infos'

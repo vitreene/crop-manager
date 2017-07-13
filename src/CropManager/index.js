@@ -5,7 +5,7 @@ import Controleur from './controleur'
 import ManipImage from './Store'
 import {IDLE, DONE} from './config/constantes'
 
-import {modele} from './config/initial'
+import modele from './config/modele'
 
 const manipImage = new ManipImage();
 

@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, {Component} from 'react';
 
-import Sources from './Sources'
-import DrawCanvas from './Rendu'
-import Manip from './Manip'
+import Sources from './sources'
+import DrawCanvas from '../Rendu'
+import CropManager from '../CropManager'
 
 import {storage} from './config/initial'
 import {cadreDefaults} from './config/initial'
@@ -66,7 +66,7 @@ export default class App extends Component {
 
           <div className="crop-manager">
               <Sources {...{getUrl, setCadre, getCadre}}>
-                <Manip 
+                <CropManager 
                     {...{src, cadre}}
                     handleRendu={toCanvas} 
                     handleExport={toExport}

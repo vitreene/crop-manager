@@ -62,48 +62,12 @@ export const presets = {
 }
 
 
-export const rendu = {
-    translate: {dX: 0, dY: 0},
-    rotate: 0,
-    scale: 1,
-    origin: {oX: 0, oY: 0},
-};
-
 export const cadreDefaults = {
     width: 160,
     height: 200,
     ratio: 0.8
 };
 
-export const modele = {
-    cadrage: {
-        diagonale: 1,
-        image: {
-            height:0,
-            width: 0
-        },
-        marge: 5,
-        ratio: 1
-    },
-    proxy: {
-        width: 0,
-        height: 0,
-        src:""
-    },
-    transform: {
-        pivot: {
-            h: 1,
-            v: 1
-        },
-        rotate: 0,
-        scale: 1,
-        translate: {
-            dX: 0,
-            dY: 0
-        }
-    }
-};
-    
 const initial = {
     "image": {
         "src": process.env.PUBLIC_URL + '/vintage-travel-posters-1-20.jpg',

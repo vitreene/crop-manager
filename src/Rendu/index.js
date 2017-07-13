@@ -18,7 +18,7 @@ draw image ;
 */
 
 import React from 'react';
-import {RAD} from '../config/constantes'
+import {RAD} from './config/constantes'
 import sharpen from './sharpen'
 
 let ref = null;
