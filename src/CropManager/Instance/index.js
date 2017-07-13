@@ -17,9 +17,9 @@ export default class {
     }
 
     log() {
-        console.log('this', this);
+        console.log('this : Instance', this);
     }
-
+    // obsolete
     report(action) {
         if (action !== DONE) return;
         const {translate, rotate} = this.transform;
@@ -32,6 +32,7 @@ export default class {
         this.isLoading = false;
         this.cadrage = cadrage;
         this._cropResize();      
+        this.translatePc = transform.translate;
         // translateEnPixels
         const translate = translateEnPixels(transform.translate, this.cropper);
         this.transform = Object.assign( 
@@ -66,6 +67,7 @@ export default class {
         */
         Object.keys(manip).map(  key => this[key] = manip[key] );
 
+        this.translatePc = translateEnPourcents(transform.translate, this.cropper);
         // this.report(manip.action);        
         return this.updateRendu(manip.action);      
     }

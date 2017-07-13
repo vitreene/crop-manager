@@ -1,19 +1,17 @@
 import React, {Component, PropTypes} from 'react';
 
-import Wrapper from './wrapper'
+import Wrapper from './Wrapper'
 import LayerInputs from './Layers/layer-inputs'
 import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
 import LayerReticule from './Layers/layer-reticule'
-import Reglages from './reglages'
+import Reglages from './Reglages'
 import Loading from './Loading'
-
+// eslint-disable-next-line
+import {Transformers, Plotters, Pointers} from './helpers/infos'
 
 import {DONE, IDLE} from './config/constantes'
 import rendu from './config/rendu'
-
-// eslint-disable-next-line
-import {Transformers, Plotters, Pointers} from './helpers/infos'
 
 import Instance from './Instance'
 const manip = new Instance({

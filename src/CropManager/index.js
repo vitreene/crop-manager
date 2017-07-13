@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, {PureComponent, PropTypes} from 'react';
 
-import Controleur from './controleur'
+import Controleur from './Controleur'
 import ManipImage from './Store'
 import {IDLE, DONE} from './config/constantes'
 
