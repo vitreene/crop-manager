@@ -8,7 +8,7 @@ import LayerReticule from './Layers/layer-reticule'
 import Reglages from './Reglages'
 import Loading from './Loading'
 // eslint-disable-next-line
-import {Transformers, Plotters, Pointers} from './helpers/infos'
+import {Transformers, Plotters, Pointers} from './infos'
 
 import {DONE, IDLE} from './config/constantes'
 import rendu from './config/rendu'

@@ -1,25 +1,24 @@
-// eslint-disable-next-line
-import pica from 'pica/dist/pica.min.js'
-
 export default async function (image) {
-    const {width: naturalWidth, height: naturalHeight} = image;
-    const options = {
-        unsharpAmount: 70,
-        unsharpRadius: 0.6,
-    }
-    const canvas = makeCanvas(naturalWidth, naturalHeight);
-    const resizer = new pica();
-    let proxy = await resizer.resize(image, canvas, options);
-        proxy = await resizer.toBlob(proxy, 'image/jpeg', 70);
-    return {
-        image, 
-        proxy: {
-            src: window.URL.createObjectURL(proxy), 
-            width: canvas.width, 
-            height: canvas.height
-        }
-    };
-     
+    const canvas = makeCanvasImage(image);
+    return new Promise( resolve => {
+        canvas.toBlob( blob => resolve({
+            image, 
+            proxy: {
+                src: window.URL.createObjectURL(blob), 
+                width: canvas.width, 
+                height: canvas.height
+            }
+        })
+        )
+    });   
+}
+
+function makeCanvasImage(image) {
+    const canvas = makeCanvas(image.width, image.height);
+    canvas
+    .getContext('2d')
+    .drawImage(image, 0,0, canvas.width, canvas.height);
+    return canvas;
 }
 
 function makeCanvas(width, height) {
