@@ -1,32 +1,39 @@
-import source from './img64-demo'
+// import source from './img64-demo'
 
 export const storage = {
   "image": {
+    "src": process.env.PUBLIC_URL + '/vintage-travel-posters-1-20.jpg',
+    "width": 3456, // pixels
+    "height": 2304, // pixels      
     // eslint-disable-next-line
-    "src": source,
-    "width": 199,
-    "height": 180
+    // "src": source,
+    // "width": 199,
+    // "height": 180
   },
+/*
   "proxy": {
     "src": "blob:http://localhost:3002/34071c94-998c-4367-8cad-e3bccef803ed",
     "width": 1000,
     "height": 904
   },
+*/
   "cadrage": {
-    "diagonale": 268.33002068348594,
+    "diagonale": 268.3300,
     "ratio": 0.8
   },
   "cadre": {
     "width": 320,
-    "height": 400
+    // "height": 400,
+    "height": 0,
+    "ratio": 0.8
   },
   "transform": {
     "translate": {
-      "dX": -0.6084317012352488,
-      "dY": 0.19824906007493773
+      "dX": -0.1955,
+      "dY": 0.1548
     },
-    "rotate": 17,
-    "scale": 3.8515730674837516,
+    "rotate": 20,
+    "scale": 4.3915,
     "pivot": {
       "h": 1,
       "v": 1
@@ -98,8 +105,8 @@ const initial = {
      "transform": {
         "id": "1",
         "translate": {
-            "x": 10, // pourcents
-            "y": 20 // pourcents
+            "x": 0.10, // pourcents
+            "y": 0.20 // pourcents
         },
         "rotation": 25, // degres
         "scale": 1.2,

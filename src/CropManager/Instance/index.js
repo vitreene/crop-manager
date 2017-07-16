@@ -19,16 +19,11 @@ export default class {
     log() {
         console.log('this : Instance', this);
     }
-    // obsolete
-    report(action) {
-        if (action !== DONE) return;
-        const {translate, rotate} = this.transform;
-        const ddX = Math.round(translate.dX *100) /100;
-        const ddY = Math.round(translate.dY *100) /100;
-        console.log('---- translate', ddX, ddY ,'rotate', rotate);
-    }
 
     init(transform, cadrage, proxy) {
+        // console.log('transform, cadrage, proxy', transform, cadrage, proxy);
+        if (!transform || !cadrage || !proxy) return {action: IDLE};
+
         this.isLoading = false;
         this.cadrage = cadrage;
         this._cropResize();      
@@ -67,8 +62,7 @@ export default class {
         */
         Object.keys(manip).map(  key => this[key] = manip[key] );
 
-        this.translatePc = translateEnPourcents(transform.translate, this.cropper);
-        // this.report(manip.action);        
+        this.translatePc = translateEnPourcents(transform.translate, this.cropper);      
         return this.updateRendu(manip.action);      
     }
 

@@ -3,10 +3,7 @@ import React, {Component} from 'react';
 
 import Sources from './sources'
 import DrawCanvas from '../Rendu'
-import CropManager from '../CropManager'
-
-import {storage} from './config/initial'
-import {cadreDefaults} from './config/initial'
+import Demo from './demo-file'
 
 import logo from './UI/crop-manager-logo3.svg';
 
@@ -15,36 +12,19 @@ export default class App extends Component {
     super(props);
     this.toCanvas = this.toCanvas.bind(this);
     this.toExport = this.toExport.bind(this);
-    this.getUrl = this.getUrl.bind(this);
-    this.getCadre = this.getCadre.bind(this);
-    this.setCadre = this.setCadre.bind(this);
+    this.getImport = this.getImport.bind(this);
   }
 
   state = {
-    /*
-    */
-    cadre : {
-      width: cadreDefaults.width,
-      height: cadreDefaults.height,
-      ratio: cadreDefaults.ratio,
-    },
-    src: null, 
     rendu: null,
+    importer: null
   }
 
-  getUrl(imgFile) {     
-      this.setState({src: imgFile.base64});
+    getImport(importer){
+      console.log('importer', importer);
+      this.setState({importer: importer});
   }
 
-  getCadre({width, height, ratio}){
-    // bloquer si pas d'image
-    this.state.src && 
-    this.setState({ cadre: {width, height, ratio} })
-  }
-
-  setCadre() {
-    return this.state.cadre;
-  }
   toCanvas(rendu){
     this.setState({...rendu});
   }
@@ -54,9 +34,8 @@ export default class App extends Component {
   }
 
   render() {
-    const {rendu, src, cadre} = this.state;
-    const {getUrl, setCadre, getCadre, toCanvas, toExport} = this;
-    // console.log('rendu', rendu);
+    const {rendu, importer} = this.state;
+    const { getImport, toCanvas, toExport} = this;
     
     return (
       <div className="container">
@@ -65,20 +44,15 @@ export default class App extends Component {
           </div>
 
           <div className="crop-manager">
-              <Sources {...{getUrl, setCadre, getCadre}}>
-                <CropManager 
-                    {...{src, cadre}}
-                    handleRendu={toCanvas} 
-                    handleExport={toExport}
-                    importer={storage}
-                />
-                </Sources>
+              <Sources {...{importer}}/>
+              
               <aside id="canvas" className="element-rendu">
+                <Demo {...{getImport}}/>                
                 <DrawCanvas {...rendu} />
               </aside>
           </div>
       </div>
     );
+
   }
 }
-

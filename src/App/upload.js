@@ -4,6 +4,8 @@ import React, {Component, PropTypes} from 'react';
 import Icon from './UI/icones'
 import Text from './UI/text'
 
+let counter = 0;
+
 export default class Upload  extends Component {
     static propTypes = {
         getUrl: PropTypes.func,
@@ -17,19 +19,15 @@ export default class Upload  extends Component {
     
      upload(e){
         const upFile = e.target.files[0];
-        
-        // if (isClient) {
-        //  const objUrl = window.URL.createObjectURL(upFile);
-        //  this.props.getUrl(objUrl);
-        //  }
-
         const reader = new FileReader();
         reader.onload = () => {
+            counter++;
             const imgFile = {
                 name: upFile.name,
                 type: upFile.type,
                 size: Math.round(upFile.size / 1000),
-                base64: reader.result,
+                src: reader.result,
+                counter
                 // file: upFile
             };
             this.props.getUrl(imgFile);

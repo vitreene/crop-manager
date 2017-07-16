@@ -25,6 +25,13 @@ const modele = {
             dX: 0,
             dY: 0
         }
+    },
+    /*
+    importer: {
+        image: {
+            src: null
+        }
     }
+    */
 };
 export default modele;

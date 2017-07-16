@@ -13,7 +13,7 @@ export default class {
     proxy = null
     transform = null
     cadrage = null
-    cadre = null
+    // cadre = null
     pristine = false // l'objet a-t-il été modifié ?
 
     // create object
@@ -34,12 +34,13 @@ export default class {
             return ( this.read() );
         })
     }
-    update(params) {
-        this.transform = params;
+    update(transform) {
+        this.transform = transform;
         this.pristine = false; 
     }
 
     updateCadre(ratio) {
+        if (!this.cadrage) return;
         this.cadrage.ratio = ratio;
         this.pristine = false; 
     }
@@ -49,7 +50,7 @@ export default class {
         return {proxy, cadrage, transform}
     }
 
-    import(obj) {
+    importer(obj) {
         const {image: {src}, cadrage, cadre, transform} = obj;
         // console.log('import image', src);
         return getImage(src)
@@ -60,26 +61,31 @@ export default class {
             this.proxy = proxy;
             this.transform = transform;
             this.pristine = true;
-            this.cadre = cadre || {width: 0, height: 0};
+            // this.cadre = cadre || {width: 0, height: 0};
+    //    console.log('importer', this.cadrage, cadrage);     
+            return ( this.read() );            
         })
         // .then( () => this.read() );
-        .then( () => console.log('import', this) );
+        // .then( () => console.log('importer', this.cadrage, cadrage) );
     }
-    export(){
+    exporter(){
+        const {image, cadrage, transform} = this;
+        if (!image || !cadrage || !transform) return;
         return {
             image: {
-                src: this.image.src,
-                width: this.image.naturalWidth,
-                height: this.image.naturalHeight
+                src: image.src,
+                width: image.naturalWidth,
+                height: image.naturalHeight
             },
             proxy: this.proxy,
             // "preset": "p4x3",
             cadrage: {
-                diagonale: this.cadrage.diagonale,
-                ratio: this.cadrage.ratio
+                diagonale: cadrage.diagonale,
+                ratio: cadrage.ratio
             },
-            cadre: this.cadre || {width: 0, height: 0},
-            transform: this.transform,
+            transform: transform,
+            // sera un tableau de cadres
+            // cadre: this.cadre || {width: 0, height: 0},
             meta: {pristine: this.pristine}
         }
     }
@@ -104,9 +110,12 @@ export default class {
         ? performance ? 
         selon l'echelle, il suffit d'envoyer le proxy à la place de l'original.
         */
-        this.cadre = {width, height};
+
+        // this.cadre = {width, height};
         
         const {image, cadrage, transform} = this;
+        if (!image || !cadrage || !transform) return;
+        
         const {dX, dY} = transform.translate;
         const {pivot} = transform;
         const {diagonale} = cadrage;
