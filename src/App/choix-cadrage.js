@@ -1,6 +1,6 @@
-import React, {PureComponent, PropTypes} from 'react';
+import React from 'react';
 
-import{presets, cadreDefaults} from './config/initial'
+// import{presets, cadreDefaults} from './config/initial'
 import Icon from './UI/icones'
 /*
 3 champs :
@@ -10,9 +10,100 @@ en placeholder, le calcul selon le ratio.
 si  les valeurs w et h sont renseignes, et leur ratio n'existe pas en preset, afficher la valeur "libre"
 
 */
+
+export default function ChoixCadrage(props) {
+    console.log('props', props);
+    
+    const {cadre, getInputs} = props;
+    const {selected} = cadre.select;
+    // console.log('ChoixCadrage', cadre);
+    
+    function handleCheck(e) {
+        console.log('handleCheck', e.target.name, e.target.value);
+        // this.setState({[e.target.name]: e.target.value})
+        getInputs({name: e.target.name, value: e.target.value});
+    }
+    function handleSelect(e) {
+       // this.setState({ratio: e.target.value})
+        getInputs({name: 'select', value: e.target.value});
+    }
+
+    function handlePermute(){
+        getInputs({name: 'permute', value: null});
+/*
+        const {width, height, ratio} = cadre;
+            width: height,
+            height: width,
+            ratio: 1 / ratio
+        })
+*/
+    }
+    function selectOptions() {
+        const {presets} = cadre.select;
+        return presets.map( preset => {
+            const value = preset.ratio;
+            const label = preset.name;
+            const key = label + value;
+            return (<option {...{key, value, label}}>{label}</option>)
+        });
+    }
+
+
+    return (
+            <div className="gestion-crop">
+
+                <label className="crop-label"  
+                htmlFor="cadrage-presets"> aspect </label>
+                <select 
+                className="crop-presets"
+                id="cadrage-presets"
+                value={selected}
+                onChange={handleSelect}>
+                    {selectOptions()}
+                </select>
+
+                <div className="gestion-crop-size">
+
+                    <label className="crop-label label-px" 
+                    htmlFor="crop-width"> L 
+                    <input
+                        className="crop-size-input"
+                        name="width"
+                        id="crop-width"
+                        type="number"
+                        value={cadre.width}
+                        placeholder={cadre.plWidth}
+                        step="1"
+                        onChange={handleCheck}
+                    /> 
+                    </label>
+
+                    <span className="crop-size-permute" 
+                    onClick={handlePermute}> 
+                    <Icon name="permuter"/>
+                    </span> 
+
+                    <label className="crop-label label-px" 
+                    htmlFor="crop-height"> H 
+                    <input
+                        className="crop-size-input"
+                        name="height"
+                        id="crop-height"
+                        type="number"
+                        value={cadre.height}
+                        placeholder={cadre.plHeight}
+                        step="1"
+                        onChange={handleCheck}
+                    /> 
+                    </label>            
+                </div>
+            </div>
+        );
+    }
+/*
 export default class ChoixCadrage extends PureComponent {
     static propTypes = {
-         getCadre: PropTypes.func,
+         getInputs: PropTypes.func,
          cadre: PropTypes.object,
     }
     constructor(props){
@@ -22,14 +113,14 @@ export default class ChoixCadrage extends PureComponent {
         this.handlePermute = this.handlePermute.bind(this);
         this.state = props.cadre;
     }
-    /*
+ 
     state = { 
         width: cadreDefaults.width,
         // height: cadreDefaults.height,
         height: '',
         ratio: cadreDefaults.ratio
      }
-     */
+  
      componentWillReceiveProps({cadre}) {
          // si importer : maj les trois valeurs,
          // autre : maj des valeurs renseignees uniquement.
@@ -57,27 +148,21 @@ export default class ChoixCadrage extends PureComponent {
                 this.state.width / this.state.height
                 ) || this.state.ratio 
         };
-        this.props.getCadre(cadre);
+        this.props.getInputs(cadre);
      }
 
     handleCheck(e) {
         console.log('handleCheck', e.target.name, e.target.value);
-        this.setState({[e.target.name]: e.target.value})
+        // this.setState({[e.target.name]: e.target.value})
+        this.props.getInputs({name: [e.target.name], value: e.target.value});
     }
     handleSelect(e) {
         this.setState({ratio: e.target.value})
     }
     handlePermute(){
-        /*
-        const {width, height, ratio} = this.state;
-        this.setState({
-            width: height,
-            height: width,
-            ratio: 1 / ratio
-        })
-        */
+
         const {width, height, ratio} = this.props.cadre;
-        this.props.getCadre({
+        this.props.getInputs({
             width: height,
             height: width,
             ratio: 1 / ratio
@@ -151,3 +236,5 @@ export default class ChoixCadrage extends PureComponent {
         );
     }
 }
+
+*/

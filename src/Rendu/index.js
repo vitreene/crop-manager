@@ -22,17 +22,22 @@ import {RAD} from './config/constantes'
 import sharpen from './sharpen'
 
 let ref = null;
+const typeFile = 'image/jpeg';
+const encoder = 0.5;
 
 export default function DrawCanvas(props) {
-    const {cadre, image} = props;
+    const {cadre, image} = props; 
 
     const width = (cadre) ? cadre.width : 0;
     const height = (cadre) ? cadre.height : 0;
-    const name = (image) ? image.name : 'noname';
+    // const name = (image) ? image.name : 'noname';
+    const name = (image) 
+    ? image.src.split("/").pop().split(".")[0] 
+    : 'noname';
     
     const imageName = `${name}_${width}_${height}.jpg`;
     const canvasStyle = {width, height};
-    const download = () => ref.toDataURL();
+    const download = () => ref.toDataURL(typeFile, encoder);
 
     if (ref && Object.keys(props).length) paint(ref, props);
 

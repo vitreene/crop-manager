@@ -13,21 +13,24 @@ export default class CropManager extends PureComponent {
     static propTypes = {
         imgFile: PropTypes.object,
         // cadrage: PropTypes.shape({
+            /*
         cadre: PropTypes.shape({
             width: PropTypes.number,
             height: PropTypes.number,
             ratio: PropTypes.number,
         }),
+        */
         importer: PropTypes.object,
-        handleCadre: PropTypes.func,
+        handleRatio: PropTypes.func,
         handleRendu: PropTypes.func,
         handleExport: PropTypes.func,
      }
     static defaultProps = {
-        cadre: {},
+        // cadre: {},
+        ratio: 1,
         imgFile: {},
         importer: {},
-        handleCadre: () => {}, 
+        handleRatio: () => {}, 
         handleRendu: () => {}, 
         handleExport: () => {},
     }
@@ -39,36 +42,21 @@ export default class CropManager extends PureComponent {
     }
 
     state = modele
-        /*
-    componentDidMount() {
-        const {importer} = this.props;
-        if (importer) {
-            console.log('imorter', importer);
-            
-            manipImage.import(importer)
-            .then( () => this._update(importer.cadre) );
-        }
-    }
-    */
+
     componentWillReceiveProps(nextProps) {
-        const {imgFile, cadre, importer} = nextProps;
-        const {ratio} = cadre;
+        const {imgFile, ratio, importer} = nextProps;
 
         if (importer) {
             const counter = (this.props.importer) 
                 ? this.props.importer.counter
                 : 0;
              if (importer.counter !== counter) {
-                 /*
-                 const cadreImport = {
-                     ratio: importer.cadrage.ratio,
-                     width: 300,
-                     height: null,
-                 };
-                    */
+                const{cadre, ...reste} = importer;
                 manipImage
-                .importer(importer)
-                .then( () => this._update(importer.cadre) ); 
+                .importer(reste)
+                .then( () => {
+                    this.props.handleCadre(cadre);
+                    this._update() }); 
                 return;
             }
         }
@@ -79,33 +67,42 @@ export default class CropManager extends PureComponent {
                 : 0;
             const {src} = imgFile;
             
-            console.log('imgFile.counter', imgFile.counter, counter);
+            // console.log('imgFile.counter', imgFile.counter, counter);
              if (imgFile.counter !== counter) {
                 manipImage
                 .create(src, ratio) 
-                .then( () => this._update(cadre) );  
+                .then( () => this._update() );  
                 return;
              }
         }
         
-        if (ratio !== this.props.cadre.ratio) {           
+        if (ratio !== this.props.ratio) {           
             manipImage.updateCadre(ratio);
-            this._update(cadre);
+            this._update();
         }
     }
 
     updatePosition(transform) {
-        const {cadre} = this.props;
+        // const {cadre} = this.props;
         manipImage.update(transform);
-        this._update(cadre);
+        this._update();
     }
 
-    _update(cadre) {
+    _update() {
         this.setState( manipImage.read() );
-        // paser cadre autrement
-        this.props.handleRendu( manipImage.rendu(cadre) );
         this.props.handleExport( manipImage.exporter() );
-        this.props.handleCadre( cadre );
+        // this.props.handleRatio( ratio );
+
+        // 2. comment déclencher le rendu ?
+        // les données de rendu sont dans Sources;
+        // la fonction de calcul est dans Crop-manager
+        // le composant est dans App.
+        /*
+        le composant recupère le résultat dans le state depuis toCanvas
+        toCanvas recoit me résultat de handleExport
+        comment faire passer cadre dans handleExport -> via props.
+        */
+        this.props.handleRendu( manipImage.rendu(this.props.cadre) );
     }
 
     render() {        
@@ -115,3 +112,10 @@ export default class CropManager extends PureComponent {
         );
     }
 }
+
+/*
+PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+])
+*/

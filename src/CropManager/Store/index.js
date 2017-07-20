@@ -8,7 +8,7 @@ import initTransform from './transform'
 import {translateEnPixels} from '../helpers/translate-pc-px'
 
 
-export default class {
+export default class StoreLib {
     image = null
     proxy = null
     transform = null
@@ -52,7 +52,7 @@ export default class {
 
     importer(obj) {
         const {image: {src}, cadrage, cadre, transform} = obj;
-        // console.log('import image', src);
+        console.log('import image', obj);
         return getImage(src)
         .then( image => makeProxy(image) )
         .then( ({image, proxy}) => {            
@@ -61,12 +61,9 @@ export default class {
             this.proxy = proxy;
             this.transform = transform;
             this.pristine = true;
-            // this.cadre = cadre || {width: 0, height: 0};
-    //    console.log('importer', this.cadrage, cadrage);     
-            return ( this.read() );            
+            // console.log('this.importer', this);
+           return ( this.read() );            
         })
-        // .then( () => this.read() );
-        // .then( () => console.log('importer', this.cadrage, cadrage) );
     }
     exporter(){
         const {image, cadrage, transform} = this;
@@ -90,7 +87,20 @@ export default class {
         }
     }
 
-    rendu({width, height}) {
+    rendu(rendu) {
+        const {plWidth: width, plHeight: height} = rendu;
+        // si w ou h   = 0, utiliser placeholder
+        // {width, height}
+        /*
+        if (!rendu.width && !rendu.height) {
+            rendu.width = cadreDefaults.width;
+            rendu.height = cadreDefaults.width / ratio 
+        } else if (!rendu.width) {
+            rendu.width = rendu.height * ratio
+        } else if (!dims.height) {
+            rendu.height = rendu.width / ratio 
+        }
+*/
         // en entree : dimensions du canvas
         // -> données pour la sortie
         // image,

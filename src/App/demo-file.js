@@ -10,7 +10,7 @@ let counter = 0;
 const Demo = (props) => {
     function  upload() {
         counter++;
-        props.getImport({...storage, counter});
+        props.handleImport({...storage, counter});
     }
     return (
         <button onClick={upload}>DEMO</button>          
@@ -18,7 +18,7 @@ const Demo = (props) => {
 }
 
 Demo.propTypes = {
-    getImport: PropTypes.func,
+    handleImport: PropTypes.func,
 }
 
 export default Demo;

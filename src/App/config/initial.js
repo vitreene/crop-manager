@@ -45,7 +45,30 @@ export const storage = {
 };
 
 
-export const presets = {
+export const presets = [
+    {
+        ratio: 1.3333,
+        name: "4:3",
+    },
+    {
+        ratio: 1.5,
+        name: "3:2",
+    },
+    {
+        ratio: 1.4001, // 0.7142,
+        name: "5:7",
+    },
+    {
+        ratio: 1.7777,
+        name: "16:9",
+    },
+    {
+        ratio: 1,
+        name: "carré",
+    },
+]
+
+export const EXpresets = {
     "p4x3": {
         ratio: 1.3333,
         name: "4:3",
@@ -72,7 +95,9 @@ export const presets = {
 export const cadreDefaults = {
     width: 160,
     height: 200,
-    ratio: 0.8
+    // ratio: 0.8,
+    absRatio: 0.8,
+    paysage: false
 };
 
 const initial = {
