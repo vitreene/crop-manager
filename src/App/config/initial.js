@@ -93,11 +93,19 @@ export const EXpresets = {
 
 
 export const cadreDefaults = {
-    width: 160,
+    width: 300,
     height: 200,
-    // ratio: 0.8,
-    absRatio: 0.8,
-    paysage: false
+    ratio: 1.5,
+    absRatio: 1.5,
+    portrait: false
+};
+
+export const cadreDefaults2 = {
+    width: 300,
+    height: 150,
+    ratio: 2,
+    absRatio: 2,
+    portrait: false
 };
 
 const initial = {

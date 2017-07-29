@@ -102,7 +102,9 @@ export default class CropManager extends PureComponent {
         toCanvas recoit me résultat de handleExport
         comment faire passer cadre dans handleExport -> via props.
         */
-        this.props.handleRendu( manipImage.rendu(this.props.cadre) );
+        console.log('this.props.cadre', this.props.cadre);
+        
+        this.props.handleRendu( manipImage.rendu(this.props.cadre.placeholder) );
     }
 
     render() {        

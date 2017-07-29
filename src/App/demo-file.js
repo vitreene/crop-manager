@@ -13,7 +13,11 @@ const Demo = (props) => {
         props.handleImport({...storage, counter});
     }
     return (
-        <button onClick={upload}>DEMO</button>          
+        <button 
+        className="demo-load"
+        onClick={upload}>
+        DEMO
+        </button>          
     );
 }
 

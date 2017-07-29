@@ -37,6 +37,7 @@ export default function DrawCanvas(props) {
     
     const imageName = `${name}_${width}_${height}.jpg`;
     const canvasStyle = {width, height};
+    // const canvasStyle = {width:'100%', height:'auto'};
     const download = () => ref.toDataURL(typeFile, encoder);
 
     if (ref && Object.keys(props).length) paint(ref, props);
@@ -46,8 +47,9 @@ export default function DrawCanvas(props) {
             <canvas ref={e => ref = e} style={canvasStyle} />
             {ref &&  
                 <a 
-                className="crop-label"
+                className="download-link"
                 href={download()} 
+                target="_blank"
                 download={imageName}> 
                 télécharger l'image 
                 </a>

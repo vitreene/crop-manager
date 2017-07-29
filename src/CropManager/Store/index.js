@@ -51,7 +51,7 @@ export default class StoreLib {
     }
 
     importer(obj) {
-        const {image: {src}, cadrage, cadre, transform} = obj;
+        const {image: {src}, cadrage,/* cadre, */ transform} = obj;
         console.log('import image', obj);
         return getImage(src)
         .then( image => makeProxy(image) )
@@ -88,7 +88,7 @@ export default class StoreLib {
     }
 
     rendu(rendu) {
-        const {plWidth: width, plHeight: height} = rendu;
+        const {width, height} = rendu;
         // si w ou h   = 0, utiliser placeholder
         // {width, height}
         /*

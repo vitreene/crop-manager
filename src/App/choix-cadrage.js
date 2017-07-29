@@ -11,15 +11,13 @@ si  les valeurs w et h sont renseignes, et leur ratio n'existe pas en preset, af
 
 */
 
-export default function ChoixCadrage(props) {
-    console.log('props', props);
-    
-    const {cadre, getInputs} = props;
+export default function ChoixCadrage(props) { 
+    const {cadre, getInputs, validateInput} = props;
     const {selected} = cadre.select;
-    // console.log('ChoixCadrage', cadre);
-    
+    const {placeholder} = cadre;
+
     function handleCheck(e) {
-        console.log('handleCheck', e.target.name, e.target.value);
+        // console.log('handleCheck', e.target.name, e.target.value);
         // this.setState({[e.target.name]: e.target.value})
         getInputs({name: e.target.name, value: e.target.value});
     }
@@ -30,13 +28,6 @@ export default function ChoixCadrage(props) {
 
     function handlePermute(){
         getInputs({name: 'permute', value: null});
-/*
-        const {width, height, ratio} = cadre;
-            width: height,
-            height: width,
-            ratio: 1 / ratio
-        })
-*/
     }
     function selectOptions() {
         const {presets} = cadre.select;
@@ -72,9 +63,10 @@ export default function ChoixCadrage(props) {
                         id="crop-width"
                         type="number"
                         value={cadre.width}
-                        placeholder={cadre.plWidth}
+                        placeholder={placeholder.width}
                         step="1"
                         onChange={handleCheck}
+                        onBlur={validateInput}
                     /> 
                     </label>
 
@@ -91,9 +83,10 @@ export default function ChoixCadrage(props) {
                         id="crop-height"
                         type="number"
                         value={cadre.height}
-                        placeholder={cadre.plHeight}
+                        placeholder={placeholder.height}
                         step="1"
                         onChange={handleCheck}
+                        onBlur={validateInput}
                     /> 
                     </label>            
                 </div>

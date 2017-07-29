@@ -5,7 +5,7 @@ import Sources from './sources'
 import DrawCanvas from '../Rendu'
 import Demo from './demo-file'
 
-import logo from './UI/crop-manager-logo3.svg';
+import logo from './UI/crop-manager-logo4.svg';
 
 export default class App extends Component {
   constructor(props) {

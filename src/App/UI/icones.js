@@ -6,6 +6,7 @@ const fond = (classe) => (
 
 
 const icones = {
+  /*
   pivotH: (
     <g fill="none" stroke="currentcolor"  strokeWidth="3">
       <path  d="M20.1 17.98c-1.44-.83-3.06-1.26-4.7-1.26-5.2 0-9.4 4.2-9.4 9.4 0 5.18 4.2 9.4 9.4 9.4 1.64 0 3.26-.45 4.7-1.27V17.98z"/>
@@ -38,12 +39,13 @@ const icones = {
       <path strokeDasharray="2" stroke="#fff"  d="M16.07 16.1h20v20h-20z"/>
   </g>
   ),
+  */
   upload:(
-    <g fill="currentcolor" stroke="#fff"  strokeWidth="2">
+    <g fill="currentcolor" stroke="var(--back-01)"  strokeWidth="2">
         <path  d="M14 12c0-3.33 2.7-6 6-6h12c3.3 0 6 2.67 6 6h5.5c4.15 0 7.5 3.36 7.5 7.5v15c0 4.13-3.36 7.5-7.5 7.5h-35C4.36 42 1 38.62 1 34.5v-15C1 15.35 4.35 12 8.5 12H14z"/>
         <circle cx="36" cy="27.72" r="10"/>
         <path d="M7.03 17.72h10v5h-10z"/>
-        <path fill="#fff" strokeWidth="0" d="M40.92 32.36c2.86-2.57 3.1-6.97.54-9.83-2.57-2.86-6.98-3.1-9.84-.53 1.95.44 4.35 1.72 6.2 3.78 1.86 2.07 2.88 4.6 3.1 6.58z"/>
+        <path fill="var(--back-01)" strokeWidth="0" d="M40.92 32.36c2.86-2.57 3.1-6.97.54-9.83-2.57-2.86-6.98-3.1-9.84-.53 1.95.44 4.35 1.72 6.2 3.78 1.86 2.07 2.88 4.6 3.1 6.58z"/>
     </g>
   ),
   permuter: (
@@ -51,6 +53,7 @@ const icones = {
       <path d="M35.3 14.1l4.6 5.98-4.3 5.03m-25.5-5.5h29.8M14.7 36.1l-4.6-5.97 4.3-5.03m25.5 5.5H10.1"/>
     </g>
   ),
+/*
   reticule: (
       <g fill="none" stroke="currentcolor"  strokeWidth="2">
           <path stroke="currentcolor" strokeWidth="3" d="M26 1v50m25-25H1"/>
@@ -59,7 +62,7 @@ const icones = {
           <circle stroke="white"  strokeWidth="1" cx="26" cy="26" r="14.87"/>
       </g>
   )
-
+*/
 }
 
 export default function Icon(props) {

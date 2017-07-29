@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 
+import CropManager from '../CropManager'
 import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
 
-import CropManager from '../CropManager'
-import {cadreDefaults} from './config/initial'
-import cadreLib from './cadre-lib'
-const cadrelib = new cadreLib();
+import CadreLib from './cadre-lib'
+const cadrelib = new CadreLib();
 
 const Source = function(Composant){
         return class Sources extends Component {
@@ -15,6 +14,8 @@ const Source = function(Composant){
 
             this.getUrl = this.getUrl.bind(this);
             this.getInputs = this.getInputs.bind(this);
+            this.validateInput = this.validateInput.bind(this);
+
             this.getRatio = this.getRatio.bind(this);
             // this.handleImport = this.handleImport.bind(this);
         }
@@ -29,22 +30,24 @@ const Source = function(Composant){
         }
 
         getInputs(inputs){
-            this.setState( cadrelib.inputs(inputs) );
+            this.setState( state => cadrelib.inputs(inputs, state) );
         }
-
+        validateInput(){
+            this.setState( state => cadrelib.validate(state) );
+        }
         getRatio() { }
         
         render() {
             const {imgFile, ...cadre} = this.state;
             const {ratio} = cadre;
-            const {props, getUrl, getInputs, getRatio} = this;
+            const {props, getUrl, getInputs, getRatio, validateInput} = this;
     
             return (
                 <main className="element-wrapper">
 
                     <aside className="element-sources">
                         <Upload {...{getUrl}}/>
-                        <ChoixCadrage {...{cadre, getInputs}}/>
+                        <ChoixCadrage {...{cadre, getInputs, validateInput}}/>
                     </aside>
 
                     <Composant
