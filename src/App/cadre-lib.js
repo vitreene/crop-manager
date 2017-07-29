@@ -1,23 +1,6 @@
-// optimiser:  passer en functionnel.
+// faire : Factoriser le rendu
 
-/*
-Gere la saisie des valeurs du cadre
-
-    entrées :
-    - inputs : width, height, ratio, permuter
-    - import : [ width ], [ height ] , ratio
-    - manip: ratio
-    valeurs par défaut pour placeholder
-    presets ratio ?
-
-    sortie :
-    - width, height,  
-    - placeholder width et height,  
-    - ratio : nom et valeur
-    - orientation : horizontal / vertical ? -> pour afficher une icone
-    presets ? 
-*/
-
+//Gere la saisie des valeurs du cadre
 
 /*
     deux étapes : saisie et blur.
@@ -34,21 +17,16 @@ Gere la saisie des valeurs du cadre
             - soit h est modifié + alerte,
     - ni w ni h sont rensignés = valeurs par defaut.
 */
+
 import{presets, cadreDefaults} from './config/initial'
 
 const cadreEmpty =  {
     width: '',
     height: '',
-    ratio: 1.5, 
+    ratio: cadreDefaults.ratio, 
     seuil: false
 }
-/*
-const quelName = {
-    width: 'height',
-    height: 'width',
-    ratio: ''
-}
-*/
+
 // idéalement, la limite supérieure est calculée sur le poids maximum accepté par ios (5Mo)
 // const maxFileSize = 5 * 1024 * 1024;
 // const minFileSize = 10 * 10;
@@ -59,6 +37,7 @@ const fileSize = {
 };
             
 export default function CadreLib(){
+
     let cadre = {...cadreEmpty};
     let placeholder = {...cadreDefaults};
     
@@ -195,38 +174,29 @@ export default function CadreLib(){
 
     function init() {
         // valeurs par défaut
-        cadre = {...cadreEmpty};
-        placeholder = {...cadreDefaults};
-        // return rendu();
+        const state = {};
+        const cadre = {...cadreEmpty};
 
-        return {
-            ...cadreEmpty,
-            placeholder: {...cadreDefaults},
-            select: _findOptions(cadreDefaults.absRatio)
-        }
-
+        const placeholder = dimensions(cadre, cadreDefaults);
+        const res =  Object.assign( {},
+            state,
+            cadre,
+            {placeholder},
+            {select: _findOptions(placeholder.absRatio)}
+        );
+        console.log('cadre-lib : importer', res);
+        return res;  
     }
 
-    // XXX
-    function _prerendu({width, height}, obj) {
-        
-        return Object.assign({}, obj, ...limit(width, height))
-    }
-    /*
-    */
     function validate(state) {
         const {width, height , ratio} = state;
 
         const cadreLimits = limit(width, height);
         cadreLimits.ratio = ratio;
         console.log('cadreLimits', cadreLimits);
+
+
         const placeholder = dimensions(cadreLimits, cadreDefaults);
-        console.log('placeholder', placeholder);
-        
-        /*
-        const placeholderLimits = limit(placeholder.width, placeholder.height);
-        console.log('placeholderLimits', placeholderLimits);
-        */
         const res =  Object.assign( {},
             state,
             cadreLimits,
@@ -261,6 +231,7 @@ export default function CadreLib(){
     }
 }
 
+// HELPERS
 
 function arrondi(value, precision = 2) {
     const multi = Number('1e' + precision);
@@ -284,16 +255,9 @@ export function limit(ww,hh) {
         seuil: false,
         // ratio: null
     };
-/*
-    if (!ww || !hh) {
-        res.seuil = true;
-        return res
-    }
-*/
+
     const w = hasWidth ? ww : 1;
     const h = hasHeight ? hh : 1;
-    // console.log('w', w, 'h', h, (!w || !h) ) ;
-
     const size = w * h ;
     const ratio = w / h;
     const widthMax = Math.sqrt( ratio ) * Math.sqrt(fileSize.max);
@@ -324,10 +288,7 @@ export function limit(ww,hh) {
 
 // retourne les trois valeurs et compense l'absence éventuelle en entrée.
 export function dimensions(dim, defaut) {
-    // const width =  height, ratio}
     const res = {...dim};
-    // const {width, height, ratio} = dim;
-    // const missingKeys = missingValues({width, height, ratio});
     const missingKeys = missingValues(dim);
     console.log('missingKeys', missingKeys);
 
@@ -396,14 +357,7 @@ export function absRatio(ratio) {
 
 // test si value est un nombre différent de zéro
 export function notZero(value) {
-    return  (typeof(value) === 'number' && !!value)
-    /*
-    return !(
-        value === null ||
-        value === undefined ||
-        value === ''
-    )
-    */
+    return  (typeof(value) === 'number' && !!value);
 }
 
 function updateRatio(width, height, ratio) {
