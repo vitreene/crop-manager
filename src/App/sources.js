@@ -3,9 +3,13 @@ import React, {Component} from 'react';
 import CropManager from '../CropManager'
 import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
+import Dropzone from 'react-dropzone'
 
 import CadreLib from './cadre-lib'
 const cadrelib = new CadreLib();
+
+const fileMax = 5 * 1024 * 1024;
+let counter = 0;
 
 const Source = function(Composant){
         return class Sources extends Component {
@@ -15,14 +19,35 @@ const Source = function(Composant){
             this.getUrl = this.getUrl.bind(this);
             this.getInputs = this.getInputs.bind(this);
             this.validateInput = this.validateInput.bind(this);
+            this.onDrop = this.onDrop.bind(this);
 
-            this.getRatio = this.getRatio.bind(this);
+            // this.getRatio = this.getRatio.bind(this);
             // this.handleImport = this.handleImport.bind(this);
         }
 
         state = {
             ...cadrelib.init(),
             imgFile: null,
+        }
+
+        onDrop(acceptedFiles, rejectedFiles) {
+            console.log('acceptedFiles', acceptedFiles);
+            console.log('rejectedFiles', rejectedFiles);
+            const upFile = acceptedFiles[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                counter++;
+                const imgFile = {
+                    name: upFile.name,
+                    type: upFile.type,
+                    size: Math.round(upFile.size / 1000),
+                    src: reader.result,
+                    counter
+                    // file: upFile
+                };
+                this.setState({imgFile});
+            }
+            reader.readAsDataURL(upFile);
         }
 
         getUrl(imgFile) {     
@@ -35,12 +60,12 @@ const Source = function(Composant){
         validateInput(){
             this.setState( state => cadrelib.validate(state) );
         }
-        getRatio() { }
+        // getRatio() { }
         
         render() {
             const {imgFile, ...cadre} = this.state;
-            const {ratio} = cadre;
-            const {props, getUrl, getInputs, getRatio, validateInput} = this;
+            const {ratio, placeholder} = cadre;
+            const {props, getUrl, getInputs, /*getRatio, */validateInput, onDrop} = this;
     
             return (
                 <main className="element-wrapper">
@@ -49,14 +74,22 @@ const Source = function(Composant){
                         <Upload {...{getUrl}}/>
                         <ChoixCadrage {...{cadre, getInputs, validateInput}}/>
                     </aside>
-
-                    <Composant
-                        {...{imgFile, ratio, cadre}}
-                        handleRatio={getRatio}
-                        handleCadre={getInputs}
-                        {...props}
-                    />
-
+                    <Dropzone
+                        accept='image/png, image/jpeg'
+                        disableClick
+                        multiple={false}
+                        maxSize={fileMax}
+                        className="manip-conteneur"
+                        onDrop={onDrop}
+                        >
+                            {/* {handleRatio={getRatio}} */}
+                        <Composant
+                            {...{imgFile, ratio}}
+                            cadre={placeholder}
+                            handleCadre={getInputs}
+                            {...props}
+                        />
+                    </Dropzone>
                 </main>
             )
         }

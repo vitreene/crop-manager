@@ -21,9 +21,13 @@ import React from 'react';
 import {RAD} from './config/constantes'
 import sharpen from './sharpen'
 
+import Preview from './preview'
+
 let ref = null;
 const typeFile = 'image/jpeg';
 const encoder = 0.5;
+
+const canvas = document.createElement('canvas');
 
 export default function DrawCanvas(props) {
     const {cadre, image} = props; 
@@ -38,14 +42,18 @@ export default function DrawCanvas(props) {
     const imageName = `${name}_${width}_${height}.jpg`;
     const canvasStyle = {width, height};
     // const canvasStyle = {width:'100%', height:'auto'};
-    const download = () => ref.toDataURL(typeFile, encoder);
+    // const download = () => ref.toDataURL(typeFile, encoder);
+    const download = () => {
+        paint(canvas, props);
+        return canvas.toDataURL(typeFile, encoder);
+    };
 
-    if (ref && Object.keys(props).length) paint(ref, props);
+    // if (ref && Object.keys(props).length) paint(ref, props);
 
     return(
         <div>
-            <canvas ref={e => ref = e} style={canvasStyle} />
-            {ref &&  
+            <Preview {...props}/>
+             {image &&   
                 <a 
                 className="download-link"
                 href={download()} 
@@ -53,12 +61,14 @@ export default function DrawCanvas(props) {
                 download={imageName}> 
                 télécharger l'image 
                 </a>
-            }
+             }
         </div>
     )
 }
+            /* <canvas ref={e => ref = e} style={canvasStyle} /> */
 
 function paint(ref, props) {  
+    if (!ref || !props.image) return;
     const {image, cadre, transform} = props;
     const {width, height} = cadre;
     const {translate, rotate, scale} = transform;

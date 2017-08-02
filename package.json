@@ -1,6 +1,6 @@
 {
   "name": "crop-manager",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "homepage": "http://vitreene.github.io/crop-manager",
   "devDependencies": {
@@ -9,7 +9,8 @@
   "dependencies": {
     "gh-pages": "^1.0.0",
     "react": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react-dom": "^15.4.0",
+    "react-dropzone": "^3.13.4"
   },
   "scripts": {
     "start": "react-scripts start",

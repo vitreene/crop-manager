@@ -12,6 +12,8 @@ const manipImage = new ManipImage();
 export default class CropManager extends PureComponent {
     static propTypes = {
         imgFile: PropTypes.object,
+        ratio: PropTypes.number,
+        cadre: PropTypes.object,
         // cadrage: PropTypes.shape({
             /*
         cadre: PropTypes.shape({
@@ -21,18 +23,20 @@ export default class CropManager extends PureComponent {
         }),
         */
         importer: PropTypes.object,
-        handleRatio: PropTypes.func,
+        // handleRatio: PropTypes.func,
         handleRendu: PropTypes.func,
         handleExport: PropTypes.func,
+        handleCadre: PropTypes.func,
      }
     static defaultProps = {
         // cadre: {},
         ratio: 1,
         imgFile: {},
         importer: {},
-        handleRatio: () => {}, 
+        // handleRatio: () => {}, 
         handleRendu: () => {}, 
         handleExport: () => {},
+        handleCadre: () => {},
     }
 
     constructor(props) {
@@ -45,6 +49,8 @@ export default class CropManager extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         const {imgFile, ratio, importer} = nextProps;
+        // console.log('imgFile', imgFile);
+        
 
         if (importer) {
             const counter = (this.props.importer) 
@@ -102,9 +108,9 @@ export default class CropManager extends PureComponent {
         toCanvas recoit me résultat de handleExport
         comment faire passer cadre dans handleExport -> via props.
         */
-        console.log('this.props.cadre', this.props.cadre);
+        // console.log('this.props.cadre', this.props.cadre);
         
-        this.props.handleRendu( manipImage.rendu(this.props.cadre.placeholder) );
+        this.props.handleRendu( manipImage.rendu(this.props.cadre) );
     }
 
     render() {        

@@ -147,10 +147,15 @@ export default class StoreLib {
             {w: width}
         );
 
+        const position = {
+            w: (width - image.width) / 2 + translate.dX,
+            h: (height - image.height) / 2 + translate.dY
+        }
 
         return {
             rendu: {
                 cadre: {width, height},
+                position,
                 image, 
                 transform: {
                     translate, 
