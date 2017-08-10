@@ -9,3 +9,4 @@ export const R90 = 'R90'
 
 export const PADDING = 5
 export const isClient = typeof window !== "undefined";
+export const FILEMAX = 5 * 1024 * 1024;

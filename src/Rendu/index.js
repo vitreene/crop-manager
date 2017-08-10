@@ -30,7 +30,9 @@ const encoder = 0.5;
 const canvas = document.createElement('canvas');
 
 export default function DrawCanvas(props) {
-    const {cadre, image} = props; 
+    const {cadre, image} = props;
+    const {transform} = props;
+ 
 
     const width = (cadre) ? cadre.width : 0;
     const height = (cadre) ? cadre.height : 0;
@@ -59,7 +61,9 @@ export default function DrawCanvas(props) {
                 href={download()} 
                 target="_blank"
                 download={imageName}> 
-                télécharger l'image 
+                charger  
+                {transform && 
+                Math.round(transform.translate.dX)}
                 </a>
              }
         </div>

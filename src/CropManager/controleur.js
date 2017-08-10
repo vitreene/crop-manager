@@ -123,7 +123,7 @@ export default class Controleur extends Component {
                     <Reglages {...{rotate90, getPivot, pivot, transformPreset}}/>
                     {/*<Transformers {...{rendu}} />*/}
                     {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                    <Plotters {...{...pointers, conteneur, cropper}}/> 
+                    {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}
             </div>
         );
     }

@@ -131,7 +131,7 @@ describe( 'dimensions', () => {
         };
         const res = dimensions(dim, cadreDefaults);
         // console.log('dimensions', res);
-        expect(res.width).toEqual(dim.height * dim.ratio);       
+        expect(res.width).toEqual(Math.floor(dim.height * dim.ratio));       
     });
 
     it('manque tout', () => {

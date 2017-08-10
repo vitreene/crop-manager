@@ -83,7 +83,7 @@ function whatTransform({what, ...reste}) {
 
 function translateImage({pointer, action, transform, pivot}){
     let message;
-    // console.log('translateImage');
+     console.log('translateImage', pointer);
 
     switch (action) {
         case START :
@@ -106,12 +106,13 @@ function translateImage({pointer, action, transform, pivot}){
         break;
     
         case END :
+        /*
             arrivee = {
                 posX: debut.posX + pointer.posX,
                 posY: debut.posY + pointer.posY,
             };
             message = `ah c’est fini. Point de départ: ${debut.posX} , ${debut.posY},  point d'arrivée : ${arrivee.posX}, ${arrivee.posY}`; 
-
+            */
         break;
     
         default:

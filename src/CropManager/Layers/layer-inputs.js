@@ -40,7 +40,6 @@ const Inputs = (props) => {
         e.stopPropagation();
         e.preventDefault();        
         const {contDX, contDY} = containerPos;
-        
         const pointers = Object.keys(e.touches)
         .reverse()
         .map( index => (

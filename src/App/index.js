@@ -29,7 +29,8 @@ export default class App extends Component {
     this.setState({...rendu});
   }
   toExport(rendu) {
-    // console.log('export', rendu);
+    console.log('export', rendu);
+    console.table( rendu);
 
   }
 

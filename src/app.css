@@ -1,0 +1,228 @@
+:root {
+  --back-01: #646469;
+  --back-02-header: #8b8f94;
+  --back-03-rendu: #2a2f2e;
+  --back-04-crop: #111;
+  --front-01-icons: #48dcc9;
+  --front-02-icons: #fff;
+
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.container{
+  box-sizing: content-box;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-flow: column;
+  background-color:  var(--back-01);
+}
+.App-header{
+  width: 100%;
+  height: 100px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--back-02-header);
+}
+
+.App-logo{
+  display: block;
+  height: 100%;
+  margin-left: 2rem;
+}
+
+.crop-manager{
+  margin: 0 4%;
+  display: flex;
+  height: 100%;
+  flex-flow: row;
+  flex-wrap:  nowrap;
+  color: var(--front-01-icons);
+}
+
+.gestion-crop-size,
+.gestion-crop{
+  display: flex;
+  flex-flow: row;
+  flex-wrap:  nowrap;
+  align-items: center;
+}
+
+.gestion-upload{
+  text-align: center;
+}
+
+/* /////////////////////////////////// */
+
+.element-sources{
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 3rem;
+}
+
+.element-rendu{
+  flex-basis: 30%;
+  padding: 2rem;
+  background-color: var(--back-03-rendu);
+  overflow: scroll; 
+  margin: 1rem 0 2rem 2rem;
+}
+
+.element-wrapper{
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  flex: 1;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.manip-conteneur{
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*//  UI  //////////////////////*/
+
+.input-hidden{
+  display: none;
+}
+
+.icon-small {
+  width: 2rem;
+  height: 2rem;
+} 
+
+.label-reglage{
+  text-align: center;
+}
+
+.crop-label{
+  margin-left: 1rem; 
+  margin-right: 1rem;
+  color: currentColor;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.label-px:after{
+  content: 'px';
+  padding-left: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .label-px:after{
+    content: '';
+  }
+}
+
+.crop-presets{
+  color: currentColor;
+  font-size: 1rem;
+  height: 2rem;
+  width: 6rem;
+}
+
+.crop-presets:focus{
+    outline: none;
+  box-shadow: none;
+}
+
+.crop-size-input{
+  margin-left: 0.4rem;
+  color: var( --back-04-crop);
+  text-align: right;
+  font-size: 1rem;
+  height: 1.7rem;
+  width: 3.6rem;
+  border-radius: 4px;
+}
+
+.crop-size-input:focus{
+  color: black;
+  border: thin solid currentColor;
+  outline: none;
+  box-shadow: none;
+  background: #EEE;
+}
+
+.crop-size-input::-webkit-input-placeholder { 
+    color: var(--front-01-icons);
+}
+.crop-size-input::-moz-placeholder { 
+    color: var(--front-01-icons);
+}
+.crop-size-input:-ms-input-placeholder {
+    color: var(--front-01-icons);
+}
+
+/* /////////////////////////////////// */
+
+/*  RENDU */
+
+.download-link{
+  display: block;
+  margin: 1rem auto;
+  height: 2rem;
+  width: 80%;
+  background-color: var(--front-01-icons);
+  color: var(--back-03-rendu);
+  font-size: 0.8rem;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 2rem;
+}
+.download-link:hover{
+  background-color: green;
+}
+
+.demo-load{
+  margin: 0 auto 1rem;
+  border: none;
+  border-radius: 4px;
+  height: 1.6rem;
+  width: 4rem;
+  background-color: var(--front-01-icons);
+  color: var(--back-03-rendu);
+  text-align: center;
+  line-height: 1.4rem;
+}
+
+.preview-image-crop{
+  width: 100%;
+  position: relative;
+   overflow: hidden; 
+}
+
+.preview-image-crop-inner{
+  background-color: darkgray;
+
+}
+.preview-image-crop-img{
+
+}

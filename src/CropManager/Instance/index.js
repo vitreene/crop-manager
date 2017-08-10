@@ -1,3 +1,5 @@
+// passer en functional, supprimer l'état interne -> state
+
 /* eslint-disable */
 import defaults from '../config/instance-init'
 import {RAD, IDLE, DONE} from '../config/constantes'
@@ -43,6 +45,7 @@ export default class {
     }
 
     updatePosition(type, pointers, sens = 1){
+        // tester si pointer = undefined
         const {transform, pivot} = this;
         const manip = transformer({
             type, 

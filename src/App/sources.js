@@ -5,13 +5,14 @@ import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
 import Dropzone from 'react-dropzone'
 
+import{FILEMAX} from './config/constantes'
 import CadreLib from './cadre-lib'
 const cadrelib = new CadreLib();
 
-const fileMax = 5 * 1024 * 1024;
+
 let counter = 0;
 
-const Source = function(Composant){
+const Sources = function(Composant){
         return class Sources extends Component {
         constructor(props) {
             super(props);
@@ -78,7 +79,7 @@ const Source = function(Composant){
                         accept='image/png, image/jpeg'
                         disableClick
                         multiple={false}
-                        maxSize={fileMax}
+                        maxSize={FILEMAX}
                         className="manip-conteneur"
                         onDrop={onDrop}
                         >
@@ -96,7 +97,7 @@ const Source = function(Composant){
     }
 }
 
-export default Source(CropManager);
+export default Sources(CropManager);
 
                         // handleRendu={toCanvas}  
                         // importer={importer}
