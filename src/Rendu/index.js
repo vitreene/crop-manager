@@ -23,7 +23,7 @@ import sharpen from './sharpen'
 
 import Preview from './preview'
 
-let ref = null;
+// let ref = null;
 const typeFile = 'image/jpeg';
 const encoder = 0.5;
 
@@ -42,7 +42,7 @@ export default function DrawCanvas(props) {
     : 'noname';
     
     const imageName = `${name}_${width}_${height}.jpg`;
-    const canvasStyle = {width, height};
+    // const canvasStyle = {width, height};
     // const canvasStyle = {width:'100%', height:'auto'};
     // const download = () => ref.toDataURL(typeFile, encoder);
     const download = () => {
@@ -52,6 +52,8 @@ export default function DrawCanvas(props) {
 
     // if (ref && Object.keys(props).length) paint(ref, props);
 
+    // canvas est généré en continu. comment generer à la demande ?
+    
     return(
         <div>
             <Preview {...props}/>
@@ -61,9 +63,9 @@ export default function DrawCanvas(props) {
                 href={download()} 
                 target="_blank"
                 download={imageName}> 
-                charger  
+                charger&nbsp; 
                 {transform && 
-                Math.round(transform.translate.dX)}
+                Math.round(transform.rotate)}
                 </a>
              }
         </div>
@@ -87,8 +89,8 @@ function paint(ref, props) {
     ctx.fillRect(0,0, width, height);
 
     ctx.translate(width/2 + dX, height/2 + dY);
-	ctx.scale(scale.x, scale.y);
 	ctx.rotate(rotate * RAD);
+	ctx.scale(scale.x, scale.y);
     ctx.drawImage(image, -(image.width/2), -(image.height/2));
     sharpen(ctx, width, height, 0.5);
 

@@ -8,8 +8,7 @@ import Text from './UI/text'
 export default class Reglages extends Component {
      static propTypes = {
          pivot: PropTypes.object,
-         getPivot: PropTypes.func,
-         rotate90: PropTypes.func,
+         handleControl: PropTypes.func,
      }    
     state = { 
         h : false,
@@ -24,6 +23,8 @@ export default class Reglages extends Component {
     }
 
     componentWillReceiveProps({pivot}) {
+        // si j'utilise les props, je peux retirer state ?
+
         const {h, v} = this.state;
         // transformer (-1)/(+1) en true/false (true = checked)
         const newPivot = {
@@ -35,25 +36,23 @@ export default class Reglages extends Component {
     }
     onPivot(e){
         const {checked, name} = e.target;
-        const {getPivot} = this.props;
         const pivot = {
         h : (name==='h') ? checked : this.state.h,
         v : (name==='v') ? checked : this.state.v
         };
-
         this.setState({[name]:checked});
 
-        getPivot(pivot);
+        this.props.handleControl('pivoter', pivot);
     }
 
     onCover(e){
-        const {transformPreset} = this.props;
-        return transformPreset(e.target.name);
+        this.props.handleControl('transformPreset', e.target.name);
+    }
+    
+    onRotate(){
+        this.props.handleControl('rotate90', 1);
     }
 
-    onRotate(){
-        this.props.rotate90(1);
-    }
     render() {
         const params = {maxScale:2.8, minScale:0.4};
         const miroir = this.state;
@@ -135,7 +134,7 @@ export default class Reglages extends Component {
                 <Text small >Contenir</Text>
                 </label>
 
-                </div>
+            </div>
         );
     }
 }

@@ -6,8 +6,8 @@ import React, {PropTypes} from 'react'
 let mouseDown = false;
 
 const Inputs = (props) => {
-    const {getPointerPosition, containerSize, containerPos} = props;
-
+    const {handleControl, containerSize, containerPos} = props;
+    
     const handleTouchStart = (e)=>{
         eventTouch(e, 'touch start')
     };
@@ -50,7 +50,11 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        getPointerPosition({type, pointers});
+        
+        ///////
+        handleControl('updatePosition', {type, pointers});
+        
+      //  getPointerPosition({type, pointers});
     }
 
     function eventMouse(e, type) {
@@ -74,7 +78,10 @@ const Inputs = (props) => {
             {posX, posY}, // pointer
         ].filter(Boolean);
 
-        getPointerPosition({type, pointers});
+        ////////
+        handleControl('updatePosition', {type, pointers});
+
+       // getPointerPosition({type, pointers}); 
     }
 
     return (
@@ -94,8 +101,9 @@ const Inputs = (props) => {
 };
 
 Inputs.propTypes = {
-    pointerPosition: PropTypes.func, 
-    middle: PropTypes.object, 
+    handleControl: PropTypes.func, 
+    getPointerPosition: PropTypes.func, 
+    // middle: PropTypes.object, 
     containerSize: PropTypes.object, 
     containerPos: PropTypes.object
 }

@@ -21,7 +21,7 @@ export default class App extends Component {
   }
 
   handleImport(importer) {
-    console.log('importer', importer);
+    // console.log('importer', importer);
     this.setState({importer: importer});
   }
 
@@ -29,9 +29,7 @@ export default class App extends Component {
     this.setState({...rendu});
   }
   toExport(rendu) {
-    console.log('export', rendu);
-    console.table( rendu);
-
+    // console.log('export', rendu);
   }
 
   render() {

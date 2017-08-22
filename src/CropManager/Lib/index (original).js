@@ -1,5 +1,51 @@
 // passer en functional, supprimer l'état interne -> state
 
+const  state = { 
+    // translate
+    dX: 0,
+    dY: 0,
+    // scale
+    sX: 1, 
+    sY: 1,
+    rotate: 0,
+
+    // objets :
+    pointers: [], 
+
+    unit: {},
+    debut: {},
+    arrivee: {}, // garder la derniere position du pointeur
+
+    message: '',
+    action: '',
+
+    start: {
+        translate: {dX: 0, dY: 0},
+        rotate: 0,
+        scale: 1,
+    },
+    move: {
+        translation: {dX: 0, dY: 0},
+        rotation: 0,
+        scalation: 1,
+    },
+    // export
+    transform: { 
+        translate: {dX: 0, dY: 0}, // pourcents
+        rotate: 0,
+        scale: 1, // valeur
+        pivot: {}
+    }, 
+
+    conteneur: {},
+    cropWrapper: {},
+    cropper: {},
+    
+    cadrage: {},
+    proxy: {}
+};
+
+
 /* eslint-disable */
 import defaults from '../config/instance-init'
 import {RAD, IDLE, DONE} from '../config/constantes'
@@ -22,15 +68,32 @@ export default class {
         console.log('this : Instance', this);
     }
 
-    init(transform, cadrage, proxy) {
+    execute(action, donnees, state, props){
+        console.log('ACTION', action );
+        return this[action] && this[action]( donnees );
+    }
+
+/*
+    carManager.execute = function ( name ) {
+        return carManager[name] && carManager[name].apply( carManager, [].slice.call(arguments, 1) );
+    };
+
+*/
+    init({transform, cadrage, proxy}) {
         // console.log('transform, cadrage, proxy', transform, cadrage, proxy);
         if (!transform || !cadrage || !proxy) return {action: IDLE};
 
         this.isLoading = false;
         this.cadrage = cadrage;
-        this._cropResize();      
+
+        // this._cropResize();  
+        this.cropWrapper = setCropWrapper(this.conteneur.containerSize, cadrage);
+        this.cropper = setCropper(this.cropWrapper, cadrage);
+
         this.translatePc = transform.translate;
         // translateEnPixels
+        // 
+        // transform devrait rester en pourcents, et n'etre converti qu'au rendu
         const translate = translateEnPixels(transform.translate, this.cropper);
         this.transform = Object.assign( 
             {},
@@ -38,14 +101,20 @@ export default class {
             {translate}
         );
 
-        this.proxy = proxy;
-        this._imageResize();
-        // this._translateResize();
+        // this.proxy = proxy;
+        // this._imageResize();
+        this.proxy = Object.assign( 
+            {},
+            proxy,
+            proxySize(this.cadrage, this.cropper)
+        );
         return this.updateRendu(); 
     }
 
-    updatePosition(type, pointers, sens = 1){
+    updatePosition({type, pointers, sens = 1}){
         // tester si pointer = undefined
+
+        // translate en pixels
         const {transform, pivot} = this;
         const manip = transformer({
             type, 
@@ -79,19 +148,20 @@ export default class {
         return this.updateRendu(); 
     }
 
-    pivoter(h,v) {
+    pivoter({h,v}) {
         // transformer true/false en (-1)/(+1) (true = checked)
         this.pivot = {
             h: h ? -1 : 1,
             v: v ? -1 : 1,
         };
+        // console.log('h,v', h,v, this.pivot);
         return this.updateRendu(DONE); 
     }
 
     rotate90(sens) {
         // ajouter sens
         const pointers = Object.keys(this.pointers).map( p => this.pointers[p]);
-        this.updatePosition('reglage R90', pointers, sens);
+        this.updatePosition({type:'reglage R90', pointers, sens});
         return this.updateRendu(DONE); 
     }
 
@@ -147,7 +217,10 @@ export default class {
     
         if (!proxy.src) return {action: IDLE};
         
-        const {width, height} = proxy;
+        // const {width, height} = proxy;
+
+        // const {dX, dY} = translateEnPixels(transform.translate, this.cropper);
+
         const {dX, dY} = transform.translate;
 
         // si pivot est l'un des deux : h ou v, rotate = 180 - t.rotate ;

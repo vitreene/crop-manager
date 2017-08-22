@@ -33,8 +33,8 @@ export default class CropManager extends PureComponent {
     static defaultProps = {
         // cadre: {},
         ratio: 1,
-        imgFile: {},
-        importer: {},
+        imgFile: {counter: 0},
+        importer: {counter: 0},
         // handleRatio: () => {}, 
         handleRendu: () => {}, 
         handleExport: () => {},
@@ -45,11 +45,14 @@ export default class CropManager extends PureComponent {
         super(props);
         this.updatePosition = this.updatePosition.bind(this);
         this._update = this._update.bind(this);
+        this._export = this._export.bind(this);
     }
 
-    // state = modele
+    state = {update: 0}
 
     componentWillReceiveProps(nextProps) {
+        console.log('CropManager nextProps');
+        
         const {imgFile, ratio, importer} = nextProps;
         // console.log('imgFile', imgFile);
         // -> width et height doivent actualiser rendu
@@ -60,11 +63,10 @@ export default class CropManager extends PureComponent {
                 : 0;
              if (importer.counter !== counter) {
                 const{cadre, ...reste} = importer;
-                manipImage
-                .importer(reste)
+                manipImage.importer(reste)
                 .then( () => {
+                    this._update('importer') }); 
                     this.props.handleCadre(cadre);
-                    this._update() }); 
                 return;
             }
         }
@@ -79,29 +81,50 @@ export default class CropManager extends PureComponent {
              if (imgFile.counter !== counter) {
                 manipImage
                 .create(src, ratio) 
-                .then( () => this._update() );  
+                .then( () => this._update('imgFile') );  
                 return;
              }
         }
         
-        console.log('Ratio', (ratio !== this.props.ratio));
+        // console.log('Ratio', (ratio !== this.props.ratio));
         
         if (ratio !== this.props.ratio) {           
             manipImage.updateCadre(ratio);
-            this._update();
+            this._update('ratio');
         }
     }
+/*
+    shouldComponentUpdate(nextProps) {
+        const {imgFile, ratio, importer} = nextProps;
 
+        console.log('importer', (importer.counter !== this.props.importer.counter));
+        console.log('ratio', (ratio !== this.props.ratio) );
+        console.log('imgFile', (imgFile.counter !== this.props.imgFile.counter));
+        
+        
+        // if (importer.counter !== this.props.importer.counter) return true;
+        // if (ratio !== this.props.ratio) return true;
+        // if (imgFile.counter !== this.props.imgFile.counter) return true;
+
+        return false;
+    }
+*/
     updatePosition(transform) {
         // const {cadre} = this.props;
         manipImage.update(transform);
-        this._update();
+        this._export();
     }
 
-    _update() {
+    _update(message) {
+        console.log('manipImage.read() ', message, manipImage.read() );
+        
+        this._export();
         this.setState( manipImage.read() );
+        this.setState( {update: this.state.update + 1} );
+    }
+    
+    _export(){
         this.props.handleExport( manipImage.exporter() );
-// sur ipad la fonction ne rend rien si la saisie est: translate
         this.props.handleRendu( manipImage.rendu(this.props.cadre) );
     }
 

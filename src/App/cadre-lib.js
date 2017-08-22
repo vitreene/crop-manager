@@ -185,7 +185,7 @@ export default function CadreLib(){
             height: height ? cadreLimits.height : '',
             ratio
         }
-        console.log('cadreLimits', cadreLimits, ratio);
+        // console.log('cadreLimits', cadreLimits, ratio);
 
         return Object.assign( {},
             rendu(state, cadre),
@@ -304,7 +304,7 @@ export function limit(ww,hh) {
 export function dimensions(dim, defaut) {
     const res = {...dim};
     const missingKeys = missingValues(dim);
-    console.log('missingKeys', missingKeys);
+    // console.log('missingKeys', missingKeys);
 
     // switch (missingValues({width, height, ratio})) {
     switch (missingKeys) {

@@ -83,7 +83,7 @@ function whatTransform({what, ...reste}) {
 
 function translateImage({pointer, action, transform, pivot}){
     let message;
-     console.log('translateImage', pointer);
+    //  console.log('translateImage', pointer);
 
     switch (action) {
         case START :
@@ -92,6 +92,7 @@ function translateImage({pointer, action, transform, pivot}){
            scale = transform.scale || 1;
 
            debut = pointer;
+           // translateStart
            translation = transform.translate || {dX: 0, dY: 0};
 
            message = 'c’est parti!' 

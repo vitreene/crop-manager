@@ -11,12 +11,61 @@ import Loading from './Loading'
 import {Transformers, Plotters, Pointers} from './infos'
 
 import {DONE, IDLE} from './config/constantes'
-import rendu from './config/rendu'
+// import rendu from './config/rendu'
 
+import controlerLib  from './Lib/controlerLib'
+/*
 import Instance from './Instance'
-const manip = new Instance({
+const controlerLib = new Instance({
     action: 'Ta-Da-dammm'
 });
+
+*/
+const  initialState = { 
+    isLoading: true,
+    // translate
+    dX: 0,
+    dY: 0,
+    // scale
+    sX: 1, 
+    sY: 1,
+    rotate: 0,
+
+    // objets :
+    pointers: [], 
+
+    unit: {},
+    debut: {},
+    arrivee: {}, // garder la derniere position du pointeur
+
+    message: '',
+    action: '',
+
+    start: {
+        translate: {dX: 0, dY: 0},
+        rotate: 0,
+        scale: 1,
+    },
+    move: {
+        translation: {dX: 0, dY: 0},
+        rotation: 0,
+        scalation: 1,
+    },
+    // export
+    transform: { 
+        translate: {dX: 0, dY: 0}, // pourcents
+        rotate: 0,
+        scale: 1, // valeur
+        pivot: {h: 1, v: 1}
+    }, 
+
+    conteneur: {},
+    cropWrapper: {},
+    cropper: {},
+    
+    cadrage: {},
+    proxy: {}
+};
 
 
 export default class Controleur extends Component {
@@ -25,105 +74,89 @@ export default class Controleur extends Component {
         cadrage: PropTypes.object,
         transform: PropTypes.object,
         updatePosition: PropTypes.func,
-        // action: PropTypes.string,
      }
 
     constructor(props) {
         super(props);
-        this.getPointerPosition = this.getPointerPosition.bind(this);
-        this.getPivot = this.getPivot.bind(this);
-        this.rotate90 = this.rotate90.bind(this);
-        this.transformPreset = this.transformPreset.bind(this);
-        this.onConteneurResize = this.onConteneurResize.bind(this);
+        this.handleControl = this.handleControl.bind(this);
     }
 
     state = {
-        rendu,
-        action: IDLE
+        ...initialState,
+        // rendu,
+        action: IDLE,
     }
   
     componentWillMount() {
-        manip.log();
+        controlerLib.log();
     }
 
     componentWillReceiveProps(newProps) {
+        // console.log('newProps update', newProps.update, this.props.update);
+        if (newProps.update === this.props.update) return;
+        console.log('newProps', newProps);
+        
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
         const {transform, proxy, cadrage} = newProps;   
-        this.setState( manip.init(transform, cadrage, proxy) );
+        if (!transform || !cadrage || !proxy) return;
+        // if ( proxy.src === this.props.proxy.src || )
+
+        // this.setState( controlerLib.init({transform, cadrage, proxy}) );
+        this.handleControl('init', {transform, proxy, cadrage})
     }
 
     componentDidUpdate() {
         if (this.state.action !== DONE) return;
+        const exporter = controlerLib.export(this.state);
+        console.log('exporter', exporter);
         
-        // console.log('sendPosition', this.state.action);
-        this.props.updatePosition(manip.export());
+        this.props.updatePosition(exporter);
         this.setState({action: IDLE});
     }
 
-    onConteneurResize(conteneur) {
-        this.setState( 
-            manip.resize(conteneur) 
-        );
+    handleControl(action, donnees) {       
+        // controlerLib.execute(action, donnees);
+        // this.setState(  controlerLib.execute(action, donnees) );
+        this.setState( (state, props) => controlerLib.execute(action, donnees, state, props ));
     }
 
-    getPivot({h,v}){
-       this.setState( 
-           manip.pivoter(h,v) 
-        );   
-    }
-    
-    getPointerPosition({type, pointers}) {
-        this.setState( 
-            manip.updatePosition(type, pointers) 
-        );
-    }
-    
-    transformPreset(action){
-        this.setState( 
-            manip.transformPreset(action) 
-        );
-    }
-    
-    rotate90(sens){        
-        this.setState( 
-            manip.rotate90(sens) 
-        );
-    }
     render() {
-        const {proxy, isLoading} = manip;
-        // console.log('proxy', proxy);
-        
-        const {rendu} = this.state;
-        const {
-            getPointerPosition, 
-            onConteneurResize, 
-            getPivot, 
-            rotate90,
-            transformPreset
-        } = this;
-        const {conteneur, cropper, cropWrapper, pivot} = manip;
-        
+        const {handleControl} = this;
+
+        const {dX, dY, rotate, sX, sY} = this.state;
+        const rendu = {
+            translate: {dX, dY, },
+            rotate,
+            scale: {x: sX, y: sY}
+        }
+
+        const {proxy, isLoading} = this.state;
+        const {conteneur, cropper, cropWrapper, transform: {pivot}} = this.state;
+
+        // const {proxy, isLoading} = controlerLib;
+        // const {conteneur, cropper, cropWrapper, pivot} = controlerLib;
+
         // eslint-disable-next-line
-        const {pointers, action, message} = manip;
+        // const {pointers, action, message} = controlerLib;
 
         return (
             <div className="manip-conteneur">
-                    <Wrapper {...{onConteneurResize}} >
+                <Wrapper {...{handleControl}} >
                 { isLoading
                     ? (proxy.src && <Loading/>)
                     : ( <div>
                         <LayerFond {...{rendu, proxy, cropper}}/>
-                        <LayerCrop {...{rendu, proxy, cropWrapper, cropper}}/>
-                        <LayerInputs {...{getPointerPosition, ...conteneur}}/>
+                        <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>
                         <LayerReticule {...{...conteneur}}/>
+                        <LayerInputs {...{handleControl, ...conteneur}}/>
                     </div> )
                 }
                 </Wrapper>
-                    <Reglages {...{rotate90, getPivot, pivot, transformPreset}}/>
-                    {/*<Transformers {...{rendu}} />*/}
-                    {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                    {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}
+                <Reglages {...{handleControl, pivot}}/>
+                {/*<Transformers {...{rendu}} />*/}
+                {/*<Pointers {...{rendu, pointers, action, message}} />*/}
+                {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}
             </div>
         );
     }

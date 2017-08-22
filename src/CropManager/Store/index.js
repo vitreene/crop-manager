@@ -130,9 +130,10 @@ export default class StoreLib {
         const {pivot} = transform;
         const {diagonale} = cadrage;
 
-        // "180 - transform.rotate" dans instance/rendu, pourquoi ?
+        // "180 + transform.rotate" dans le rendu Canvas, pourquoi ?
+        // résolu, il fallait d'abord appliquer rotate avant scale.
          const rotate = ((pivot.h + pivot.v) === 0) 
-            ? 180 + transform.rotate
+            ? 180 - transform.rotate
             : transform.rotate;
 
         const scale = {

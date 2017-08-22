@@ -182,3 +182,46 @@ rendu: {…}
         translate:
             dX: -0.1955
             dY: 0.1548
+
+que doit contenir state dans Controleur ?
+- toutes les variables des librairies manip-image et transform-origin,
+- à plat, les variables qui entrainent un raffraichissement du composant,
+- en objet, les variables intermediaires.
+state : 
+à plat :
+    (translate)
+        dX,
+        dY,
+    (scale)
+        sX,
+        sY,
+    rotate
+
+objets :
+    pointers // ou bien
+        pointer,
+        axe, 
+
+    unit,
+    debut,
+    arrivee, // garder la derniere position du pointeur
+
+    message,
+    action,
+
+    start
+        translate,
+        rotate,
+        scale,
+    
+    moving
+        translation,
+        rotation,
+        scalation,
+
+    transform // export
+        translate, // pourcents
+        rotate,
+        scale, // valeur
+        pivot,
+
