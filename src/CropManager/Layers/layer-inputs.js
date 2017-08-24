@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react'
+import {TOUCH, MOUSE, START, MOVE, END} from '../config/constantes'
+
 // bug : touch si l'on relache d'abord axe, 
 // -> pointer devient axe et decale l'image
 // bug shift+ clic, relacher le shitft et deplacer -> erreur,
@@ -9,25 +11,25 @@ const Inputs = (props) => {
     const {handleControl, containerSize, containerPos} = props;
     
     const handleTouchStart = (e)=>{
-        eventTouch(e, 'touch start')
+        eventTouch(e, [TOUCH, START])
     };
     const handleTouchMove = (e)=>{
-        eventTouch(e, 'touch move')
+        eventTouch(e, [TOUCH,  MOVE])
     };
     const handleTouchEnd = (e)=>{
-        eventTouch(e, 'touch end')
+        eventTouch(e, [TOUCH, END])
     };
     const handleMouseDown = (e) => {
         mouseDown = true;
-         eventMouse(e, 'mouse start');
+         eventMouse(e, [MOUSE, START]);
     };
     const handleMouseMove = (e) => {
-        if (mouseDown) eventMouse(e, 'mouse move');
+        if (mouseDown) eventMouse(e, [MOUSE, MOVE]);
     };
     const handleMouseUp = (e) => {
         if (mouseDown){
             mouseDown = false;
-            eventMouse(e, 'mouse end');
+            eventMouse(e, [MOUSE, END]);
         }
     };
     const handleMouseWheel = (e) => {

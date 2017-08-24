@@ -1,67 +1,23 @@
 /* eslint-disable */
 
-// todo : adapter en fonctionnel
 
-import {R90, RAD, DEG, START, MOVE, END, DONE} from '../config/constantes'
-/*
-// position initiale
-let debut = {posX: 0, posY:0};
-
-// arrivee : position en fin d'action 
-let arrivee = {posX: 0, posY:0};
-
-// angle de rotation
-// let angle = 0;
-
-// + : le decalage translation
-let translation;
-let rotation;
-let scalation; // ouais ca se dit
-
-// exports
-// translate : valeur du déplacement en px
-let translate = {dX: 0, dY: 0};
-let rotate = 0;
-let scale = 1;
-
-let rotateStart = 0;
-let scaleStart = 1;
-// let translateStart = {dX: 0, dY: 0};
-
-
-let unit = {dX: 0, dY: 0};
-*/
+import {R90, RAD, DEG, START, MOVE, END, DONE, SENSIBLE} from '../config/constantes'
+import {translateEnPourcents} from './translate-pc-px'
 
 // attenuer l'amplitude de la mise à l'échelle
-const sensibilite = 2;
+// const sensibilite = 2;
 
 const ted = tourneEtDecale();
 
 
-
-
-
-
-
-
-
 export default function (donnees, state) {
     const {type, pointers, sens} = donnees;
-    // const {transform, unit, start, move} = state;
-/*
-    const transform = {
-        translate: state.transform.translatePx,
-        rotate: state.transform.rotate,
-        scale: state.transform.scale,
-    };
-    
-*/
-    const [device, action] = type.split(' ');
+
+    const [device, action] = type;
     const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
     const pointer = pointers[+modifier];
     const axe = modifier && pointers[0];
     
-    // translate: translateEnPourcents(manip.transform.translate, state.cropper),
     // mon hack : 
     // enumerer les conditions, associer un résultat
     // filtrer les résultats vides
@@ -71,35 +27,21 @@ export default function (donnees, state) {
         (modifier === false) && translateImage,
         (modifier === true) && rotateAndScaleImage
     ].filter(Boolean)[0];
-
-    // console.log('whatUp', whatUp);
-    const nextState = whatUp({
-        action, 
-        pointer, 
-        axe, 
-        sens,
-        }, 
-        state
-    );
-    /*
-        transform,
-        unit,
-        start, 
-        move, 
-    })
-    */
-
-    console.log('transformer nextState', nextState);
     
-    const done = (action === 'end') ? DONE : action;
-
+    const nextState = whatUp({action, pointer, axe, sens }, state);
+    console.log('transformer nextState', action, nextState);
+    
+    const transform = {
+        ...nextState.transform,
+        translate: translateEnPourcents(nextState.transform.translatePx, state.cropper)
+    }
+    
     return {
-        // ...state, 
         ...nextState,
-        action: done, 
+        transform,
+        action, 
         pointers: {pointer, axe}, 
-        device,          
-        // message: nextState.message,
+        device          
     }
 }
 
@@ -136,7 +78,7 @@ function translateImage(donnees, state){
 
            message = 'c’est parti!' 
            */
-        break;
+        // break;
     
         case MOVE :
         return {
@@ -170,10 +112,10 @@ function translateImage(donnees, state){
             };
             message = `ah c’est fini. Point de départ: ${debut.posX} , ${debut.posY},  point d'arrivée : ${arrivee.posX}, ${arrivee.posY}`; 
             */
-        break;
+        // break;
     
-        default:
-        break;
+        // default:
+        // break;
     }
 /*
     return {
@@ -217,7 +159,8 @@ function rotateAndScaleImage(donnees, state) {
                 rotation: transform.rotate || 0,
                 scalation: transform.scale || 1,
             },
-            transform
+            transform,
+            message: 'ca tourne, ca scale'
 
 
         }
@@ -239,7 +182,7 @@ function rotateAndScaleImage(donnees, state) {
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
             // translateStart = transform.translate || {dX: 0, dY: 0};
             */
-        break;
+        // break;
     
         case MOVE :
             const step = {
@@ -249,7 +192,7 @@ function rotateAndScaleImage(donnees, state) {
 
             const relatif = {
                 rotate: Math.round((start.rotate - step.rotate) * DEG),
-                scale: Math.round(step.scale - start.scale) * 0.01 / sensibilite
+                scale: Math.round(step.scale - start.scale) * SENSIBLE
             };
 
             const scale = move.scalation + relatif.scale;
@@ -271,24 +214,24 @@ function rotateAndScaleImage(donnees, state) {
                 rotate,
                 scale
             },
-            message,
+            message
         }
-        break;
+        // break;
     
         case END :
         return {
             transform,
             message: 'c’est fini.'
          }
-        break;
+        // break;
     }
     
-    return {
-        message,
-        translate,
-        rotate,
-        scale
-    };
+    // return {
+    //     message,
+    //     translate,
+    //     rotate,
+    //     scale
+    // };
     
 }
 
@@ -296,7 +239,7 @@ function rotateAndScaleImage(donnees, state) {
 function rotate90(donnees, state) {
     const {action,sens} = donnees;
     const {transform} = state;
-    
+
     const scale = transform.scale;
     const rotation = (90 * transform.pivot.h * transform.pivot.v * sens);
     const rotate = (transform.rotate + rotation) % 360;

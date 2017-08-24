@@ -51,7 +51,7 @@ const  state = {
 
 /* eslint-disable */
 import defaults from '../config/instance-init'
-import {RAD, IDLE, DONE} from '../config/constantes'
+import {RAD, IDLE, DONE, CMD, R90} from '../config/constantes'
 
 import transformer from '../helpers/transformer-origin'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
@@ -192,7 +192,7 @@ console.log('nextState', nextState);
         // ajouter sens
         const pointers = Object.keys(state.pointers)
             .map( p => state.pointers[p]);
-        return this.updatePosition({type:'reglage R90', pointers, sens}, state);
+        return this.updatePosition({type: [CMD, R90], pointers, sens}, state);
     },
 
     transformPreset(action, state) {
