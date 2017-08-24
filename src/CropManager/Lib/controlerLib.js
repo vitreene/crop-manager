@@ -1,5 +1,3 @@
-// passer en functional, supprimer l'état interne -> state
-
 // eslint-disable-next-line 
 const  state = { 
     // RENDUS /////////
@@ -34,13 +32,13 @@ const  state = {
     },
     // export
     transform: { 
+        translatePx: {dX: 0, dY: 0}, // pixels. ignore pivot
         translate: {dX: 0, dY: 0}, // pourcents
         rotate: 0,
         scale: 1, // valeur
         pivot: {}
     }, 
-    translatePc: {dX: 0, dY: 0}, // pourcents <- à virer
-    translatePx: {dX: 0, dY: 0}, // pixels. ignore pivot
+    // translatePc: {dX: 0, dY: 0}, // pourcents <- à virer
 
     conteneur: {},
     cropWrapper: {},
@@ -116,18 +114,22 @@ const controlerLib = {
         )
     },
 
-    updatePosition({type, pointers, sens = 1}, state){
+    // updatePosition({type, pointers, sens = 1}, state){
+    updatePosition(donnees, state){
         // tester si pointer = undefined
 
         // translate en pixels
-        const {pivot} = state.transform;
-        // const {transform} = state;
-        const transform = {
-            translate: state.transform.translatePx,
-            rotate: state.transform.rotate,
-            scale: state.transform.scale,
-        };
-
+        // const {pivot} = state.transform;
+        // const transform = {
+        //     translate: state.transform.translatePx,
+        //     rotate: state.transform.rotate,
+        //     scale: state.transform.scale,
+        // };
+        
+        // changer manip pour nextState
+  
+        // const manip = transformer(donnees, state);
+        /*
         const manip = transformer({
             type, 
             pointers, 
@@ -135,6 +137,7 @@ const controlerLib = {
             pivot, 
             sens
         }); 
+        */
         /*
             manip : {
                 transform,
@@ -144,7 +147,8 @@ const controlerLib = {
                 message,
             }
         */
-
+        const nextState = transformer(donnees, state);
+/*
         const nextState = Object.assign( 
             {}, 
             manip, 
@@ -153,9 +157,11 @@ const controlerLib = {
                 // scale: manip.transform.scale, 
                 translatePx: manip.transform.translate,
                 translate: translateEnPourcents(manip.transform.translate, state.cropper),
-                pivot
+                pivot: state.transform.pivot
             },
         });
+*/
+console.log('nextState', nextState);
 
         return Object.assign(
             {},

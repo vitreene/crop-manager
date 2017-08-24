@@ -3,7 +3,7 @@
 // todo : adapter en fonctionnel
 
 import {R90, RAD, DEG, START, MOVE, END, DONE} from '../config/constantes'
-
+/*
 // position initiale
 let debut = {posX: 0, posY:0};
 
@@ -28,85 +28,141 @@ let rotateStart = 0;
 let scaleStart = 1;
 // let translateStart = {dX: 0, dY: 0};
 
-const ted = tourneEtDecale();
 
 let unit = {dX: 0, dY: 0};
+*/
 
 // attenuer l'amplitude de la mise à l'échelle
 const sensibilite = 2;
 
-export default function ({type, pointers, transform, pivot, sens}) {
-    const [device, action] = type.split(' ');
+const ted = tourneEtDecale();
 
-    const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
+
+
+
+
+
+
+
+
+export default function (donnees, state) {
+    const {type, pointers, sens} = donnees;
+    // const {transform, unit, start, move} = state;
+/*
+    const transform = {
+        translate: state.transform.translatePx,
+        rotate: state.transform.rotate,
+        scale: state.transform.scale,
+    };
     
+*/
+    const [device, action] = type.split(' ');
+    const modifier = (pointers.length >1); // 1-> 0 , 2 -> 1
     const pointer = pointers[+modifier];
     const axe = modifier && pointers[0];
+    
+    // translate: translateEnPourcents(manip.transform.translate, state.cropper),
+    // mon hack : 
+    // enumerer les conditions, associer un résultat
+    // filtrer les résultats vides
+    // ne garder que le premier résultat (simplifie les tests)
+    const whatUp = [
+        (action === R90) && rotate90,
+        (modifier === false) && translateImage,
+        (modifier === true) && rotateAndScaleImage
+    ].filter(Boolean)[0];
 
-    const what = (action === R90) 
-    ? R90
-    : modifier
-            
-    const {message, ...reste} = whatTransform({
-        what, 
+    // console.log('whatUp', whatUp);
+    const nextState = whatUp({
+        action, 
         pointer, 
         axe, 
-        action, 
-        transform, 
-        pivot,
-        sens
-    });
+        sens,
+        }, 
+        state
+    );
+    /*
+        transform,
+        unit,
+        start, 
+        move, 
+    })
+    */
+
+    console.log('transformer nextState', nextState);
+    
     const done = (action === 'end') ? DONE : action;
 
     return {
-        transform: reste,
+        // ...state, 
+        ...nextState,
         action: done, 
-        device,          
         pointers: {pointer, axe}, 
-        message,
-    }
-}
-
-function whatTransform({what, ...reste}) {
-    switch (what) {
-        case false :
-        return  translateImage(reste);
-        case true :
-        return rotateAndScaleImage(reste);  
-        case R90 :
-        return rotate90(reste)  
-        default:
-            break;
+        device,          
+        // message: nextState.message,
     }
 }
 
 
-function translateImage({pointer, action, transform, pivot}){
-    let message;
-    //  console.log('translateImage', pointer);
-
+function translateImage(donnees, state){
+    const {action, pointer} = donnees;
+    const { transform, start, move } = state;
+    
+    // let message;
+    // console.log('action', action);
+    
     switch (action) {
         case START :
+        return {
+            // debut: pointer,
+            start: {            
+                // translate: transform.translate || {dX: 0, dY: 0}
+                ...start,
+                translate: pointer
+            },
+            move: {  
+                ...move,          
+                translation: transform.translatePx || {dX: 0, dY: 0}
+            },
+            transform, 
+            message: 'c’est parti!'
+        }
+        /*
            translate = transform.translate || {dX: 0, dY: 0};
-           rotate = transform.rotate || 0;
-           scale = transform.scale || 1;
 
            debut = pointer;
            // translateStart
            translation = transform.translate || {dX: 0, dY: 0};
 
            message = 'c’est parti!' 
+           */
         break;
     
         case MOVE :
+        return {
+            transform: {
+                ...transform,
+                translatePx: { 
+                    dX: move.translation.dX + (pointer.posX - start.translate.posX) * transform.pivot.h,
+                    dY: move.translation.dY + (pointer.posY - start.translate.posY) * transform.pivot.v,
+                }
+            },           
+            message: `ca bouge! `
+        }
+
+        /*
             translate = { 
                 dX: translation.dX + (pointer.posX - debut.posX) * pivot.h,
                 dY: translation.dY + (pointer.posY - debut.posY) * pivot.v,
             }           
             message = `ca bouge! move : ${translate.dX}, ${translate.dY}`;
         break;
-    
+    */
         case END :
+        return {
+            transform,
+            message: 'c’est fini.'
+         }
         /*
             arrivee = {
                 posX: debut.posX + pointer.posX,
@@ -119,20 +175,21 @@ function translateImage({pointer, action, transform, pivot}){
         default:
         break;
     }
-
+/*
     return {
-        message,
+        ...transform,
         translate,
-        rotate,
-        scale
+        message,
         };
-
+*/
 }
 // L'axe doit etre le point central du crop -> remis à jour par resize.
 
-function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
+function rotateAndScaleImage(donnees, state) {
     // console.log('rotateAndScaleImage');
-    let message;
+    const {action, pointer, axe} = donnees;
+    const {transform, unit, start, move} = state;
+
     const d = {
         dX: pointer.posX - axe.posX,
         dY: pointer.posY - axe.posY,
@@ -142,7 +199,29 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     switch (action) {
         case START :
         // simuler transform-origin
+        return {
+            unit: {
+                dX: transform.translatePx.dX / transform.scale,
+                dY: transform.translatePx.dY / transform.scale,
+            },
+            start: {
+                // translate: transform.translate || 0,
+                // rotate: transform.rotate || 0,
+                // scale: transform.scale || 1
+                ...start,
+                rotate: Math.atan2(d.dX, d.dY) * transform.pivot.h * transform.pivot.v,
+                scale:  Math.sqrt(d.dX * d.dX + d.dY * d.dY),
+            },
+            move: {
+                ...move,
+                rotation: transform.rotate || 0,
+                scalation: transform.scale || 1,
+            },
+            transform
 
+
+        }
+/*
             unit = {
                 dX: transform.translate.dX / transform.scale,
                 dY: transform.translate.dY / transform.scale,
@@ -159,36 +238,48 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
             rotateStart = Math.atan2(d.dX, d.dY) * pivot.h  * pivot.v;
             scaleStart =  Math.sqrt(d.dX * d.dX + d.dY * d.dY);
             // translateStart = transform.translate || {dX: 0, dY: 0};
+            */
         break;
     
         case MOVE :
-            const stepRotation = Math.atan2(d.dX, d.dY) * pivot.h * pivot.v ;
-            const stepScale = Math.sqrt(d.dX * d.dX + d.dY * d.dY);
+            const step = {
+                rotate: Math.atan2(d.dX, d.dY) * transform.pivot.h * transform.pivot.v,
+                scale: Math.sqrt(d.dX * d.dX + d.dY * d.dY)
+            };
 
-            const relRotate =  Math.round((rotateStart - stepRotation) * DEG);
-            const relScale = Math.round(stepScale - scaleStart) * 0.01 / sensibilite;
+            const relatif = {
+                rotate: Math.round((start.rotate - step.rotate) * DEG),
+                scale: Math.round(step.scale - start.scale) * 0.01 / sensibilite
+            };
 
-            scale = scalation + relScale;
-            rotate = rotation + relRotate;
+            const scale = move.scalation + relatif.scale;
+            const rotate = move.rotation + relatif.rotate;
 
             const translated = ted.decaleAndScale(unit, scale);
-            const origin = ted.decale({dX: 0, dY: 0},translated, -1);
             const centre = {dX: 0, dY: 0};
-            const centerPoint = ted.tourne(origin, centre, relRotate);
+            const origin = ted.decale(centre, translated, -1);
+            const centerPoint = ted.tourne(origin, centre, relatif.rotate);
 
-            translate = ted.decale(translated, centerPoint, 1);
+            const translatePx = ted.decale(translated, centerPoint, 1);
 
-            message = `axe : ${axe.posX}, ${axe.posY}, D : ${d.dX}, ${d.dY} `
+            const message = `axe : ${axe.posX}, ${axe.posY}, D : ${d.dX}, ${d.dY} `
+
+        return {
+            transform: {
+                ...transform,
+                translatePx,
+                rotate,
+                scale
+            },
+            message,
+        }
         break;
     
         case END :
-        break;
-
-        case 'R90' :
-        // pivoter de 90°
-        break;
-    
-        default:
+        return {
+            transform,
+            message: 'c’est fini.'
+         }
         break;
     }
     
@@ -201,29 +292,37 @@ function rotateAndScaleImage({pointer, axe, action, transform, pivot}) {
     
 }
 
-function rotate90({action, transform, pivot, sens}) {
+    
+function rotate90(donnees, state) {
+    const {action,sens} = donnees;
+    const {transform} = state;
+    
     const scale = transform.scale;
-    const rotation = (90 * pivot.h * pivot.v * sens);
+    const rotation = (90 * transform.pivot.h * transform.pivot.v * sens);
     const rotate = (transform.rotate + rotation) % 360;
     
     const unit = {
-        dX: transform.translate.dX / transform.scale,
-        dY: transform.translate.dY / transform.scale,
+        dX: transform.translatePx.dX / transform.scale,
+        dY: transform.translatePx.dY / transform.scale,
     };
     const translated = ted.decaleAndScale(unit, scale);
-    const origin = ted.decale({dX: 0, dY: 0},translated, -1);
     const centre = {dX: 0, dY: 0};
+    const origin = ted.decale(centre, translated, -1);
     const centerPoint = ted.tourne(origin, centre, rotation);
 
-    const translate = ted.decale(translated, centerPoint, 1);
+    const translatePx = ted.decale(translated, centerPoint, 1);
 
     const message = 'rotation de 90°';
     
     return {
-        message,
-        translate,
-        rotate,
-        scale
+        transform: {
+            ...transform,
+            translatePx,
+            rotate,
+            scale
+        },
+        unit,
+        message
     };
 }
 
@@ -251,14 +350,14 @@ export function tourneEtDecale() {
         return{
             dX: point.dX + (translate.dX * sens),
             dY: point.dY + (translate.dY * sens)
-            }
+        }
     }
 
     function decaleAndScale(unit, scale) {
         return{
             dX: unit.dX * scale,
             dY: unit.dY * scale
-            }
+        }
     }
 
     return {

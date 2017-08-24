@@ -8,7 +8,7 @@ import initTransform from './transform'
 import {translateEnPixels} from '../helpers/translate-pc-px'
 
 
-export default class StoreLib {
+export default class ManagerLib {
     image = null
     proxy = null
     transform = null

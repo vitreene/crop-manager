@@ -54,6 +54,7 @@ const  initialState = {
     // export
     transform: { 
         translate: {dX: 0, dY: 0}, // pourcents
+        translatePx: {dX: 0, dY: 0}, // pixels
         rotate: 0,
         scale: 1, // valeur
         pivot: {h: 1, v: 1}
@@ -69,12 +70,12 @@ const  initialState = {
 
 
 export default class Controleur extends Component {
-     static propTypes = {
-        proxy: PropTypes.object,
-        cadrage: PropTypes.object,
-        transform: PropTypes.object,
-        updatePosition: PropTypes.func,
-     }
+    static propTypes = {
+       proxy: PropTypes.object,
+       cadrage: PropTypes.object,
+       transform: PropTypes.object,
+       updatePosition: PropTypes.func,
+    }
 
     constructor(props) {
         super(props);
@@ -83,7 +84,6 @@ export default class Controleur extends Component {
 
     state = {
         ...initialState,
-        // rendu,
         action: IDLE,
     }
   
@@ -92,17 +92,14 @@ export default class Controleur extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        // console.log('newProps update', newProps.update, this.props.update);
         if (newProps.update === this.props.update) return;
-        console.log('newProps', newProps);
-        
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
-        const {transform, proxy, cadrage} = newProps;   
-        if (!transform || !cadrage || !proxy) return;
-        // if ( proxy.src === this.props.proxy.src || )
+        const {transform, proxy, cadrage} = newProps;
 
-        // this.setState( controlerLib.init({transform, cadrage, proxy}) );
+        console.log('newProps', newProps);
+
+        if (!transform || !cadrage || !proxy) return;
         this.handleControl('init', {transform, proxy, cadrage})
     }
 
@@ -121,25 +118,20 @@ export default class Controleur extends Component {
         this.setState( (state, props) => controlerLib.execute(action, donnees, state, props ));
     }
 
-    render() {
-        const {handleControl} = this;
-
+    get rendu() {
         const {dX, dY, rotate, sX, sY} = this.state;
-        const rendu = {
-            translate: {dX, dY, },
+        return {
+            translate: {dX, dY},
             rotate,
             scale: {x: sX, y: sY}
-        }
+        } 
+    }
 
-        const {proxy, isLoading} = this.state;
-        const {conteneur, cropper, cropWrapper, transform: {pivot}} = this.state;
-
-        // const {proxy, isLoading} = controlerLib;
-        // const {conteneur, cropper, cropWrapper, pivot} = controlerLib;
-
-        // eslint-disable-next-line
-        // const {pointers, action, message} = controlerLib;
-
+    render() {
+        const {handleControl, rendu} = this;
+        const {conteneur, cropper, cropWrapper, proxy, isLoading} = this.state;
+        const {pivot} = this.state.transform;
+ 
         return (
             <div className="manip-conteneur">
                 <Wrapper {...{handleControl}} >

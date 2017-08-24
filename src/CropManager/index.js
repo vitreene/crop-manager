@@ -4,11 +4,11 @@ import React, {PureComponent, PropTypes} from 'react';
 import './index.css';
 
 import Controleur from './Controleur'
-import ManipImage from './Store'
+import ManagerLib from './Store'
 import {IDLE, DONE} from './config/constantes'
 
 import modele from './config/modele'
-const manipImage = new ManipImage();
+const managerLib = new ManagerLib();
 
 
 export default class CropManager extends PureComponent {
@@ -63,7 +63,7 @@ export default class CropManager extends PureComponent {
                 : 0;
              if (importer.counter !== counter) {
                 const{cadre, ...reste} = importer;
-                manipImage.importer(reste)
+                managerLib.importer(reste)
                 .then( () => {
                     this._update('importer') }); 
                     this.props.handleCadre(cadre);
@@ -79,8 +79,7 @@ export default class CropManager extends PureComponent {
             
             // console.log('imgFile.counter', imgFile.counter, counter);
              if (imgFile.counter !== counter) {
-                manipImage
-                .create(src, ratio) 
+                managerLib.create(src, ratio) 
                 .then( () => this._update('imgFile') );  
                 return;
              }
@@ -89,43 +88,28 @@ export default class CropManager extends PureComponent {
         // console.log('Ratio', (ratio !== this.props.ratio));
         
         if (ratio !== this.props.ratio) {           
-            manipImage.updateCadre(ratio);
+            managerLib.updateCadre(ratio);
             this._update('ratio');
         }
     }
-/*
-    shouldComponentUpdate(nextProps) {
-        const {imgFile, ratio, importer} = nextProps;
 
-        console.log('importer', (importer.counter !== this.props.importer.counter));
-        console.log('ratio', (ratio !== this.props.ratio) );
-        console.log('imgFile', (imgFile.counter !== this.props.imgFile.counter));
-        
-        
-        // if (importer.counter !== this.props.importer.counter) return true;
-        // if (ratio !== this.props.ratio) return true;
-        // if (imgFile.counter !== this.props.imgFile.counter) return true;
-
-        return false;
-    }
-*/
     updatePosition(transform) {
         // const {cadre} = this.props;
-        manipImage.update(transform);
+        managerLib.update(transform);
         this._export();
     }
 
     _update(message) {
-        console.log('manipImage.read() ', message, manipImage.read() );
+        console.log('managerLib.read() ', message, managerLib.read() );
         
         this._export();
-        this.setState( manipImage.read() );
+        this.setState( managerLib.read() );
         this.setState( {update: this.state.update + 1} );
     }
     
     _export(){
-        this.props.handleExport( manipImage.exporter() );
-        this.props.handleRendu( manipImage.rendu(this.props.cadre) );
+        this.props.handleExport( managerLib.exporter() );
+        this.props.handleRendu( managerLib.rendu(this.props.cadre) );
     }
 
     render() {        
