@@ -33,7 +33,7 @@ export default class CropManager extends PureComponent {
     static defaultProps = {
         // cadre: {},
         ratio: 1,
-        imgFile: {counter: 0},
+        imgFile: {src: null},
         importer: {counter: 0},
         // handleRatio: () => {}, 
         handleRendu: () => {}, 
@@ -72,13 +72,13 @@ export default class CropManager extends PureComponent {
         }
 
         if (imgFile) {
-            const counter = (this.props.imgFile)
-                ? this.props.imgFile.counter
-                : 0;
+            const propImgFileSrc = this.props.imgFile && 
+            ('src' in this.props.imgFile) && 
+            this.props.imgFile.src;
+
             const {src} = imgFile;
             
-            // console.log('imgFile.counter', imgFile.counter, counter);
-             if (imgFile.counter !== counter) {
+             if (imgFile.src !== propImgFileSrc) {
                 managerLib.create(src, ratio) 
                 .then( () => this._update('imgFile') );  
                 return;

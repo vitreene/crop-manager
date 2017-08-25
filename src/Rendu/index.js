@@ -24,54 +24,47 @@ import sharpen from './sharpen'
 import Preview from './preview'
 
 // let ref = null;
-const typeFile = 'image/jpeg';
-const encoder = 0.5;
+const TYPEFILE = 'image/jpeg';
+const ENCODER = 0.5;
+const SHARP = 0.5;
 
 const canvas = document.createElement('canvas');
+let ref;
 
 export default function DrawCanvas(props) {
     const {cadre, image} = props;
     const {transform} = props;
- 
 
     const width = (cadre) ? cadre.width : 0;
     const height = (cadre) ? cadre.height : 0;
-    // const name = (image) ? image.name : 'noname';
+
     const name = (image) 
     ? image.src.split("/").pop().split(".")[0] 
     : 'noname';
     
     const imageName = `${name}_${width}_${height}.jpg`;
-    // const canvasStyle = {width, height};
-    // const canvasStyle = {width:'100%', height:'auto'};
-    // const download = () => ref.toDataURL(typeFile, encoder);
-    const download = () => {
+    
+    function downloadCanvas() {
         paint(canvas, props);
-        return canvas.toDataURL(typeFile, encoder);
-    };
-
-    // if (ref && Object.keys(props).length) paint(ref, props);
-
-    // canvas est généré en continu. comment generer à la demande ?
+        ref.href = canvas.toDataURL(TYPEFILE, ENCODER);
+        ref.download = imageName;
+    }
     
     return(
         <div>
             <Preview {...props}/>
              {image &&   
                 <a 
+                ref={ r => ref = r}
+                onClick={downloadCanvas}
                 className="download-link"
-                href={download()} 
-                target="_blank"
-                download={imageName}> 
-                charger&nbsp; 
-                {transform && 
-                Math.round(transform.rotate)}
+                target="_blank"> 
+                Télécharger
                 </a>
              }
         </div>
     )
 }
-            /* <canvas ref={e => ref = e} style={canvasStyle} /> */
 
 function paint(ref, props) {  
     if (!ref || !props.image) return;
@@ -92,7 +85,7 @@ function paint(ref, props) {
 	ctx.rotate(rotate * RAD);
 	ctx.scale(scale.x, scale.y);
     ctx.drawImage(image, -(image.width/2), -(image.height/2));
-    sharpen(ctx, width, height, 0.5);
+    sharpen(ctx, width, height, SHARP);
 
 }
 

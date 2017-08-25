@@ -9,9 +9,6 @@ import{FILEMAX} from './config/constantes'
 import CadreLib from './cadre-lib'
 const cadrelib = new CadreLib();
 
-
-let counter = 0;
-
 const Sources = function(Composant){
         return class Sources extends Component {
         constructor(props) {
@@ -29,6 +26,7 @@ const Sources = function(Composant){
         state = {
             ...cadrelib.init(),
             imgFile: null,
+            counter: 0
         }
 
         onDrop(acceptedFiles, rejectedFiles) {
@@ -37,22 +35,20 @@ const Sources = function(Composant){
             const upFile = acceptedFiles[0];
             const reader = new FileReader();
             reader.onload = () => {
-                counter++;
                 const imgFile = {
                     name: upFile.name,
                     type: upFile.type,
                     size: Math.round(upFile.size / 1000),
                     src: reader.result,
-                    counter
                     // file: upFile
                 };
-                this.setState({imgFile});
+                this.setState({imgFile, counter: this.state.counter + 1});
             }
             reader.readAsDataURL(upFile);
         }
 
         getUrl(imgFile) {     
-            this.setState({imgFile});
+            this.setState({imgFile, counter: this.state.counter + 1});
         }
 
         getInputs(inputs){

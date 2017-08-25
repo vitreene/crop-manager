@@ -7,7 +7,7 @@ import {translateEnPourcents} from './translate-pc-px'
 // attenuer l'amplitude de la mise à l'échelle
 // const sensibilite = 2;
 
-const ted = tourneEtDecale();
+// const ted = tourneEtDecale();
 
 
 export default function (donnees, state) {
@@ -39,8 +39,8 @@ export default function (donnees, state) {
     return {
         ...nextState,
         transform,
-        action, 
         pointers: {pointer, axe}, 
+        action, 
         device          
     }
 }
@@ -198,12 +198,12 @@ function rotateAndScaleImage(donnees, state) {
             const scale = move.scalation + relatif.scale;
             const rotate = move.rotation + relatif.rotate;
 
-            const translated = ted.decaleAndScale(unit, scale);
+            const translated = decaleAndScale(unit, scale);
             const centre = {dX: 0, dY: 0};
-            const origin = ted.decale(centre, translated, -1);
-            const centerPoint = ted.tourne(origin, centre, relatif.rotate);
+            const origin = decale(centre, translated, -1);
+            const centerPoint = tourne(origin, centre, relatif.rotate);
 
-            const translatePx = ted.decale(translated, centerPoint, 1);
+            const translatePx = decale(translated, centerPoint, 1);
 
             const message = `axe : ${axe.posX}, ${axe.posY}, D : ${d.dX}, ${d.dY} `
 
@@ -248,12 +248,12 @@ function rotate90(donnees, state) {
         dX: transform.translatePx.dX / transform.scale,
         dY: transform.translatePx.dY / transform.scale,
     };
-    const translated = ted.decaleAndScale(unit, scale);
+    const translated = decaleAndScale(unit, scale);
     const centre = {dX: 0, dY: 0};
-    const origin = ted.decale(centre, translated, -1);
-    const centerPoint = ted.tourne(origin, centre, rotation);
+    const origin = decale(centre, translated, -1);
+    const centerPoint = tourne(origin, centre, rotation);
 
-    const translatePx = ted.decale(translated, centerPoint, 1);
+    const translatePx = decale(translated, centerPoint, 1);
 
     const message = 'rotation de 90°';
     
@@ -270,8 +270,8 @@ function rotate90(donnees, state) {
 }
 
 
-export function tourneEtDecale() {
-    function tourne (centre, point, angle) {
+// export function tourneEtDecale() {
+export function tourne (centre, point, angle) {
         // centre: point d'axe,
         // point : point à tourner
         // angle : angle de rotation
@@ -289,25 +289,25 @@ export function tourneEtDecale() {
         }
     }
 
-    function decale(point, translate, sens = 1) {
+export function decale(point, translate, sens = 1) {
         return{
             dX: point.dX + (translate.dX * sens),
             dY: point.dY + (translate.dY * sens)
         }
     }
 
-    function decaleAndScale(unit, scale) {
+export function decaleAndScale(unit, scale) {
         return{
             dX: unit.dX * scale,
             dY: unit.dY * scale
         }
     }
-
+/*
     return {
         tourne,
         decale,
         decaleAndScale
     }
 }
-
+*/
 
