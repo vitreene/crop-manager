@@ -1,5 +1,5 @@
 import {R90, RAD, DEG, START, MOVE, END, DONE, SENSIBLE} from '../config/constantes'
-import {translateEnPourcents} from './translate-pc-px'
+import {translateEnPourcents} from '../helpers/translate-pc-px'
 
 
 export default function (donnees, state) {

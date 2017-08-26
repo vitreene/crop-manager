@@ -3,7 +3,7 @@ import React, {PureComponent, PropTypes} from 'react';
 
 import './index.css';
 
-import Controleur from './Controleur'
+import Controleur from './controleur' // le nom n'est pas le meme ?
 import ManagerLib from './Store'
 import {IDLE, DONE} from './config/constantes'
 

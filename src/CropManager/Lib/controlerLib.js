@@ -1,12 +1,11 @@
-// import defaults from '../config/instance-init'
-import {DONE, CMD, R90} from '../config/constantes'
-
-import transformer from '../helpers/transformer-origin'
+import transformer from './transformerLib'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
 import {translateEnPixels} from '../helpers/translate-pc-px'
+
 import initTransform from '../Store/transform'
 
+import {DONE, CMD, R90} from '../config/constantes'
 
 const controlerLib = {
     execute(action, donnees, state) {
