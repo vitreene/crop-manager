@@ -100,6 +100,12 @@
   margin: 0.5rem;
   transition: color 0.3s;
   z-index: 0;
+  user-select: none;
+}
+
+.label-on{
+  background-color: #0F4519;
+  color: white;
 }
 
 .label-reglage:hover{

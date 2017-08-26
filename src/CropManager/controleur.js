@@ -96,17 +96,16 @@ export default class Controleur extends Component {
         // mise à disposition asynchrone 
         // de l'image et de sa transform initiale.
         const {transform, proxy, cadrage} = newProps;
-
-        console.log('newProps', newProps);
-
+        // console.log('newProps', newProps);
         if (!transform || !cadrage || !proxy) return;
+
         this.handleControl('init', {transform, proxy, cadrage})
     }
 
     componentDidUpdate() {
         if (this.state.action !== DONE) return;
         const exporter = controlerLib.export(this.state);
-        console.log('exporter', exporter);
+        // console.log('exporter', exporter);
         
         this.props.updatePosition(exporter);
         this.setState({action: IDLE});

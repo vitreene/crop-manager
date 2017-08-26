@@ -51,10 +51,9 @@ export default class CropManager extends PureComponent {
     state = {update: 0}
 
     componentWillReceiveProps(nextProps) {
-        console.log('CropManager nextProps');
-        
+        // console.log('CropManager nextProps');
         const {imgFile, ratio, importer} = nextProps;
-        // console.log('imgFile', imgFile);
+
         // -> width et height doivent actualiser rendu
 
         if (importer) {
@@ -84,9 +83,7 @@ export default class CropManager extends PureComponent {
                 return;
              }
         }
-        
-        // console.log('Ratio', (ratio !== this.props.ratio));
-        
+
         if (ratio !== this.props.ratio) {           
             managerLib.updateCadre(ratio);
             this._update('ratio');

@@ -1,55 +1,3 @@
-// eslint-disable-next-line 
-const  state = { 
-    // RENDUS /////////
-    // translate
-    dX: 0,
-    dY: 0,
-    // scale
-    sX: 1, 
-    sY: 1,
-    // rotate
-    rotate: 0,
-
-    // OBJETS /////////
-    pointers: [], 
-
-    unit: {},
-    debut: {},
-    arrivee: {}, // garder la derniere position du pointeur
-
-    message: '',
-    action: '',
-
-    start: {
-        translate: {dX: 0, dY: 0},
-        rotate: 0,
-        scale: 1,
-    },
-    move: {
-        translation: {dX: 0, dY: 0},
-        rotation: 0,
-        scalation: 1,
-    },
-    // export
-    transform: { 
-        translatePx: {dX: 0, dY: 0}, // pixels. ignore pivot
-        translate: {dX: 0, dY: 0}, // pourcents
-        rotate: 0,
-        scale: 1, // valeur
-        pivot: {}
-    }, 
-    // translatePc: {dX: 0, dY: 0}, // pourcents <- à virer
-
-    conteneur: {},
-    cropWrapper: {},
-    cropper: {},
-    
-    cadrage: {},
-    proxy: {}
-};
-
-
-/* eslint-disable */
 import defaults from '../config/instance-init'
 import {RAD, IDLE, DONE, CMD, R90} from '../config/constantes'
 
@@ -66,17 +14,10 @@ const controlerLib = {
     },
 
     execute(action, donnees, state, props){
-        // execute(action, ...reste){
-        console.log('ACTION', action );
+        // console.log('ACTION', action );
         return this[action] && this[action]( donnees, state, props );
     },
 
-/*
-    carManager.execute = function ( name ) {
-        return carManager[name] && carManager[name].apply( carManager, [].slice.call(arguments, 1) );
-    };
-
-*/
     init(donnees, state) {
         const {conteneur} = state;
 
@@ -114,55 +55,9 @@ const controlerLib = {
         )
     },
 
-    // updatePosition({type, pointers, sens = 1}, state){
     updatePosition(donnees, state){
-        // tester si pointer = undefined
-
-        // translate en pixels
-        // const {pivot} = state.transform;
-        // const transform = {
-        //     translate: state.transform.translatePx,
-        //     rotate: state.transform.rotate,
-        //     scale: state.transform.scale,
-        // };
-        
-        // changer manip pour nextState
-  
-        // const manip = transformer(donnees, state);
-        /*
-        const manip = transformer({
-            type, 
-            pointers, 
-            transform,
-            pivot, 
-            sens
-        }); 
-        */
-        /*
-            manip : {
-                transform,
-                pointers, 
-                action, 
-                device,          
-                message,
-            }
-        */
         const nextState = transformer(donnees, state);
-/*
-        const nextState = Object.assign( 
-            {}, 
-            manip, 
-            {transform: {
-                ...manip.transform, 
-                // scale: manip.transform.scale, 
-                translatePx: manip.transform.translate,
-                translate: translateEnPourcents(manip.transform.translate, state.cropper),
-                pivot: state.transform.pivot
-            },
-        });
-*/
-console.log('nextState', nextState);
-
+        // console.log('message', nextState.message);
         return Object.assign(
             {},
             state,

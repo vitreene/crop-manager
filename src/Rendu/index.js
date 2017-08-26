@@ -33,7 +33,6 @@ let ref;
 
 export default function DrawCanvas(props) {
     const {cadre, image} = props;
-    const {transform} = props;
 
     const width = (cadre) ? cadre.width : 0;
     const height = (cadre) ? cadre.height : 0;

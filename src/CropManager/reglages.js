@@ -49,13 +49,14 @@ export default class Reglages extends Component {
         this.props.handleControl('transformPreset', e.target.name);
     }
     
-    onRotate(){
-        this.props.handleControl('rotate90', 1);
+    onRotate(e){
+        const sens = (e.shiftKey) ? -1 : 1;
+        this.props.handleControl('rotate90', sens);
     }
 
     render() {
         const params = {maxScale:2.8, minScale:0.4};
-        const miroir = this.state;
+        const {v, h} = this.state;
         const {placement=''} = this.props;
 
         return (
@@ -69,7 +70,7 @@ export default class Reglages extends Component {
                 onChange={this.onPivot}
                 />
                 <label htmlFor="miroir-h"
-                className="label-reglage">
+                className={['label-reglage', h && 'label-on'].join(' ')}>
                     <Icon name="pivotH" checked={this.state.h} />
                 <Text small >Miroir H</Text>
                 </label>
@@ -83,7 +84,7 @@ export default class Reglages extends Component {
                 onChange={this.onPivot}
                 />
                 <label htmlFor="miroir-v"
-                className="label-reglage">
+                className={['label-reglage', v && 'label-on'].join(' ')}>
                     <Icon name="pivotV" checked={this.state.v} />
                 <Text small >Miroir V</Text>
                 </label>

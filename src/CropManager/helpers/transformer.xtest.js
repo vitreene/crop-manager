@@ -1,5 +1,4 @@
-import {tourneEtDecale as tD} from './transformer-origin'
-const tourneEtDecale = tD();
+import {tourne, decale, decaleAndScale} from './transformer-origin'
 /*
 function tourneEtDecale(cx, cy, x, y, tx, ty, angle, scale) {
     // cx, cy : point d'axe,
@@ -9,8 +8,12 @@ function tourneEtDecale(cx, cy, x, y, tx, ty, angle, scale) {
     // scale : facteurd'échelle
 */
 
+
+// fonctions obsoletes ! 
+
+
 describe( 'fonction tourneEtDecale', () => {
-    console.log('tourneEtDecale.tourne',  typeof tourneEtDecale.tourne);
+    console.log('tourne',  typeof tourne);
     
     it('la fonction est reciproque avec des valeurs à 0', () => {
      const centre = {dX: 0, dY: 0};
@@ -18,10 +21,10 @@ describe( 'fonction tourneEtDecale', () => {
      const angle = 0;
      const scale = 1;
 
-     const res1 = tourneEtDecale.tourne(centre, point, angle, scale);
+     const res1 = tourne(centre, point, angle, scale);
      console.log('res1', res1);
      
-     const res2 = tourneEtDecale.tourne(point, centre, angle, scale);
+     const res2 = tourne(point, centre, angle, scale);
      console.log('res2', res2);
      
     expect(res1.dX).toBeCloseTo(res2.dX, 2);
@@ -36,10 +39,10 @@ describe( 'fonction tourneEtDecale', () => {
      const angle = 45;
      const scale = 1.4;
 
-     const res1 = tourneEtDecale.decale(point, translate, 1);
+     const res1 = decale(point, translate, 1);
      console.log('res1', res1);
      
-     const res2 = tourneEtDecale.decale(res1, translate, -1);
+     const res2 = decale(res1, translate, -1);
      console.log('res2', res2);
      
     expect(point.dX).toBeCloseTo(res2.dX, 2);
@@ -53,10 +56,10 @@ describe( 'fonction tourneEtDecale', () => {
      const angle = 45;
      const scale = 1.4;
 
-     const res1 = tourneEtDecale.tourne(centre, point, angle, scale);
+     const res1 = tourne(centre, point, angle, scale);
      console.log('res1', res1);
      
-     const res2 = tourneEtDecale.reTourne(centre, res1, angle, scale);
+     const res2 = reTourne(centre, res1, angle, scale);
      console.log('res2', res2);
      
     expect(point.dX).toBeCloseTo(res2.dX, 2);
@@ -71,8 +74,8 @@ describe( 'fonction tourneEtDecale', () => {
      const angle = 45;
      const scale = 1.4;
 
-     const res1 = tourneEtDecale.decale(point,translate, 1);
-     const res11 = tourneEtDecale.tourne(centre, res1, angle, scale)
+     const res1 = decale(point,translate, 1);
+     const res11 = tourne(centre, res1, angle, scale)
      
      const res2 = tourneEtDecale.reTourne(centre, res11, angle, scale);
      const res22 = tourneEtDecale.decale(res2, translate, -1);
