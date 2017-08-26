@@ -11,63 +11,10 @@ import Loading from './Loading'
 import {Transformers, Plotters, Pointers} from './infos'
 
 import {DONE, IDLE} from './config/constantes'
-// import rendu from './config/rendu'
 
 import controlerLib  from './Lib/controlerLib'
-/*
-import Instance from './Instance'
-const controlerLib = new Instance({
-    action: 'Ta-Da-dammm'
-});
 
-*/
-const  initialState = { 
-    isLoading: true,
-    // translate
-    dX: 0,
-    dY: 0,
-    // scale
-    sX: 1, 
-    sY: 1,
-    rotate: 0,
-
-    // objets :
-    pointers: [], 
-
-    unit: {},
-    debut: {},
-    arrivee: {}, // garder la derniere position du pointeur
-
-    message: '',
-    action: '',
-
-    start: {
-        translate: {dX: 0, dY: 0},
-        rotate: 0,
-        scale: 1,
-    },
-    move: {
-        translation: {dX: 0, dY: 0},
-        rotation: 0,
-        scalation: 1,
-    },
-    // export
-    transform: { 
-        translate: {dX: 0, dY: 0}, // pourcents
-        translatePx: {dX: 0, dY: 0}, // pixels
-        rotate: 0,
-        scale: 1, // valeur
-        pivot: {h: 1, v: 1}
-    }, 
-
-    conteneur: {},
-    cropWrapper: {},
-    cropper: {},
-    
-    cadrage: {},
-    proxy: {}
-};
-
+import initialState from './config/instance-init'
 
 export default class Controleur extends Component {
     static propTypes = {
@@ -87,10 +34,6 @@ export default class Controleur extends Component {
         action: IDLE,
     }
   
-    componentWillMount() {
-        controlerLib.log();
-    }
-
     componentWillReceiveProps(newProps) {
         if (newProps.update === this.props.update) return;
         // mise à disposition asynchrone 
@@ -103,32 +46,22 @@ export default class Controleur extends Component {
     }
 
     componentDidUpdate() {
+        // console.log('this.state.action ', this.state.action );
         if (this.state.action !== DONE) return;
+
         const exporter = controlerLib.export(this.state);
         // console.log('exporter', exporter);
-        
         this.props.updatePosition(exporter);
         this.setState({action: IDLE});
     }
 
     handleControl(action, donnees) {       
-        // controlerLib.execute(action, donnees);
-        // this.setState(  controlerLib.execute(action, donnees) );
-        this.setState( (state, props) => controlerLib.execute(action, donnees, state, props ));
-    }
-
-    get rendu() {
-        const {dX, dY, rotate, sX, sY} = this.state;
-        return {
-            translate: {dX, dY},
-            rotate,
-            scale: {x: sX, y: sY}
-        } 
+        this.setState( state => controlerLib.execute(action, donnees, state) );
     }
 
     render() {
-        const {handleControl, rendu} = this;
-        const {conteneur, cropper, cropWrapper, proxy, isLoading} = this.state;
+        const {handleControl} = this;
+        const {conteneur, cropper, cropWrapper, proxy, isLoading, rendu} = this.state;
         const {pivot} = this.state.transform;
  
         return (

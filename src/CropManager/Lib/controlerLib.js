@@ -1,69 +1,30 @@
-import defaults from '../config/instance-init'
-import {RAD, IDLE, DONE, CMD, R90} from '../config/constantes'
+// import defaults from '../config/instance-init'
+import {DONE, CMD, R90} from '../config/constantes'
 
 import transformer from '../helpers/transformer-origin'
 import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
-import {translateEnPourcents, translateEnPixels} from '../helpers/translate-pc-px'
+import {translateEnPixels} from '../helpers/translate-pc-px'
 import initTransform from '../Store/transform'
 
 
 const controlerLib = {
-    log() {
-        console.log('this : Instance', this);
-    },
-
-    execute(action, donnees, state, props){
+    execute(action, donnees, state) {
         // console.log('ACTION', action );
-        return this[action] && this[action]( donnees, state, props );
+        return this[action] && this[action]( donnees, state);
     },
 
     init(donnees, state) {
-        const {conteneur} = state;
-
-        const {cadrage, proxy, transform} = donnees;
-        const {containerSize} = conteneur;
-        const {translate} = transform;
-
-        // this._cropResize();
-        const cropWrapper = setCropWrapper(containerSize, cadrage);
-        const cropper = setCropper(cropWrapper, cadrage);
-
-        // this._imageResize();
-        const size = proxySize(cadrage, cropper);
-        const proxysize = {...proxy, ...size }
-
-        // this._translateResize();
-        const translatePx = translateEnPixels(translate, cropper);
-        
-        const transformPx =  {...transform, translatePx};
-
         const nextState = {
+            ...this.preSizes(state.conteneur, donnees),
             isLoading: false,
-            cadrage,
-            cropWrapper,
-            cropper,
-            proxy: proxysize,
-            transform: transformPx,
         };
-        // console.log('nextState', nextState);
-        return Object.assign(
-            {},
-            state,
-            nextState,
-            this.updateRendu(nextState)
-        )
+        return this.update(state, nextState);
     },
 
     updatePosition(donnees, state){
         const nextState = transformer(donnees, state);
-        // console.log('message', nextState.message);
-        return Object.assign(
-            {},
-            state,
-            nextState,
-            this.updateRendu(nextState, nextState.action)
-        )   
+        return this.update(state, nextState, nextState.action);
     },
 
     pivoter({h,v}, state) {
@@ -75,12 +36,8 @@ const controlerLib = {
         const nextState = {
             transform: {...state.transform, pivot},
         };
-        return Object.assign(
-            {},
-            state,
-            nextState,
-            this.updateRendu(nextState)
-        )
+        return this.update(state, nextState);
+        
     },
 
     rotate90(sens, state) {
@@ -99,86 +56,76 @@ const controlerLib = {
         const nextState = {
             transform: {...transform, translatePx, pivot},
         };
-
-        return Object.assign(
-            {},
-            state,
-            nextState,
-            this.updateRendu(nextState)
-        )
+        return this.update(state, nextState);
+        
     },
 
     resize(conteneur, state) {
         if (state.isLoading) return {...state, conteneur};
-        
-        const {cadrage, proxy, transform} = state;
-        const {containerSize} = conteneur;
-        const {translate} = transform;        
-
-        // this._cropResize();
-        const cropWrapper = setCropWrapper(containerSize, cadrage);
-        const cropper = setCropper(cropWrapper, cadrage);
-        
-        // this._imageResize();
-        const size = proxySize(cadrage, cropper);
-        const proxysize = {...proxy, ...size }        
-
-        // this._translateResize();
-        const translatePx = translateEnPixels(translate, cropper);
-
-        const transformPx =  {...transform, translatePx};
-
-        const nextState = {
-            conteneur,
-            cropWrapper, 
-            cropper, 
-            proxy, 
-            transform: transformPx,
-        };
-
-        return Object.assign(
-            {},
-            state,
-            nextState,
-            this.updateRendu(nextState)
-        )
-     },
-
+        const nextState = this.preSizes(conteneur, state);
+        return this.update(state, nextState);
+    },
+    
     export(state){
+        // eslint-disable-next-line
         const {translatePx, ...transform} = state.transform;
         return transform;
     },
 
+    preSizes(conteneur, state){
+        const {containerSize} = conteneur;
+        const {cadrage} = state;
+        const {translate} = state.transform;        
+        
+        const cropWrapper = setCropWrapper(containerSize, cadrage);
+        const cropper = setCropper(cropWrapper, cadrage);
+        
+        const size = proxySize(cadrage, cropper);
+        const proxy = {...state.proxy, ...size }        
+        
+        const translatePx = translateEnPixels(translate, cropper);
+        const transform =  {...state.transform, translatePx};
+        return {
+            conteneur,
+            cadrage,
+            cropWrapper, 
+            cropper, 
+            proxy, 
+            transform,
+        }
+    },
 
-    updateRendu(args, action=DONE){
-        // console.log('args', args);
-
-        const {transform} = args;
+    rendu({transform}) {
         const {pivot, translatePx} = transform;
-    
         // si pivot est l'un des deux : h ou v, rotate = 180 - t.rotate ;
         const rotate = ((pivot.h + pivot.v) === 0) 
             ? 180 - transform.rotate
             : transform.rotate;
 
-        const sX = transform.scale * pivot.v;
-        const sY = transform.scale * pivot.h;
+        const x = transform.scale * pivot.v;
+        const y = transform.scale * pivot.h;
 
         const dX = Math.round(translatePx.dX * pivot.h);
         const dY = Math.round(translatePx.dY * pivot.v);
-
+        
         return {
-            dX,
-            dY, 
-            rotate, 
-            sX,
-            sY, 
-            action
-        };
+            rendu: {
+                translate: {dX, dY},
+                rotate,
+                scale: {x, y}
+            }
+        }
+    },
 
+    update(state, nextState, action = DONE) {
+        return Object.assign(
+            {},
+            state,
+            nextState,
+            this.rendu(nextState),
+            {action}
+        )
     }
-
 }
-
 
 export default  controlerLib;

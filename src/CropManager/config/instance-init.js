@@ -1,3 +1,50 @@
+
+const  initialState = { 
+    isLoading: true,
+    rendu: {
+        translate: {dX: 0, dY: 0},
+        rotate: 0,
+        scale: {x: 1, y: 1}
+    },
+    // objets :
+    pointers: [], 
+    unit: {},
+    // debut: {},
+    // arrivee: {}, // garder la derniere position du pointeur
+
+    message: '',
+    action: '',
+
+    start: {
+        translate: {dX: 0, dY: 0},
+        rotate: 0,
+        scale: 1,
+    },
+    move: {
+        translation: {dX: 0, dY: 0},
+        rotation: 0,
+        scalation: 1,
+    },
+    // export
+    transform: { 
+        translate: {dX: 0, dY: 0}, // pourcents
+        translatePx: {dX: 0, dY: 0}, // pixels
+        rotate: 0,
+        scale: 1, // valeur
+        pivot: {h: 1, v: 1}
+    }, 
+
+    conteneur: {},
+    cropWrapper: {},
+    cropper: {},
+    
+    cadrage: {},
+    proxy: {}
+};
+
+export default initialState
+
+/*
 const instance = {
     isLoading: true,
     hasOrigin: false,
@@ -50,4 +97,7 @@ const instance = {
     message: ''
 }
 
+
+
 export default instance
+*/
