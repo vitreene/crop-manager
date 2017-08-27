@@ -34,12 +34,9 @@ const cadreEmpty =  {
     seuil: false
 };
 
-export default function CadreLib(){
 
-    // let cadre = {...cadreEmpty};
-    // let placeholder = {...cadreDefaults};
-    
-    function inputs(inputs, state) {
+const cadreLib = {
+    inputs(inputs, state) {
         // accepte un objet de type {name, value}
         // ou bien {width, height, ratio}   
         const profil = Object.keys(inputs).length;
@@ -49,23 +46,18 @@ export default function CadreLib(){
         switch (name) {
             case 'cadre':
                 console.log('cadre', value);
-                return importer(value)
-                // break;
+                return this.importer(value)
             case 'permute':
                 console.log('permute');
-                return _permute(state);                
-                // break;
-        
+                return this._permute(state);                
             case 'select':
-                return _ratioChange(Number(value), state);
-                // break;
-        
+                return this._ratioChange(Number(value), state);
             default:
-                return _dims({name, value: Number(value)}, state)
-                // break;
+                return this._dims({name, value: Number(value)}, state)
         }
-    }
-    function _ratioChange(ratio, state) {
+    },
+
+    _ratioChange(ratio, state) {
         // forcer la hauteur si nouveau ratio.
         // const {width, height} = state;
         const cadre = {
@@ -75,25 +67,13 @@ export default function CadreLib(){
                 : state.height,
             ratio
         }
+        return this.validate(state, cadre);
+    },
 
-        return validate(state, cadre);
-    }
-    /*
-        const placeholder = dimensions(cadre, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadre,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('_ratioChange', res);
-        return res;
-     }
-    */
     // @params: target-name, 
     // @params: valeur
     // @params: prev-state
-    function _dims({name, value}, state) {
+    _dims({name, value}, state) {
         const {width, height, ratio} = state;
         const cadre = {
             width, 
@@ -102,110 +82,52 @@ export default function CadreLib(){
             [name]: notZero( value ) ? value : ''
         };
         cadre.ratio = updateRatio(cadre.width, cadre.height, ratio);
-        return rendu(state, cadre);
-    }
-    /*
-        const placeholder = dimensions(cadre, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadre,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('_dims', res);
-        return res;
-    }
-*/
-    function _permute(state) {
+        return this.rendu(state, cadre);
+    },
+
+    _permute(state) {
         const {width, height, ratio} = state;
         const cadre = {
             width: height,
             height: width,
             ratio: 1 / ratio
         };
-        return rendu(state, cadre);
-    }
-/*
-        const placeholder = dimensions(cadre, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadre,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('_permute', res);
-        return res;
-    }
-*/
+        return this.rendu(state, cadre);
+    },
 
-    function importer(inputs, state) {
+    importer(inputs, state) {
         const cadre = {...cadreEmpty};
         cadre.ratio = inputs.ratio;
-        return rendu(state, cadre);
-    }
-    /*
-        const placeholder = dimensions(inputs, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadre,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('cadre-lib : importer', res);
-        return res;        
-    }
-    */
-    function init() {
+        return this.rendu(state, cadre);
+    },
+
+    init() {
         // valeurs par défaut
         const state = {};
         const cadre = {...cadreEmpty};
-        return rendu(state, cadre);
-    }
-    /*
-        const placeholder = dimensions(cadre, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadre,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('cadre-lib : importer', res);
-        return res;  
-        }
-    */
-    function validate(state, dim) {
+        return this.rendu(state, cadre);
+    },
+    
+    validate(state, dim) {
         const {width, height, ratio} = dim || state;
         const placeholder = dimensions({width, height, ratio}, cadreDefaults);
-
         const cadreLimits = limit(placeholder.width, placeholder.height);
-        // cadreLimits.ratio = ratio;
-
         const cadre = {
             width: width ? cadreLimits.width : '',
             height: height ? cadreLimits.height : '',
             ratio
         }
-        // console.log('cadreLimits', cadreLimits, ratio);
-
+        return this.rendu(state, cadre);
+        /*
         return Object.assign( {},
             rendu(state, cadre),
             // idealement seulement à la validation 
             // ratio
         );
-    }
-/*
-        const placeholder = dimensions(cadreLimits, cadreDefaults);
-        const res =  Object.assign( {},
-            state,
-            cadreLimits,
-            {placeholder},
-            {select: _findOptions(placeholder.absRatio)}
-        );
-        console.log('validate', res);
-        return res;
-    }
-*/
-    function _findOptions(v) {
+        */
+    },
+
+    _findOptions(v) {
         const value = arrondi(v);
         //verifier si absRatio est présent dans la liste
         // sinon, attribuer à 'libre'
@@ -222,28 +144,23 @@ export default function CadreLib(){
         const options = libre.concat(presets);
 
         return {
-                selected: options[select].ratio,
-                presets: options
+            selected: options[select].ratio,
+            presets: options
         }
-    }
+    },
 
-    function rendu(state, cadre) {
+    rendu(state, cadre) {
         const placeholder = dimensions(cadre, cadreDefaults);
         return Object.assign( {},
             state,
             cadre,
             {placeholder},
-            {select: _findOptions(placeholder.absRatio)},
+            {select: this._findOptions(placeholder.absRatio)},
         );
     }
-
-    return {
-        init,
-        importer,
-        inputs,
-        validate
-    }
 }
+
+export default cadreLib;
 
 // HELPERS
 
@@ -256,7 +173,6 @@ function arrondi(value, precision = 2) {
 // dans ce cas, renvoie la valeur limite en respectant le ratio
 // avec un flag indiquant si le seuil a été atteint
 export function limit(ww,hh) {
-
     /*
     si ww = 0 -> ''
     si ww = '' 

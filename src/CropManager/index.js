@@ -4,11 +4,20 @@ import React, {PureComponent, PropTypes} from 'react';
 import './index.css';
 
 import Controleur from './controleur' // le nom n'est pas le meme ?
-import ManagerLib from './Store'
+import managerLib from './Store'
+import deepEQ from './helpers/deepEQ'
 import {IDLE, DONE} from './config/constantes'
-
 import modele from './config/modele'
-const managerLib = new ManagerLib();
+// const managerLib = new ManagerLib();
+
+const initialState = {
+    image: {src: null},
+    cadrage: null,
+    transform: null,
+    proxy: null,
+    pristine: true // l'objet est-il intact ?
+}
+const asyncActions = {'create': true, 'importer': true};
 
 
 export default class CropManager extends PureComponent {
@@ -16,26 +25,15 @@ export default class CropManager extends PureComponent {
         imgFile: PropTypes.object,
         ratio: PropTypes.number,
         cadre: PropTypes.object,
-        // cadrage: PropTypes.shape({
-            /*
-        cadre: PropTypes.shape({
-            width: PropTypes.number,
-            height: PropTypes.number,
-            ratio: PropTypes.number,
-        }),
-        */
         importer: PropTypes.object,
-        // handleRatio: PropTypes.func,
         handleRendu: PropTypes.func,
         handleExport: PropTypes.func,
         handleCadre: PropTypes.func,
      }
     static defaultProps = {
-        // cadre: {},
         ratio: 1,
         imgFile: {src: null},
         importer: {counter: 0},
-        // handleRatio: () => {}, 
         handleRendu: () => {}, 
         handleExport: () => {},
         handleCadre: () => {},
@@ -48,24 +46,58 @@ export default class CropManager extends PureComponent {
         this._export = this._export.bind(this);
     }
 
-    state = {update: 0}
+    state = {
+        ...initialState,
+        update: 0
+    }
+
+
 
     componentWillReceiveProps(nextProps) {
         // console.log('CropManager nextProps');
-        const {imgFile, ratio, importer} = nextProps;
+        // const {imgFile, ratio, importer} = nextProps;
 
+        // next contient la propriété qui a changé.
+        // testFirst contient l'ordre des propriétés à appliquer
+        // [ratio, imgFile, importer]
+        const testFirst = ['ratio', 'imgFile', 'importer']
+        // ou alors : tester les objets les moins volumineux ?
+
+        const next = deepEQ(nextProps, this.props, testFirst)
+
+        switch (next) {
+            case 'importer':
+                const{cadre, ...reste} = nextProps.importer;
+                this._update('create', reste);
+                this.props.handleCadre(cadre);
+                break;
+                
+                case 'imgFile':
+                this._update('create', {
+                    image: nextProps.imgFile, 
+                    ratio: nextProps.ratio
+                })
+                break;
+                
+            case 'ratio':
+                this._update('updateCadre', nextProps.ratio);            
+                break;
+
+            default:
+                break;
+        }
+
+        /*
         // -> width et height doivent actualiser rendu
 
         if (importer) {
             const counter = (this.props.importer) 
                 ? this.props.importer.counter
                 : 0;
-             if (importer.counter !== counter) {
+            if (importer.counter !== counter) {
                 const{cadre, ...reste} = importer;
-                managerLib.importer(reste)
-                .then( () => {
-                    this._update('importer') }); 
-                    this.props.handleCadre(cadre);
+                this._update('create', reste);
+                this.props.handleCadre(cadre);
                 return;
             }
         }
@@ -75,52 +107,66 @@ export default class CropManager extends PureComponent {
             ('src' in this.props.imgFile) && 
             this.props.imgFile.src;
 
-            const {src} = imgFile;
-            
-             if (imgFile.src !== propImgFileSrc) {
-                managerLib.create(src, ratio) 
-                .then( () => this._update('imgFile') );  
+            if (imgFile.src !== propImgFileSrc) {
+                this._update('create', {src: imgFile.src, ratio})
+            }
+        }
+        */
+    /*
+        if (importer) {
+            const{cadre, ...reste} = importer;
+                this._update('create', reste);
+                this.props.handleCadre(cadre);
                 return;
-             }
         }
-
-        if (ratio !== this.props.ratio) {           
-            managerLib.updateCadre(ratio);
-            this._update('ratio');
-        }
-    }
-
-    updatePosition(transform) {
-        // const {cadre} = this.props;
-        managerLib.update(transform);
-        this._export();
-    }
-
-    _update(message) {
-        console.log('managerLib.read() ', message, managerLib.read() );
         
+        if (imgFile) {
+                this._update('create', {src: imgFile.src, ratio})
+        }
+        
+        if (ratio !== this.props.ratio) { 
+            this._update('updateCadre', ratio);
+        }
+        */
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // tester si state à changé ?
         this._export();
-        this.setState( managerLib.read() );
-        this.setState( {update: this.state.update + 1} );
+    }
+    
+    updatePosition(transform) {
+        this._update('update', transform);
+    }
+
+    _update(action, donnees) {
+        // console.log('action, donnees', action, donnees);
+        console.log('action', action);
+        
+        if (action === 'create') {
+            managerLib.execute(action, donnees, this.state)
+            .then(res => {
+                this.setState(res);
+                this.setState( state => ({update: state.update + 1}) );
+            });
+        } else {
+            this.setState( state => managerLib.execute(action, donnees, state));
+            (action !== 'update') && this.setState( state => ({update: state.update + 1}) );
+        }
+
     }
     
     _export(){
-        this.props.handleExport( managerLib.exporter() );
-        this.props.handleRendu( managerLib.rendu(this.props.cadre) );
+        this.props.handleExport(managerLib.exporter(this.state) );
+        this.props.handleRendu(managerLib.rendu(this.props.cadre, this.state) );
     }
 
     render() {        
-        const {updatePosition, state} = this;
+        const {updatePosition} = this;
+        const {proxy, cadrage, transform, update} = this.state;
         
         return (
-            <Controleur {...{updatePosition, ...state}}/> 
+            <Controleur {...{updatePosition, proxy, cadrage, transform, update}}/> 
         );
     }
 }
-
-/*
-PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-])
-*/

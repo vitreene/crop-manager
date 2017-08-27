@@ -1,17 +1,10 @@
 export default function (image) {
     const canvas = makeCanvasFromImage(image);
     const proxy = convertCanvasToImage(canvas);
-    // console.log('proxy',proxy);
     return {
-        image, 
-        /*
-        proxy
-        */
-        proxy: {
-            src: proxy.src, 
-            width: proxy.width, 
-            height: proxy.height
-        }
+        src: proxy.src, 
+        width: proxy.width, 
+        height: proxy.height
     } 
 }
 

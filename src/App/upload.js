@@ -1,6 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-// import {isClient} from './config/constantes'
-
 import Icon from './UI/icones'
 import Text from './UI/text'
 
@@ -13,7 +11,7 @@ export default class Upload  extends Component {
         this.upload = this.upload.bind(this);
     }
 
-    state = {  }
+    state = { value: ''}
     
      upload(e){
         const upFile = e.target.files[0];
@@ -25,6 +23,7 @@ export default class Upload  extends Component {
                 size: Math.round(upFile.size / 1000),
                 src: reader.result
             };
+            this.setState({value: ''});
             this.props.getUrl(imgFile);
         }
         reader.readAsDataURL(upFile);
@@ -39,6 +38,7 @@ export default class Upload  extends Component {
                 type="file"
                 accept="image/*"
                 onChange={this.upload}
+                value={this.state.value}
                 />
                 <label htmlFor="upload-file"
                 className="label-reglage">
@@ -49,36 +49,3 @@ export default class Upload  extends Component {
         );
     }
 }
-
-/*
-
-handleFileChange(e) {
-    let inp_files = e.target.files;
-    let op_all_files = [];
-    for (let i = 0; i < inp_files.length; i++) {
-      let to_file = inp_files[i];
-      let reader_obj = new FileReader();
-      reader_obj.readAsDataURL(to_file);
-      reader_obj.onload = () => {
-        let to_file_obj = {
-          name: to_file.name,
-          type: to_file.type,
-          size: Math.round(to_file.size / 1000),
-          base64: reader_obj.result,
-          file: to_file
-        };
-        op_all_files.push(to_file_obj);
-        if(op_all_files.length === inp_files.length) {
-          if(this.props.multiple) {
-            this.setState({ image_objs_array: op_all_files });
-            this.props.callbackFunction(op_all_files);
-          }
-          else {
-            this.setState({ image_objs_array: op_all_files });
-            this.props.callbackFunction(op_all_files[0]);
-          }
-        }
-      }
-    }
-  }
-*/

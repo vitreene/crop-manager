@@ -6,8 +6,7 @@ import Upload from './upload'
 import Dropzone from 'react-dropzone'
 
 import{FILEMAX} from './config/constantes'
-import CadreLib from './cadre-lib'
-const cadrelib = new CadreLib();
+import cadreLib from './cadre-lib'
 
 const Sources = function(Composant){
         return class Sources extends Component {
@@ -16,22 +15,22 @@ const Sources = function(Composant){
 
             this.getUrl = this.getUrl.bind(this);
             this.getInputs = this.getInputs.bind(this);
+            this.loadImage = this.loadImage.bind(this);
             this.validateInput = this.validateInput.bind(this);
             this.onDrop = this.onDrop.bind(this);
-
-            // this.getRatio = this.getRatio.bind(this);
-            // this.handleImport = this.handleImport.bind(this);
         }
 
         state = {
-            ...cadrelib.init(),
+            ...cadreLib.init(),
             imgFile: null,
-            counter: 0
         }
+
+        counter = 0
 
         onDrop(acceptedFiles, rejectedFiles) {
             console.log('acceptedFiles', acceptedFiles);
             console.log('rejectedFiles', rejectedFiles);
+            if (rejectedFiles[0]) return;
             const upFile = acceptedFiles[0];
             const reader = new FileReader();
             reader.onload = () => {
@@ -42,27 +41,32 @@ const Sources = function(Composant){
                     src: reader.result,
                     // file: upFile
                 };
-                this.setState({imgFile, counter: this.state.counter + 1});
+                this.loadImage(imgFile);
             }
             reader.readAsDataURL(upFile);
         }
-
-        getUrl(imgFile) {     
-            this.setState({imgFile, counter: this.state.counter + 1});
+        
+        getUrl(imgFile) { 
+            this.loadImage(imgFile);
+        }
+        
+        loadImage(imgFile) {
+            this.counter++ ;
+            this.setState({imgFile: {...imgFile, counter: this.counter}});
         }
 
         getInputs(inputs){
-            this.setState( state => cadrelib.inputs(inputs, state) );
+            this.setState( state => cadreLib.inputs(inputs, state) );
         }
+
         validateInput(){
-            this.setState( state => cadrelib.validate(state) );
+            this.setState( state => cadreLib.validate(state) );
         }
-        // getRatio() { }
         
         render() {
             const {imgFile, ...cadre} = this.state;
             const {ratio, placeholder} = cadre;
-            const {props, getUrl, getInputs, /*getRatio, */validateInput, onDrop} = this;
+            const {props, getUrl, getInputs, validateInput, onDrop} = this;
     
             return (
                 <main className="element-wrapper">
@@ -79,7 +83,6 @@ const Sources = function(Composant){
                         className="manip-conteneur"
                         onDrop={onDrop}
                         >
-                            {/* {handleRatio={getRatio}} */}
                         <Composant
                             {...{imgFile, ratio}}
                             cadre={placeholder}

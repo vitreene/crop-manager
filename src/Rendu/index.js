@@ -36,11 +36,9 @@ export default function DrawCanvas(props) {
 
     const width = (cadre) ? cadre.width : 0;
     const height = (cadre) ? cadre.height : 0;
-
-    const name = (image) 
-    ? image.src.split("/").pop().split(".")[0] 
-    : 'noname';
+    // image && console.log('image', image.name);
     
+    const name = (image && image.name) || 'untitled';
     const imageName = `${name}_${width}_${height}.jpg`;
     
     function downloadCanvas() {
