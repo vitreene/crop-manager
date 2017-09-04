@@ -44,19 +44,22 @@ export default function ChoixCadrage(props) {
             <div className="gestion-crop">
 
                 <label className="crop-label"  
-                htmlFor="cadrage-presets"> aspect </label>
-                <select 
-                className="crop-presets"
-                id="cadrage-presets"
-                value={selected}
-                onChange={handleSelect}>
-                    {selectOptions()}
-                </select>
+                htmlFor="cadrage-presets">
+                <span className="crop-label-info"> aspect </span>
+                    <select 
+                    className="crop-presets"
+                    id="cadrage-presets"
+                    value={selected}
+                    onChange={handleSelect}>
+                        {selectOptions()}
+                    </select>
+                 </label>
 
                 <div className="gestion-crop-size">
 
                     <label className="crop-label label-px" 
-                    htmlFor="crop-width"> L 
+                    htmlFor="crop-width">
+                    <span className="crop-label-info"> L </span>
                     <input
                         className="crop-size-input"
                         name="width"
@@ -76,7 +79,8 @@ export default function ChoixCadrage(props) {
                     </span> 
 
                     <label className="crop-label label-px" 
-                    htmlFor="crop-height"> H 
+                    htmlFor="crop-height">
+                    <span className="crop-label-info"> H </span>
                     <input
                         className="crop-size-input"
                         name="height"

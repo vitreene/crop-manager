@@ -3,9 +3,8 @@ import React, {Component} from 'react';
 
 import Sources from './sources'
 import DrawCanvas from '../Rendu'
-import Demo from './demo-file'
+import Header from './Header'
 
-import logo from './UI/crop-manager-logo4.svg';
 
 export default class App extends Component {
   constructor(props) {
@@ -38,22 +37,17 @@ export default class App extends Component {
 
     return (
       <div className="container">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="crop-manager"/>
-        </div>
+        <Header/>
 
-        <div className="crop-manager">
+        <main className="crop-manager">
           <Sources 
             {...{importer}}
             handleRendu={toCanvas}
             handleExport={toExport}
           />
 
-          <aside id="canvas" className="element-rendu">
-            <Demo {...{handleImport}}/>
-            <DrawCanvas {...rendu}/>
-          </aside>
-        </div>
+          <DrawCanvas {...{rendu, handleImport}}/>
+        </main>
       </div>
     );
 

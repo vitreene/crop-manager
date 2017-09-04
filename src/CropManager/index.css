@@ -1,4 +1,19 @@
 
+/* 
+myComponent.style.setProperty('--primary', 'green');
+var cs = getComputedStyle(myComponent);
+cs.getPropertyValue('--primary');
+*/
+:root {
+  --back-01: #646469;
+  --back-02-header: #8b8f94;
+  --back-03-rendu: #2a2f2e;
+  --back-04-crop: #111;
+  --front-01-icons: #48dcc9;
+  --front-02-icons: #fff;
+  --raleway: "Raleway", "Helvetica Neue", Arial, sans-serif;
+}
+
 .manip-wrapper{
   position: relative;
   display: flex;
@@ -92,21 +107,29 @@
   justify-content: space-between;
   align-items: center;
   height: 44px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .label-reglage {
   position: relative;
-  margin: 0.5rem;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  /* margin: 0  auto; */
+  margin-right:1rem;
+  /* padding: 0 0.5rem; */
+  /* text-align: center;   */
   transition: color 0.3s;
   z-index: 0;
   user-select: none;
 }
 
-.label-on{
-  background-color: #0F4519;
-  color: white;
+.label-reglage:last-child{
+  margin-right: 0;
 }
+
 
 .label-reglage:hover{
     color:var(--front-02-icons);
@@ -128,7 +151,16 @@
 
 .input-hidden{
   display: none;
-  }
+}
+
+.label-on{
+  background-color: #0F4519;
+  color: white;
+}
+    
+.reglage-separator{
+  flex:1;
+}
 
 /*////////////////////////*/
 

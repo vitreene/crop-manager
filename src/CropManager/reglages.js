@@ -102,7 +102,7 @@ export default class Reglages extends Component {
                 <Text small >Tourner</Text>
                 </label>
 
-                <div style={{margin: 'auto'}}/>
+                <div  className="reglage-separator"/>
 
                 <input
                 className="input-hidden"

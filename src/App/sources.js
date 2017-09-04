@@ -69,7 +69,7 @@ const Sources = function(Composant){
             const {props, getUrl, getInputs, validateInput, onDrop} = this;
     
             return (
-                <main className="element-wrapper">
+                <div className="element-wrapper">
 
                     <aside className="element-sources">
                         <Upload {...{getUrl}}/>
@@ -90,7 +90,7 @@ const Sources = function(Composant){
                             {...props}
                         />
                     </Dropzone>
-                </main>
+                </div>
             )
         }
     }

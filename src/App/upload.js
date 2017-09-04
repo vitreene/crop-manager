@@ -43,7 +43,7 @@ export default class Upload  extends Component {
                 <label htmlFor="upload-file"
                 className="label-reglage">
                     <Icon name="upload"  />
-                    <Text small >Choisir image</Text>
+                    <Text small >Image</Text>
                 </label>
             </div>            
         );
