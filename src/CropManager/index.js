@@ -1,14 +1,10 @@
-/* eslint-disable */
 import React, {PureComponent, PropTypes} from 'react';
 
-import './index.css';
-
-import Controleur from './controleur' // le nom n'est pas le meme ?
-import managerLib from './Store'
+import Controleur from './Controleur' 
+import managerLib from './Lib/managerLib'
 import deepEQ from './helpers/deepEQ'
-import {IDLE, DONE} from './config/constantes'
-import modele from './config/modele'
-// const managerLib = new ManagerLib();
+
+import './index.css';
 
 const initialState = {
     image: {src: null},
@@ -17,8 +13,6 @@ const initialState = {
     proxy: null,
     pristine: true // l'objet est-il intact ?
 }
-const asyncActions = {'create': true, 'importer': true};
-
 
 export default class CropManager extends PureComponent {
     static propTypes = {
@@ -51,20 +45,13 @@ export default class CropManager extends PureComponent {
         update: 0
     }
 
-
-
     componentWillReceiveProps(nextProps) {
-        // console.log('CropManager nextProps');
-        // const {imgFile, ratio, importer} = nextProps;
-
         // next contient la propriété qui a changé.
         // testFirst contient l'ordre des propriétés à appliquer
         // [ratio, imgFile, importer]
         const testFirst = ['ratio', 'imgFile', 'importer']
-        // ou alors : tester les objets les moins volumineux ?
-
         const next = deepEQ(nextProps, this.props, testFirst)
-
+        // reunir : source = {ratio, imgFile}
         switch (next) {
             case 'importer':
                 const{cadre, ...reste} = nextProps.importer;
@@ -86,48 +73,6 @@ export default class CropManager extends PureComponent {
             default:
                 break;
         }
-
-        /*
-        // -> width et height doivent actualiser rendu
-
-        if (importer) {
-            const counter = (this.props.importer) 
-                ? this.props.importer.counter
-                : 0;
-            if (importer.counter !== counter) {
-                const{cadre, ...reste} = importer;
-                this._update('create', reste);
-                this.props.handleCadre(cadre);
-                return;
-            }
-        }
-
-        if (imgFile) {
-            const propImgFileSrc = this.props.imgFile && 
-            ('src' in this.props.imgFile) && 
-            this.props.imgFile.src;
-
-            if (imgFile.src !== propImgFileSrc) {
-                this._update('create', {src: imgFile.src, ratio})
-            }
-        }
-        */
-    /*
-        if (importer) {
-            const{cadre, ...reste} = importer;
-                this._update('create', reste);
-                this.props.handleCadre(cadre);
-                return;
-        }
-        
-        if (imgFile) {
-                this._update('create', {src: imgFile.src, ratio})
-        }
-        
-        if (ratio !== this.props.ratio) { 
-            this._update('updateCadre', ratio);
-        }
-        */
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -140,9 +85,7 @@ export default class CropManager extends PureComponent {
     }
 
     _update(action, donnees) {
-        // console.log('action, donnees', action, donnees);
-        console.log('action', action);
-        
+        // console.log('action', action);  
         if (action === 'create') {
             managerLib.execute(action, donnees, this.state)
             .then(res => {
@@ -153,7 +96,6 @@ export default class CropManager extends PureComponent {
             this.setState( state => managerLib.execute(action, donnees, state));
             (action !== 'update') && this.setState( state => ({update: state.update + 1}) );
         }
-
     }
     
     _export(){

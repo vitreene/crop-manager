@@ -34,7 +34,7 @@ const LayerCrop = (props) => {
     };
 
     return (
-     <div className="layer-crop">
+     <div className="layer-base layer-crop">
         <div 
          className="layer-crop-outer"
          style={cropLayer}>

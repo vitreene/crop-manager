@@ -27,10 +27,7 @@ cs.getPropertyValue('--primary');
 
 
 /* LAYERS */
-
-.layer-crop,
-.layer-fond,
-.inputsWrapper{
+.layer-base{
   position: absolute;
   top: 0;
   bottom: 0;
@@ -42,6 +39,13 @@ cs.getPropertyValue('--primary');
   user-select: none;
   opacity: 0.01;
 }
+.layer-fond{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--back-04-crop);
+}
 
 .layer-crop-outer {
   position: relative;
@@ -51,8 +55,7 @@ cs.getPropertyValue('--primary');
   overflow: hidden;
 }
 
-.layer-crop-inner,
-.layer-fond{
+.layer-crop-inner{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,9 +69,6 @@ cs.getPropertyValue('--primary');
   animation: fadeIn 0.5s;
 }
 
-.layer-fond{
-  background-color: var(--back-04-crop);
-}
 .layer-crop-inner{
   border: 1px solid white;
 }
@@ -83,7 +83,6 @@ cs.getPropertyValue('--primary');
   position: relative;
   width: auto;
 }
-
 
 .icon-reticule{
   width: 3rem;

@@ -3,7 +3,7 @@ import {setCropWrapper, setCropper} from '../helpers/cropper-size'
 import proxySize from '../helpers/proxy-size'
 import {translateEnPixels} from '../helpers/translate-pc-px'
 
-import initTransform from '../Store/transform'
+import initTransform from '../helpers//transform'
 
 import {DONE, CMD, R90} from '../config/constantes'
 

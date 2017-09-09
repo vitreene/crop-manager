@@ -118,13 +118,6 @@ const cadreLib = {
             ratio
         }
         return this.rendu(state, cadre);
-        /*
-        return Object.assign( {},
-            rendu(state, cadre),
-            // idealement seulement à la validation 
-            // ratio
-        );
-        */
     },
 
     _findOptions(v) {

@@ -6,7 +6,7 @@ import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
 import LayerReticule from './Layers/layer-reticule'
 import Reglages from './Reglages'
-import Loading from './Loading'
+import Loading from './UI/Loading'
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './infos'
 

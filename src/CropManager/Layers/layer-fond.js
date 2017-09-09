@@ -20,7 +20,7 @@ const LayerImage = ({rendu: transform, proxy, cropper}) => {
     };
 
     return (
-        <div className="layer-fond">
+        <div className="layer-base layer-fond">
             <img role="presentation"
                 src={proxy.src} 
                 style={transformation} 

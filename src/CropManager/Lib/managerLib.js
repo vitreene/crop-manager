@@ -1,8 +1,8 @@
 // create, read, update 
-import getImage from './image'
-import makeProxy from './proxy'
-import creerCadrage from './cadrage'
-import initTransform from './transform'
+import getImage from '../helpers/image'
+import makeProxy from '../helpers/proxy'
+import creerCadrage from '../helpers/cadrage'
+import initTransform from '../helpers/transform'
 import {translateEnPixels} from '../helpers/translate-pc-px'
 
 const ManagerLib = {
