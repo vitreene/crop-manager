@@ -1,113 +1,130 @@
-import React, {PropTypes} from 'react'
-import {TOUCH, MOUSE, START, MOVE, END} from '../config/constantes'
+import React, {Component, PropTypes} from 'react'
+import {TOUCH, MOUSE, 
+    START, MOVE, END,
+    SCALEMIN, SCALEMAX
+} from '../config/constantes'
 
-// bug : touch si l'on relache d'abord axe, 
-// -> pointer devient axe et decale l'image
-// bug shift+ clic, relacher le shitft et deplacer -> erreur,
+import '../UI/input-range.css'
 
-let mouseDown = false;
+// valeur arbitraire, élevée : 
+// la ligne axeX - initial représente le vecteur de l'échelle 
+const axeX = -1000;
+const INITIAL = 0;
 
-const Inputs = (props) => {
-    const {handleControl, containerSize, containerPos} = props;
-    
-    const handleTouchStart = (e)=>{
-        eventTouch(e, [TOUCH, START])
-    };
-    const handleTouchMove = (e)=>{
-        eventTouch(e, [TOUCH,  MOVE])
-    };
-    const handleTouchEnd = (e)=>{
-        eventTouch(e, [TOUCH, END])
-    };
-    const handleMouseDown = (e) => {
-        mouseDown = true;
-         eventMouse(e, [MOUSE, START]);
-    };
-    const handleMouseMove = (e) => {
-        if (mouseDown) eventMouse(e, [MOUSE, MOVE]);
-    };
-    const handleMouseUp = (e) => {
-        if (mouseDown){
-            mouseDown = false;
-            eventMouse(e, [MOUSE, END]);
-        }
-    };
-    const handleMouseWheel = (e) => {
-        
-        // e.nativeEvent.deltaY
-        // deltaMode, deltaX, deltaY, deltaZ
-    };
+// amplitude du curseur entre -10 and 10
+const mid = 0;
+const max = 10;
 
-    function eventTouch(e, type) {
-        e.stopPropagation();
-        e.preventDefault();        
-        const {contDX, contDY} = containerPos;
-        const pointers = Object.keys(e.touches)
-        .reverse()
-        .map( index => (
-                {
-                    posX: Math.round( e.touches[index].pageX - contDX ),
-                    posY: Math.round( e.touches[index].pageY - contDY ),
-                }
-            )
-        )
-        .filter(touche => touche.posX && touche.posY);
-        
-        ///////
-        handleControl('updatePosition', {type, pointers});
-        
-      //  getPointerPosition({type, pointers});
-    }
+// The result should be between 1 an 50
+const minv =  Math.LN2;
+// force de l'amplification
+const maxv = Math.log(50);
+// calculate adjustment factor
+const scale = (maxv-minv) / (max-mid);
 
-    function eventMouse(e, type) {
-        e.stopPropagation();
-        e.preventDefault();
-
-
-        const {pageX, pageY, shiftKey} = e;
-        const {contDX, contDY} = containerPos;
-        const {width, height} = containerSize;
-
-        const midX = Math.round( (width * 0.5) );
-        const midY = Math.round( (height * 0.5) );  
-
-
-        const posX = Math.round( pageX - contDX );
-        const posY = Math.round( pageY - contDY );
-
-        const pointers = [
-            shiftKey && {posX: midX, posY: midY}, // axe
-            {posX, posY}, // pointer
-        ].filter(Boolean);
-
-        ////////
-        handleControl('updatePosition', {type, pointers});
-
-       // getPointerPosition({type, pointers}); 
-    }
-
-    return (
-            <div 
-            className="layer-base inputsWrapper"
-            style={containerSize}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onWheel={handleMouseWheel}
-            />
-    )
+const logslider = (position) =>{
+    if (position === 0) return 0;
+    const val = Math.sign(position) * 
+                Math.exp( minv + scale * 
+                (Math.abs(position) - mid) );
+    return val;
 };
 
-Inputs.propTypes = {
-    handleControl: PropTypes.func, 
-    getPointerPosition: PropTypes.func, 
-    // middle: PropTypes.object, 
-    containerSize: PropTypes.object, 
-    containerPos: PropTypes.object
-}
+const initialState = {
+    value: INITIAL, 
+    scale: INITIAL,
+    trend: 0, 
+    sens: 0,
+    min: -max,
+    max: max,
+    step: 0.1,  
+    emit: false
+};
 
-export default Inputs
+export default class LayerScale extends Component {
+    static propTypes = {
+        handleControl: PropTypes.func, 
+        transform: PropTypes.object, 
+    }
+
+    constructor(props) {
+        super(props);
+        this.handleScale = this.handleScale.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+    }
+
+    state = initialState;
+
+    componentDidUpdate(prevProps, prevState) {
+        this.state.emit && !prevState.emit && this.updateValue();
+    }
+    
+   updateValue(){
+        const timer = setTimeout( ()=> {
+            // si je bute sur une borne arreter, figer la valeur jusq'à que je change de sens.
+            const actualScale = this.props.transform.scale;
+            const {sens} = this.state;
+            
+            const trending = ( 
+                (sens === -1 && (actualScale <= SCALEMIN )) || 
+                (sens === 1 && (actualScale >= SCALEMAX )) 
+            ) ? 0 : sens * Math.abs(this.state.trend);
+            
+            const scaling = this.state.scale + trending;
+
+            // butée minimale / maximale
+            const scale = (scaling > axeX) ? scaling : axeX + 1;
+
+            this.props.handleControl('updateScale', {type:[MOUSE, MOVE], axeX, scale});
+            this.setState({scale});
+            this.state.emit && this.updateValue();
+        }, 30);
+        this.setState({timer});
+   }
+
+    handleScale(e) {
+        const value = parseFloat(e.target.value);
+        // trend est value, amplifié aux extrémités.
+        const trend = logslider(value);
+        // sens du mouvement du curseur : -1 ou 1
+        const sens = Math.sign(trend - this.state.trend);
+        this.setState({value, trend, sens} );
+    }
+    
+    handleMouseDown() {
+        const {scale} = this.state;
+        this.props.handleControl('updateScale', {type:[MOUSE, START], axeX, scale});
+        this.setState({emit: true});
+    }
+    
+    handleMouseUp() {
+        const {scale, timer} = this.state;
+        clearTimeout(timer);
+        this.props.handleControl('updateScale', {type:[MOUSE, END], axeX, scale});
+        this.setState(initialState);
+    }
+
+    render(){
+        const {state, handleScale, handleMouseUp, handleMouseDown} = this;
+        return (
+            <div className="input-scale">
+                <div className="input-scale-inner">
+                <input 
+                    className="input-scale-range"
+                    type="range" 
+                    min={state.min} 
+                    max={state.max}
+                    step={state.step}
+                    value={state.value}
+                    onChange={handleScale}
+                    onMouseUp={handleMouseUp}
+                    onMouseDown={handleMouseDown}
+                    onTouchStart={handleMouseDown}
+                    onTouchEnd={handleMouseUp}/>
+                </div>
+            </div>
+
+        )
+    }
+};

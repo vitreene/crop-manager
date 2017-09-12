@@ -52,17 +52,14 @@ const Inputs = (props) => {
             )
         )
         .filter(touche => touche.posX && touche.posY);
-        
-        ///////
+
         handleControl('updatePosition', {type, pointers});
-        
-      //  getPointerPosition({type, pointers});
+
     }
 
     function eventMouse(e, type) {
         e.stopPropagation();
         e.preventDefault();
-
 
         const {pageX, pageY, shiftKey} = e;
         const {contDX, contDY} = containerPos;
@@ -70,7 +67,6 @@ const Inputs = (props) => {
 
         const midX = Math.round( (width * 0.5) );
         const midY = Math.round( (height * 0.5) );  
-
 
         const posX = Math.round( pageX - contDX );
         const posY = Math.round( pageY - contDY );
@@ -80,10 +76,8 @@ const Inputs = (props) => {
             {posX, posY}, // pointer
         ].filter(Boolean);
 
-        ////////
         handleControl('updatePosition', {type, pointers});
 
-       // getPointerPosition({type, pointers}); 
     }
 
     return (
@@ -104,8 +98,6 @@ const Inputs = (props) => {
 
 Inputs.propTypes = {
     handleControl: PropTypes.func, 
-    getPointerPosition: PropTypes.func, 
-    // middle: PropTypes.object, 
     containerSize: PropTypes.object, 
     containerPos: PropTypes.object
 }

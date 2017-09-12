@@ -1,6 +1,13 @@
-import {R90, RAD, DEG, START, MOVE, END, DONE, SENSIBLE} from '../config/constantes'
+import {
+    R90, 
+    RAD, DEG, 
+    START, MOVE, END, DONE, 
+    SENSIBLE, SCALEMIN, SCALEMAX
+} from '../config/constantes'
 import {translateEnPourcents} from '../helpers/translate-pc-px'
 
+// const scaleMin = 0.5;
+// const scaleMax = 5;
 
 export default function (donnees, state) {
     const {type, pointers, sens} = donnees;
@@ -88,14 +95,23 @@ function translateImage(donnees, state){
 // L'axe doit etre le point central du crop -> remis à jour par resize.
 
 function rotateAndScaleImage(donnees, state) {
-    // console.log('rotateAndScaleImage');
     const {action, pointer, axe} = donnees;
     const {transform, unit, start, move} = state;
 
     const d = {
         dX: pointer.posX - axe.posX,
-        dY: pointer.posY - axe.posY,
+        dY: pointer.posY - axe.posY
+    }
+    /*
+    const dX = pointer.posX - axe.posX;
+    const dY = pointer.posY - axe.posY;
+    const d = {
+        dX: (dX > 0) ? dX : 1,
+        dY: (dY > 0) ? dY : 1,
     };
+    // console.log('dX', d.dX);
+    */
+    // console.log('rotateAndScaleImage', d.dX, d.dY);
 
     switch (action) {
         case START :
@@ -130,7 +146,17 @@ function rotateAndScaleImage(donnees, state) {
                 scale: Math.round(step.scale - start.scale) * SENSIBLE
             };
 
-            const scale = move.scalation + relatif.scale;
+            const scaling = move.scalation + relatif.scale;
+            const scale = [
+                (SCALEMIN < scaling) && (SCALEMAX > scaling) && scaling,
+                (SCALEMIN >= scaling) && SCALEMIN,
+                (SCALEMAX <= scaling) && SCALEMAX
+            ].filter(Boolean)[0];
+            
+
+            // console.log('scale', scale, pointer.posX);
+            // console.log('scale', scale, scaling, move.scalation,relatif.scale);
+            // console.log('scale', scaling, relatif.scale);
             const rotate = move.rotation + relatif.rotate;
 
             const translated = decaleAndScale(unit, scale);

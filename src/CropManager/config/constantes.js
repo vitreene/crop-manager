@@ -15,4 +15,8 @@ export const PADDING = 5
 // attenuer l'amplitude de la mise à l'échelle
 export const SENSIBLE = 0.01 / 2
 
+// scale min & max
+export const SCALEMIN = 0.5
+export const SCALEMAX = 10
+
 export const isClient = typeof window !== "undefined";

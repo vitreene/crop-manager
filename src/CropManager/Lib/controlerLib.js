@@ -22,7 +22,9 @@ const controlerLib = {
     },
 
     updatePosition(donnees, state){
+        
         const nextState = transformer(donnees, state);
+        // console.log('scale', donnees.pointers[0].posX, donnees.pointers[1].posX, nextState.transform.scale);
         return this.update(state, nextState, nextState.action);
     },
 
@@ -44,6 +46,25 @@ const controlerLib = {
         const pointers = Object.keys(state.pointers)
             .map( p => state.pointers[p]);
         return this.updatePosition({type: [CMD, R90], pointers, sens}, state);
+    },
+    
+    updateScale(donnees, state){
+        // console.log('updateScale donnees', donnees);
+        // fixer des butées 
+        const {type, axeX, scale} = donnees;
+        // const scaling = (scale  > -1000) ? scale : -999;
+        // console.log('scaling', scaling, 1000 + scale );
+        // console.log('updateScale', (scale > -1000) , scaling );
+        
+        const pointers = [
+            // {posX: -1000, posY: 0},
+            {posX: axeX, posY: 0},
+            {posX: scale, posY: 0},
+        ]
+
+        // console.log('SCALE', donnees, state.pointers);
+        return this.updatePosition({type, pointers}, state);
+        
     },
 
     transformPreset(action, state) {
