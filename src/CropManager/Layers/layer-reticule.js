@@ -1,7 +1,8 @@
 import React from 'react';
 import Icon from '../UI/icones'
 
-const LayerReticule = ({containerSize}) => {
+const LayerReticule = (props) => {
+    const {containerSize} = props.conteneur;
     const middle = {
         top: containerSize.height * 0.5, 
         left: containerSize.width * 0.5, 

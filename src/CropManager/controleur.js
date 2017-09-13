@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 import Wrapper from './Wrapper'
 import LayerScale from './Layers/layer-scale'
+import LayerRotate from './Layers/layer-rotate'
 import LayerInputs from './Layers/layer-inputs'
 import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
@@ -62,7 +63,7 @@ export default class Controleur extends Component {
 
     render() {
         const {handleControl} = this;
-        const {conteneur, cropper, cropWrapper, proxy, isLoading, rendu, transform} = this.state;
+        const {conteneur, cropper, cropWrapper, proxy, isLoading, rendu, transform, start} = this.state;
         const {pivot} = this.state.transform;
  
         return (
@@ -73,9 +74,10 @@ export default class Controleur extends Component {
                     : ( <div>
                         <LayerFond {...{rendu, proxy, cropper}}/>
                         <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>
-                        <LayerReticule {...{...conteneur}}/>
-                        <LayerInputs {...{handleControl, ...conteneur}}/>
-                        <LayerScale {...{handleControl, transform, ...conteneur}}/>
+                        <LayerReticule {...{conteneur}}/>
+                        <LayerInputs {...{handleControl, conteneur}}/>
+                        <LayerScale {...{handleControl, transform}}/>
+                        <LayerRotate {...{handleControl, conteneur, transform}}/>
                     </div> )
                 }
                 </Wrapper>

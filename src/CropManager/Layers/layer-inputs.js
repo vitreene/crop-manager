@@ -8,7 +8,8 @@ import {TOUCH, MOUSE, START, MOVE, END} from '../config/constantes'
 let mouseDown = false;
 
 const Inputs = (props) => {
-    const {handleControl, containerSize, containerPos} = props;
+    const {handleControl} = props;
+    const {containerSize, containerPos} = props.conteneur;
     
     const handleTouchStart = (e)=>{
         eventTouch(e, [TOUCH, START])

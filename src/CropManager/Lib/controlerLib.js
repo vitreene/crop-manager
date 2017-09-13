@@ -5,7 +5,7 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 
 import initTransform from '../helpers//transform'
 
-import {DONE, CMD, R90} from '../config/constantes'
+import {RAD, DEG, DONE, CMD, R90} from '../config/constantes'
 
 const controlerLib = {
     execute(action, donnees, state) {
@@ -49,22 +49,26 @@ const controlerLib = {
     },
     
     updateScale(donnees, state){
-        // console.log('updateScale donnees', donnees);
-        // fixer des butées 
         const {type, axeX, scale} = donnees;
-        // const scaling = (scale  > -1000) ? scale : -999;
-        // console.log('scaling', scaling, 1000 + scale );
-        // console.log('updateScale', (scale > -1000) , scaling );
-        
         const pointers = [
-            // {posX: -1000, posY: 0},
             {posX: axeX, posY: 0},
             {posX: scale, posY: 0},
         ]
-
-        // console.log('SCALE', donnees, state.pointers);
         return this.updatePosition({type, pointers}, state);
+    },
+    
+    updateRotate(donnees, state){
+        const {type, rotate} = donnees;
+        // const absRotate = (state.transform.rotate + rotate)% 360;
+        const absRotate = rotate;
+        const pointers = [
+            {posX: 0, posY: 0},
+            {posX: Math.cos(absRotate * RAD)*100, posY: Math.sin(absRotate * RAD)*100},
+        ]
+        // console.log('POINTERS', pointers[1]);
+        // console.log('absRotate', absRotate, absRotate * RAD);
         
+        return this.updatePosition({type, pointers}, state);
     },
 
     transformPreset(action, state) {

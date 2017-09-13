@@ -102,16 +102,9 @@ function rotateAndScaleImage(donnees, state) {
         dX: pointer.posX - axe.posX,
         dY: pointer.posY - axe.posY
     }
-    /*
-    const dX = pointer.posX - axe.posX;
-    const dY = pointer.posY - axe.posY;
-    const d = {
-        dX: (dX > 0) ? dX : 1,
-        dY: (dY > 0) ? dY : 1,
-    };
-    // console.log('dX', d.dX);
-    */
+ 
     // console.log('rotateAndScaleImage', d.dX, d.dY);
+    // console.log('dX', d.dX, Math.atan2(d.dX, d.dY));
 
     switch (action) {
         case START :

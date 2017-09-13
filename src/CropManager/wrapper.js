@@ -11,11 +11,11 @@ export default  class Wrapper extends Component {
         this.getRect = this.getRect.bind(this);
         this.resizeContainer = this.resizeContainer.bind(this);
     }
-    wrapper = null
-    debounceResizeContainer = null
+    ref = null;
+    debounceResizeContainer = null;
 
     componentDidMount() {
-        this.getRect(this.wrapper);
+        this.getRect(this.ref);
         isClient && window.addEventListener('resize', this.resizeContainer);
     }
 
@@ -24,13 +24,13 @@ export default  class Wrapper extends Component {
     }
 
     resizeContainer() {
-        const {wrapper, getRect} = this;
+        const {ref, getRect} = this;
         let {debounceResizeContainer} = this;
 
         clearTimeout(debounceResizeContainer);
         debounceResizeContainer = setTimeout(() => {
-            getRect(wrapper);
-        }, 250)
+            getRect(ref);
+        }, 60)
     }
 
     getRect(el) {
@@ -53,7 +53,7 @@ export default  class Wrapper extends Component {
         return (
             <div
             className="manip-wrapper" 
-            ref={ref => this.wrapper = ref}>
+            ref={r => this.ref = r}>
                 {this.props.children}
             </div>
 
