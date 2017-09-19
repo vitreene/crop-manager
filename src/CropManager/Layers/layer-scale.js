@@ -84,6 +84,8 @@ export default class LayerScale extends Component {
    }
 
     handleScale(e) {
+        e.stopPropagation();
+        e.preventDefault();
         const value = parseFloat(e.target.value);
         // trend est value, amplifié aux extrémités.
         const trend = logslider(value);

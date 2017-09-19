@@ -14,6 +14,9 @@ const controlerLib = {
     },
 
     init(donnees, state) {
+        const {transform, proxy, cadrage} = donnees;
+        if (!transform || !cadrage || !proxy) return;
+
         const nextState = {
             ...this.preSizes(state.conteneur, donnees),
             isLoading: false,
@@ -22,8 +25,9 @@ const controlerLib = {
     },
 
     updatePosition(donnees, state){
-        
-        const nextState = transformer(donnees, state);
+        // smooth : apply a transition to the transformation
+        const {smooth} = donnees;
+        const nextState = {...transformer(donnees, state), smooth};
         // console.log('scale', donnees.pointers[0].posX, donnees.pointers[1].posX, nextState.transform.scale);
         return this.update(state, nextState, nextState.action);
     },
@@ -35,7 +39,7 @@ const controlerLib = {
             v: v ? -1 : 1,
         };
         const nextState = {
-            transform: {...state.transform, pivot},
+            transform: {...state.transform, pivot}, smooth: true
         };
         return this.update(state, nextState);
         
@@ -43,9 +47,15 @@ const controlerLib = {
 
     rotate90(sens, state) {
         // ajouter sens
-        const pointers = Object.keys(state.pointers)
-            .map( p => state.pointers[p]);
-        return this.updatePosition({type: [CMD, R90], pointers, sens}, state);
+        const pointers = Object
+            .keys(state.pointers)
+            .map(p => state.pointers[p]);
+        return this.updatePosition({
+            type: [CMD, R90],
+            pointers,
+            sens,
+            smooth: true
+        }, state);
     },
     
     updateScale(donnees, state){
@@ -79,6 +89,7 @@ const controlerLib = {
 
         const nextState = {
             transform: {...transform, translatePx, pivot},
+            smooth: true
         };
         return this.update(state, nextState);
         

@@ -1,3 +1,6 @@
+// simplifier ce module
+// a faire : séparer la logique de la présentation, pour une meilleure portabilité.
+
 import React, {Component, PropTypes} from 'react'
 import {
     MOUSE, 
@@ -8,7 +11,7 @@ import '../UI/input-range.css'
 
 // valeur arbitraire, élevée : 
 // la ligne axeX - initial représente le vecteur de l'échelle 
-const axeX = -1000;
+// const axeX = -1000;
 const INITIAL = 0;
 
 // amplitude du curseur entre -10 and 10
@@ -21,7 +24,7 @@ const minv =  Math.LN2;
 const maxv = Math.LN10;
 // calculate adjustment factor
 const scale = (maxv-minv) / (max-mid);
-
+/*
 const logslider = (position) =>{
     if (position === 0) return 0;
     const val = Math.sign(position) * 
@@ -29,7 +32,7 @@ const logslider = (position) =>{
                 (Math.abs(position) - mid) );
     return val;
 };
-
+*/
 const initialState = {
     value: INITIAL, 
     rotate: INITIAL,
@@ -97,7 +100,7 @@ export default class LayerRotate extends Component {
     }
 
     get size(){
-        const {width, height} =  this.props.conteneur.containerSize;
+        const {height} =  this.props.conteneur.containerSize;
         // largeur : 5% du conteneur. 
         return {width: height - (height * 0.2)}
     }

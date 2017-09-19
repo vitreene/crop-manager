@@ -8,7 +8,7 @@ import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
 import LayerReticule from './Layers/layer-reticule'
 import Reglages from './Reglages'
-import Loading from './UI/Loading'
+// import Loading from './UI/Loading'
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './infos'
 
@@ -20,6 +20,7 @@ import initialState from './config/instance-init'
 
 export default class Controleur extends Component {
     static propTypes = {
+       isLoading: PropTypes.bool,
        proxy: PropTypes.object,
        cadrage: PropTypes.object,
        transform: PropTypes.object,
@@ -37,16 +38,17 @@ export default class Controleur extends Component {
     }
   
     componentWillReceiveProps(newProps) {
-        if (newProps.update === this.props.update) return;
-        // mise à disposition asynchrone 
-        // de l'image et de sa transform initiale.
-        const {transform, proxy, cadrage} = newProps;
-        // console.log('newProps', newProps);
-        if (!transform || !cadrage || !proxy) return;
+        
+        // this.setState({isLoading: this.props.isLoading});
+        if (newProps.update !== this.props.update) {
+            // mise à disposition asynchrone 
+            // de l'image et de sa transform initiale.
+            const {transform, proxy, cadrage} = newProps;
+            // if (!transform || !cadrage || !proxy) return;
 
-        this.handleControl('init', {transform, proxy, cadrage})
+            this.handleControl('init', {transform, proxy, cadrage})
+        }
     }
-
     componentDidUpdate() {
         // console.log('this.state.action ', this.state.action );
         if (this.state.action !== DONE) return;
@@ -62,24 +64,20 @@ export default class Controleur extends Component {
     }
 
     render() {
-        const {handleControl} = this;
-        const {conteneur, cropper, cropWrapper, proxy, isLoading, rendu, transform, start} = this.state;
+        const {handleControl, state} = this;
+        const {isLoading} = this.props;
+        const {/*isLoading, */conteneur, cropper, cropWrapper, proxy, rendu, transform, start} = this.state;
         const {pivot} = this.state.transform;
  
         return (
             <div className="manip-conteneur">
-                <Wrapper {...{handleControl}} >
-                { isLoading
-                    ? (proxy.src && <Loading/>)
-                    : ( <div>
-                        <LayerFond {...{rendu, proxy, cropper}}/>
-                        <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>
-                        <LayerReticule {...{conteneur}}/>
-                        <LayerInputs {...{handleControl, conteneur}}/>
-                        <LayerScale {...{handleControl, transform}}/>
-                        <LayerRotate {...{handleControl, conteneur, transform}}/>
-                    </div> )
-                }
+                <Wrapper {...{handleControl, isLoading, hasSrc: proxy.src}} >
+                    <LayerFond {...state}/>
+                    <LayerCrop {...state}/>
+                    <LayerReticule {...{conteneur}}/>
+                    <LayerInputs {...{handleControl, conteneur}}/>
+                    <LayerScale {...{handleControl, transform}}/>
+                    <LayerRotate {...{handleControl, conteneur, transform}}/>
                 </Wrapper>
                 <Reglages {...{handleControl, pivot}}/>
                 {/*<Transformers {...{rendu}} />*/}
@@ -89,3 +87,6 @@ export default class Controleur extends Component {
         );
     }
 }
+
+{/* <LayerFond {...{rendu, proxy, cropper}}/> */}
+//  <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>

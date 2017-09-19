@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import Loading from './UI/Loading'
 
 import {isClient} from './config/constantes'
         
@@ -50,11 +51,16 @@ export default  class Wrapper extends Component {
     }
 
     render() {
+        const {isLoading, hasSrc} = this.props;
+        // loading s'arrette lorsque l'image est prete, mais pas le proxy
         return (
             <div
             className="manip-wrapper" 
             ref={r => this.ref = r}>
-                {this.props.children}
+                { isLoading
+                    ? <Loading/>
+                    : hasSrc && this.props.children 
+                }
             </div>
 
         );

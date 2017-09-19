@@ -4,6 +4,7 @@ import CropManager from '../CropManager'
 import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
 import Dropzone from 'react-dropzone'
+import Loading from '../CropManager/UI/Loading'
 
 import{FILEMAX} from './config/constantes'
 import cadreLib from './cadre-lib'
@@ -23,6 +24,7 @@ const Sources = function(Composant){
         state = {
             ...cadreLib.init(),
             imgFile: null,
+            isLoading: false
         }
 
         counter = 0
@@ -31,13 +33,14 @@ const Sources = function(Composant){
             console.log('acceptedFiles', acceptedFiles);
             console.log('rejectedFiles', rejectedFiles);
             if (rejectedFiles[0]) return;
+            this.setState({isLoading: true})
             const upFile = acceptedFiles[0];
             const reader = new FileReader();
             reader.onload = () => {
                 const imgFile = {
                     name: upFile.name,
                     type: upFile.type,
-                    size: Math.round(upFile.size / 1000),
+                    size: Math.round(upFile.size / 1024),
                     src: reader.result,
                     // file: upFile
                 };
@@ -53,6 +56,7 @@ const Sources = function(Composant){
         loadImage(imgFile) {
             this.counter++ ;
             this.setState({imgFile: {...imgFile, counter: this.counter}});
+            this.setState({isLoading: false});
         }
 
         getInputs(inputs){
@@ -64,13 +68,12 @@ const Sources = function(Composant){
         }
         
         render() {
-            const {imgFile, ...cadre} = this.state;
+            const {imgFile, isLoading, ...cadre} = this.state;
             const {ratio, placeholder} = cadre;
             const {props, getUrl, getInputs, validateInput, onDrop} = this;
-    
+            
             return (
                 <div className="element-wrapper">
-
                     <aside className="element-sources">
                         <Upload {...{getUrl}}/>
                         <ChoixCadrage {...{cadre, getInputs, validateInput}}/>
@@ -83,12 +86,14 @@ const Sources = function(Composant){
                         className="manip-conteneur"
                         onDrop={onDrop}
                         >
-                        <Composant
+                            <Composant
                             {...{imgFile, ratio}}
                             cadre={placeholder}
                             handleCadre={getInputs}
+                            isLoading={isLoading}
                             {...props}
-                        />
+                            />
+                          
                     </Dropzone>
                 </div>
             )

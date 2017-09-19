@@ -16,6 +16,7 @@ const initialState = {
 
 export default class CropManager extends PureComponent {
     static propTypes = {
+        isLoading: PropTypes.bool,
         imgFile: PropTypes.object,
         ratio: PropTypes.number,
         cadre: PropTypes.object,
@@ -25,6 +26,7 @@ export default class CropManager extends PureComponent {
         handleCadre: PropTypes.func,
      }
     static defaultProps = {
+        isLoading: false,
         ratio: 1,
         imgFile: {src: null},
         importer: {counter: 0},
@@ -51,7 +53,10 @@ export default class CropManager extends PureComponent {
         // [ratio, imgFile, importer]
         const testFirst = ['ratio', 'imgFile', 'importer']
         const next = deepEQ(nextProps, this.props, testFirst)
+        // console.log('next', next);
+
         // reunir : source = {ratio, imgFile}
+        
         switch (next) {
             case 'importer':
                 const{cadre, ...reste} = nextProps.importer;
@@ -75,7 +80,8 @@ export default class CropManager extends PureComponent {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    // componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate() {
         // tester si state à changé ?
         this._export();
     }
@@ -105,10 +111,20 @@ export default class CropManager extends PureComponent {
 
     render() {        
         const {updatePosition} = this;
+        const {isLoading} = this.props;
         const {proxy, cadrage, transform, update} = this.state;
         
         return (
-            <Controleur {...{updatePosition, proxy, cadrage, transform, update}}/> 
+            < Controleur {
+                ...{
+                    updatePosition,
+                    proxy,
+                    cadrage,
+                    transform,
+                    update,
+                    isLoading
+                }
+            } />
         );
     }
 }
