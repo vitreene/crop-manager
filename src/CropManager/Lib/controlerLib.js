@@ -5,7 +5,7 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 
 import initTransform from '../helpers//transform'
 
-import {RAD, DEG, DONE, CMD, R90} from '../config/constantes'
+import {RAD, DONE, CMD, R90} from '../config/constantes'
 import controlerOptions from '../config/controler-options'
 
 

@@ -88,5 +88,5 @@ export default class Controleur extends Component {
     }
 }
 
-{/* <LayerFond {...{rendu, proxy, cropper}}/> */}
+/* <LayerFond {...{rendu, proxy, cropper}}/> */
 //  <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>

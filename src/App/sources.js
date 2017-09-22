@@ -4,7 +4,6 @@ import CropManager from '../CropManager'
 import ChoixCadrage from './choix-cadrage'
 import Upload from './upload'
 import Dropzone from 'react-dropzone'
-import Loading from '../CropManager/UI/Loading'
 
 import{FILEMAX} from './config/constantes'
 import cadreLib from './cadre-lib'

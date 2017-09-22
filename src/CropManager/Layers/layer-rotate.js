@@ -11,30 +11,9 @@ import {
 
 import '../UI/input-range.css'
 
-// valeur arbitraire, élevée : 
-// la ligne axeX - initial représente le vecteur de l'échelle 
-// const axeX = -1000;
 const INITIAL = 0;
-
-// amplitude du curseur entre -10 and 10
-const mid = 0;
 const max = 180;
 
-// The result should be between 1 an 50
-const minv =  Math.LN2;
-// force de l'amplification
-const maxv = Math.LN10;
-// calculate adjustment factor
-const scale = (maxv-minv) / (max-mid);
-/*
-const logslider = (position) =>{
-    if (position === 0) return 0;
-    const val = Math.sign(position) * 
-                Math.exp( minv + scale * 
-                (Math.abs(position) - mid) );
-    return val;
-};
-*/
 const initialState = {
     value: INITIAL, 
     rotate: INITIAL,
