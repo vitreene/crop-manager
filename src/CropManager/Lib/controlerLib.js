@@ -6,68 +6,79 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 import initTransform from '../helpers//transform'
 
 import {RAD, DEG, DONE, CMD, R90} from '../config/constantes'
+import controlerOptions from '../config/controler-options'
+
 
 const controlerLib = {
     execute(action, donnees, state) {
         // console.log('ACTION', action );
-        return this[action] && this[action]( donnees, state);
+        const options = controlerOptions(action, state);
+        return this[action] && this[action](donnees, state, options);
     },
 
-    init(donnees, state) {
+    init(donnees, state, options) {
         const {transform, proxy, cadrage} = donnees;
         if (!transform || !cadrage || !proxy) return;
 
         const nextState = {
             ...this.preSizes(state.conteneur, donnees),
-            isLoading: false,
+            options
         };
         return this.update(state, nextState);
     },
 
-    updatePosition(donnees, state){
-        // smooth : apply a transition to the transformation
-        const {smooth} = donnees;
-        const nextState = {...transformer(donnees, state), smooth};
-        // console.log('scale', donnees.pointers[0].posX, donnees.pointers[1].posX, nextState.transform.scale);
+    inputPosition(donnees, state, options){
+        return this.updatePosition(donnees, state, options)
+    },
+
+    updatePosition(donnees, state, options){
+        const nextState = {
+            ...transformer(donnees, state),
+           options
+        };
         return this.update(state, nextState, nextState.action);
     },
 
-    pivoter({h,v}, state) {
+    pivoter({h,v}, state, options) {
         // transformer true/false en (-1)/(+1) (true = checked)
         const pivot = {
             h: h ? -1 : 1,
             v: v ? -1 : 1,
         };
         const nextState = {
-            transform: {...state.transform, pivot}, smooth: true
+            transform: {...state.transform, pivot},
+            options
         };
         return this.update(state, nextState);
         
     },
 
-    rotate90(sens, state) {
+    rotate90(sens, state, options) {
         // ajouter sens
         const pointers = Object
             .keys(state.pointers)
             .map(p => state.pointers[p]);
-        return this.updatePosition({
-            type: [CMD, R90],
-            pointers,
-            sens,
-            smooth: true
-        }, state);
+        return this.updatePosition(
+            {
+                type: [CMD, R90],
+                pointers,
+                sens,
+            }, 
+            state,
+            options
+            );
     },
     
-    updateScale(donnees, state){
+    updateScale(donnees, state, options){
         const {type, axeX, scale} = donnees;
         const pointers = [
             {posX: axeX, posY: 0},
             {posX: scale, posY: 0},
         ]
-        return this.updatePosition({type, pointers}, state);
+        return this.updatePosition({type, pointers}, state, options);
     },
     
-    updateRotate(donnees, state){
+    updateRotate(donnees, state, options){
         const {type, rotate} = donnees;
         // const absRotate = (state.transform.rotate + rotate)% 360;
         const absRotate = rotate;
@@ -78,30 +89,33 @@ const controlerLib = {
         // console.log('POINTERS', pointers[1]);
         // console.log('absRotate', absRotate, absRotate * RAD);
         
-        return this.updatePosition({type, pointers}, state);
+        return this.updatePosition({type, pointers}, state, options);
     },
 
-    transformPreset(action, state) {
+    transformPreset(action, state, options) {
         const {image, ...cadrage} = state.cadrage;
         const pivot = {h: 1, v: 1};
         const transform = initTransform(cadrage, image, action);
         const translatePx = translateEnPixels(transform.translate, state.cropper);
 
         const nextState = {
-            transform: {...transform, translatePx, pivot},
-            smooth: true
+           transform: {...transform, translatePx, pivot},
+           options
         };
         return this.update(state, nextState);
         
     },
 
-    resize(conteneur, state) {
+    resize(conteneur, state, options) {
         if (state.isLoading) return {...state, conteneur};
-        const nextState = this.preSizes(conteneur, state);
+        const nextState = {
+            ...this.preSizes(conteneur, state),
+            options
+        };
         return this.update(state, nextState);
     },
     
-    export(state){
+    exporter(state){
         // eslint-disable-next-line
         const {translatePx, ...transform} = state.transform;
         return transform;

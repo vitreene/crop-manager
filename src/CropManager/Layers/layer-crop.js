@@ -1,9 +1,8 @@
 import React from 'react';
 
 const LayerCrop = (props) => {
-    const {rendu: transform, proxy, cropWrapper, cropper, smooth} = props;
-    
-    const transition = `transform ${smooth ? 0.3 : 0}s`;
+    const {rendu: transform, proxy, cropWrapper, cropper, options} = props;
+    const transition = `transform ${options.smooth ? 0.3 : 0}s`;
     const cropLayer = {
         left: cropWrapper.x,
         top: cropWrapper.y,

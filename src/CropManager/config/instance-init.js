@@ -1,6 +1,9 @@
 
 const  initialState = { 
-    isLoading: true,
+    options: {
+        isLoading: true, // attention : géré par props.
+        smooth: false
+    },
     rendu: {
         translate: {dX: 0, dY: 0},
         rotate: 0,

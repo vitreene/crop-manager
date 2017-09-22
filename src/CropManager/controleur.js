@@ -53,7 +53,7 @@ export default class Controleur extends Component {
         // console.log('this.state.action ', this.state.action );
         if (this.state.action !== DONE) return;
 
-        const exporter = controlerLib.export(this.state);
+        const exporter = controlerLib.exporter(this.state);
         // console.log('exporter', exporter);
         this.props.updatePosition(exporter);
         this.setState({action: IDLE});

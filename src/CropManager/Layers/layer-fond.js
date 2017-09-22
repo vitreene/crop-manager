@@ -1,8 +1,10 @@
 import React from 'react';
 // import Loading from '../Loading'
 
-const LayerImage = ({rendu: transform, proxy, cropper, smooth}) => {
-    const transition = `transform ${smooth ? 0.3 : 0}s`;  
+const LayerImage = (props) => {
+    const {rendu: transform, proxy, cropper, options} = props;
+    
+    const transition = `transform ${options.smooth ? 0.3 : 0}s`;
     const{
         translate: {dX = 0, dY = 0 }, 
         rotate = 0, 

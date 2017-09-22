@@ -54,7 +54,7 @@ const Inputs = (props) => {
         )
         .filter(touche => touche.posX && touche.posY);
 
-        handleControl('updatePosition', {type, pointers,  smooth: false});
+        handleControl('inputPosition', {type, pointers,  smooth: false});
 
     }
 
@@ -77,7 +77,7 @@ const Inputs = (props) => {
             {posX, posY}, // pointer
         ].filter(Boolean);
 
-        handleControl('updatePosition', {type, pointers, smooth: false});
+        handleControl('inputPosition', {type, pointers, smooth: false});
 
     }
 
