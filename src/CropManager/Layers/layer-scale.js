@@ -44,7 +44,8 @@ const initialState = {
 export default class LayerScale extends Component {
     static propTypes = {
         handleControl: PropTypes.func, 
-        transform: PropTypes.object, 
+        state: PropTypes.object, 
+        // transform: PropTypes.object, 
     }
 
     constructor(props) {
@@ -63,7 +64,7 @@ export default class LayerScale extends Component {
    updateValue(){
         const timer = setTimeout( ()=> {
             // si je bute sur une borne arreter, figer la valeur jusq'à que je change de sens.
-            const actualScale = this.props.transform.scale;
+            const actualScale = this.props.state.transform.scale;
             const {sens} = this.state;
             
             const trending = ( 

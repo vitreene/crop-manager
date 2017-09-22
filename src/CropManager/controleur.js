@@ -66,20 +66,20 @@ export default class Controleur extends Component {
     render() {
         const {handleControl, state} = this;
         const {isLoading} = this.props;
-        const {/*isLoading, */conteneur, cropper, cropWrapper, proxy, rendu, transform, start} = this.state;
-        const {pivot} = this.state.transform;
+        //const {/*isLoading, */conteneur, cropper, cropWrapper, proxy, rendu, transform, start} = this.state;
+        // const {pivot} = this.state.transform;
  
         return (
             <div className="manip-conteneur">
-                <Wrapper {...{handleControl, isLoading, hasSrc: proxy.src}} >
+                <Wrapper {...{handleControl, isLoading, hasSrc: state.proxy.src}} >
                     <LayerFond {...state}/>
                     <LayerCrop {...state}/>
-                    <LayerReticule {...{conteneur}}/>
-                    <LayerInputs {...{handleControl, conteneur}}/>
-                    <LayerScale {...{handleControl, transform}}/>
-                    <LayerRotate {...{handleControl, conteneur, transform}}/>
+                    <LayerReticule {...state}/>
+                    <LayerInputs {...{handleControl, state}}/>
+                    <LayerScale {...{handleControl, state}}/>
+                    <LayerRotate {...{handleControl, state}}/>
                 </Wrapper>
-                <Reglages {...{handleControl, pivot}}/>
+                <Reglages {...{handleControl, pivot: state.transform.pivot }}/>
                 {/*<Transformers {...{rendu}} />*/}
                 {/*<Pointers {...{rendu, pointers, action, message}} />*/}
                 {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}

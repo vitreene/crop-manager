@@ -9,7 +9,7 @@ let mouseDown = false;
 
 const Inputs = (props) => {
     const {handleControl} = props;
-    const {containerSize, containerPos} = props.conteneur;
+    const {containerSize, containerPos} = props.state.conteneur;
     
     const handleTouchStart = (e)=>{
         eventTouch(e, [TOUCH, START])
@@ -34,7 +34,6 @@ const Inputs = (props) => {
         }
     };
     const handleMouseWheel = (e) => {
-        
         // e.nativeEvent.deltaY
         // deltaMode, deltaX, deltaY, deltaZ
     };
@@ -99,8 +98,9 @@ const Inputs = (props) => {
 
 Inputs.propTypes = {
     handleControl: PropTypes.func, 
-    containerSize: PropTypes.object, 
-    containerPos: PropTypes.object
+    state: PropTypes.object, 
+    // containerSize: PropTypes.object, 
+    // containerPos: PropTypes.object
 }
 
 export default Inputs

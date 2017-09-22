@@ -13,8 +13,6 @@ const controlerOptionsParams = {
 };
 
 export default function controlerOptions(action, state) {
-   console.log('action', action, controlerOptionsParams[action]);
-   
    return Object.assign(
        state.options,
        controlerOptionsParams[action]

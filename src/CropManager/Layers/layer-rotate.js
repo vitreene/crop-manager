@@ -1,4 +1,6 @@
-// simplifier ce module
+// simplifier ce module !
+// ne recopie pas la problématique de scale.
+
 // a faire : séparer la logique de la présentation, pour une meilleure portabilité.
 
 import React, {Component, PropTypes} from 'react'
@@ -46,9 +48,9 @@ const initialState = {
 export default class LayerRotate extends Component {
     static propTypes = {
         handleControl: PropTypes.func, 
-        transform: PropTypes.object, 
-        // start: PropTypes.object, 
-        conteneur: PropTypes.object, 
+        state: PropTypes.object, 
+        // transform: PropTypes.object, 
+        // conteneur: PropTypes.object, 
     }
 
     constructor(props) {
@@ -75,15 +77,13 @@ export default class LayerRotate extends Component {
    }
 
     handleRotate(e) {
-        
         const value = parseFloat(e.target.value);
         this.setState({value} );
     }
     
     handleMouseDown() {
-        const rotate = this.props.transform.rotate;
+        const {rotate} = this.props.state.transform;
         this.props.handleControl('updateRotate', {type:[MOUSE, START], rotate});
-        
         this.setState({emit: true, rotate});
     }
     
@@ -100,7 +100,7 @@ export default class LayerRotate extends Component {
     }
 
     get size(){
-        const {height} =  this.props.conteneur.containerSize;
+        const {height} =  this.props.state.conteneur.containerSize;
         // largeur : 5% du conteneur. 
         return {width: height - (height * 0.2)}
     }
