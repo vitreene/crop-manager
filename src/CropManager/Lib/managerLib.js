@@ -4,6 +4,8 @@ import makeProxy from '../helpers/proxy'
 import creerCadrage from '../helpers/cadrage'
 import initTransform from '../helpers/transform'
 import {translateEnPixels} from '../helpers/translate-pc-px'
+import undoLib from './undoLib'
+import {UNDO, REDO, DO, RAZ} from '../config/constantes'
 
 const ManagerLib = {
     execute(action, donnees, state) {
@@ -20,10 +22,12 @@ const ManagerLib = {
         const nextState = {
             image,
             cadrage,
-            transform,
+            transform: undoLib.execute(RAZ, transform),
+            // transform,
             proxy,
             pristine: true      
         };
+        
         return Object.assign(
             {},
             state,
@@ -31,11 +35,17 @@ const ManagerLib = {
         )
     },
 
-    update(transform, state) {
+    update(transformer, state) {
+        const transform = undoLib.execute(DO, transformer, state.transform);
+        if (!transform) return state;
+        const commandes = this._canDO(transform);
+
         const nextState = {
             transform,
+            commandes,
             pristine: false      
         };
+        // console.log('nextState', nextState);
         return Object.assign(
             {},
             state,
@@ -43,6 +53,29 @@ const ManagerLib = {
         )
     },
     
+    undoRedo(action, state) {
+        const transform = undoLib.execute(action, state.transform);
+        const commandes = this._canDO(transform);
+        
+        const nextState = {
+            transform,
+            commandes
+        };
+        
+        return Object.assign(
+            {},
+            state,
+            nextState
+        )
+    },
+
+    _canDO(transform){
+        return {
+            canundo: !!transform.past.length,
+            canredo: !!transform.future.length
+        }
+    },
+
     updateCadre(ratio, state) {
         if (!state.cadrage) return state;
         const nextState = {
@@ -59,6 +92,7 @@ const ManagerLib = {
     exporter(state){
         const {image, cadrage, transform, proxy, pristine} = state;
         if (!image || !cadrage || !transform) return;
+        const present = (transform && transform.present) || null;
         return {
             image: {
                 src: image.src,
@@ -70,7 +104,8 @@ const ManagerLib = {
                 diagonale: cadrage.diagonale,
                 ratio: cadrage.ratio
             },
-            transform,
+            // transform,
+            transform: present,
             // sera un tableau de cadres
             // cadre: this.cadre || {width: 0, height: 0},
             meta: {pristine}
@@ -87,8 +122,10 @@ const ManagerLib = {
         obtenir le translate
         dX, dY * width
     */    
-        const {image, cadrage, transform} = state;
-        if (!image || !cadrage || !transform) return;
+        const {image, cadrage, transform: transformer} = state;
+               
+        if (!image || !cadrage || !transformer) return;
+        const transform = transformer.present;
         
         const {dX, dY} = transform.translate;
         const {pivot} = transform;

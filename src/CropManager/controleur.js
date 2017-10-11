@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+// import React, {Component, PropTypes} from 'react';
+import React, {PureComponent, PropTypes} from 'react';
 
 import Wrapper from './Wrapper'
 import LayerScale from './Layers/layer-scale'
@@ -7,7 +8,7 @@ import LayerInputs from './Layers/layer-inputs'
 import LayerFond from './Layers/layer-fond'
 import LayerCrop from './Layers/layer-crop'
 import LayerReticule from './Layers/layer-reticule'
-import Reglages from './Reglages'
+import Controls from './Controls'
 // import Loading from './UI/Loading'
 // eslint-disable-next-line
 import {Transformers, Plotters, Pointers} from './infos'
@@ -18,9 +19,10 @@ import controlerLib  from './Lib/controlerLib'
 
 import initialState from './config/instance-init'
 
-export default class Controleur extends Component {
+export default class Controleur extends PureComponent {
     static propTypes = {
        isLoading: PropTypes.bool,
+       hasUpdate: PropTypes.number,
        proxy: PropTypes.object,
        cadrage: PropTypes.object,
        transform: PropTypes.object,
@@ -30,6 +32,7 @@ export default class Controleur extends Component {
     constructor(props) {
         super(props);
         this.handleControl = this.handleControl.bind(this);
+        this.handleCommand = this.handleCommand.bind(this);
     }
 
     state = {
@@ -40,7 +43,7 @@ export default class Controleur extends Component {
     componentWillReceiveProps(newProps) {
         
         // this.setState({isLoading: this.props.isLoading});
-        if (newProps.update !== this.props.update) {
+        if (newProps.hasUpdate !== this.props.hasUpdate) {
             // mise à disposition asynchrone 
             // de l'image et de sa transform initiale.
             const {transform, proxy, cadrage} = newProps;
@@ -50,6 +53,8 @@ export default class Controleur extends Component {
         }
     }
     componentDidUpdate() {
+        // il faut que les actions qui viennent de manager ne déclenchent pas d'update ?
+        
         // console.log('this.state.action ', this.state.action );
         if (this.state.action !== DONE) return;
 
@@ -63,11 +68,13 @@ export default class Controleur extends Component {
         this.setState( state => controlerLib.execute(action, donnees, state) );
     }
 
+    handleCommand(action, donnees) {
+        this.props[action](donnees);
+    }
+
     render() {
-        const {handleControl, state} = this;
-        const {isLoading} = this.props;
-        //const {/*isLoading, */conteneur, cropper, cropWrapper, proxy, rendu, transform, start} = this.state;
-        // const {pivot} = this.state.transform;
+        const {handleControl, handleCommand, state} = this;
+        const {isLoading, commandes} = this.props;
  
         return (
             <div className="manip-conteneur">
@@ -79,14 +86,20 @@ export default class Controleur extends Component {
                     <LayerScale {...{handleControl, state}}/>
                     <LayerRotate {...{handleControl, state}}/>
                 </Wrapper>
-                <Reglages {...{handleControl, pivot: state.transform.pivot }}/>
-                {/*<Transformers {...{rendu}} />*/}
-                {/*<Pointers {...{rendu, pointers, action, message}} />*/}
-                {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}
+                <Controls {...{
+                    handleControl, 
+                    handleCommand,
+                    commandes,
+                    pivot: state.transform.pivot 
+                    }}/>
             </div>
         );
     }
 }
+
+// {/*<Transformers {...{rendu}} />*/}
+// {/*<Pointers {...{rendu, pointers, action, message}} />*/}
+// {/* <Plotters {...{...pointers, conteneur, cropper}}/>  */}
 
 /* <LayerFond {...{rendu, proxy, cropper}}/> */
 //  <LayerCrop {...{rendu, proxy, cropper, cropWrapper}}/>

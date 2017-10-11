@@ -1,13 +1,16 @@
 /* eslint-disable */
 import React, {Component, PropTypes} from 'react';
 
-import Icon from './UI/icones'
-import Text from './UI/text'
+import {UNDO, REDO, DO, RAZ} from '../config/constantes'
+import Icon from '../UI/icones'
+import Text from '../UI/text'
 
 
-export default class Reglages extends Component {
-     static propTypes = {
+export default class Controls extends Component {
+    static propTypes = {
          pivot: PropTypes.object,
+         commandes: PropTypes.object,
+         handleCommand: PropTypes.func,
          handleControl: PropTypes.func,
      }    
     state = { 
@@ -20,6 +23,8 @@ export default class Reglages extends Component {
         this.onPivot = this.onPivot.bind(this);
         this.onCover = this.onCover.bind(this);
         this.onRotate = this.onRotate.bind(this);
+        this.onUndo = this.onUndo.bind(this);
+        this.onRedo = this.onRedo.bind(this);
     }
 
     componentWillReceiveProps({pivot}) {
@@ -54,13 +59,26 @@ export default class Reglages extends Component {
         this.props.handleControl('rotate90', sens);
     }
 
+    onUndo() {
+        this.props.handleCommand('undoRedo', UNDO);
+    }
+
+    onRedo() {
+        this.props.handleCommand('undoRedo', REDO);
+    }
+
     render() {
         const params = {maxScale:2.8, minScale:0.4};
         const {v, h} = this.state;
         const {placement=''} = this.props;
+        const {canundo, canredo} = this.props.commandes;
+        // console.log('canundo, canredo', canundo, canredo);
+        
 
         return (
             <div className="manip-reglages-icons" >
+            <button onClick={this.onUndo} disabled={!canundo}>UNDO</button>
+            <button onClick={this.onRedo} disabled={!canredo}>REDO</button>
               <input
                 className="input-hidden"
                 id="miroir-h"

@@ -20,3 +20,9 @@ export const SCALEMIN = 0.5
 export const SCALEMAX = 10
 
 export const isClient = typeof window !== "undefined";
+
+// undo - redo 
+export const UNDO = 'UNDO';
+export const REDO = 'REDO'; 
+export const DO = 'DO'; // update,
+export const RAZ = 'RAZ'; // init

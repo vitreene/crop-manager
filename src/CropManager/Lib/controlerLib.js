@@ -5,7 +5,7 @@ import {translateEnPixels} from '../helpers/translate-pc-px'
 
 import initTransform from '../helpers//transform'
 
-import {RAD, DONE, CMD, R90} from '../config/constantes'
+import {IDLE, RAD, DONE, CMD, R90} from '../config/constantes'
 import controlerOptions from '../config/controler-options'
 
 
@@ -24,7 +24,7 @@ const controlerLib = {
             ...this.preSizes(state.conteneur, donnees),
             options
         };
-        return this.update(state, nextState);
+        return this.update(state, nextState, IDLE);
     },
 
     inputPosition(donnees, state, options){
