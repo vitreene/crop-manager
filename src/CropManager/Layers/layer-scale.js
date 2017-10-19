@@ -1,5 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import {MOUSE, 
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
+import {
+    MOUSE, 
     START, MOVE, END,
     SCALEMIN, SCALEMAX
 } from '../config/constantes'

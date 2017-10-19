@@ -1,11 +1,13 @@
-// importe une image avec un pre-reglage
 /*
-l'image est dans ./public
-
+    importe une image avec un pre-reglage
+    l'image est dans ./public
 */
 
-import React, {PropTypes} from 'react';
-import {storage} from './config/initial';
+import React from 'react';
+import PropTypes from 'prop-types'
+
+import {storage} from './config/initial'
+
 let counter = 0;
 const Demo = (props) => {
     function  upload() {

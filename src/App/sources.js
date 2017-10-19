@@ -18,21 +18,27 @@ const Sources = function(Composant){
             this.loadImage = this.loadImage.bind(this);
             this.validateInput = this.validateInput.bind(this);
             this.onDrop = this.onDrop.bind(this);
+            this.onDragEnter = this.onDragEnter.bind(this);
+            this.onDragLeave = this.onDragLeave.bind(this);
         }
 
         state = {
             ...cadreLib.init(),
             imgFile: null,
-            isLoading: false
+            isLoading: false,
+            dropzoneActive: false
         }
 
         counter = 0
 
         onDrop(acceptedFiles, rejectedFiles) {
-            console.log('acceptedFiles', acceptedFiles);
-            console.log('rejectedFiles', rejectedFiles);
+            // console.log('acceptedFiles', acceptedFiles);
+            // console.log('rejectedFiles', rejectedFiles);
             if (rejectedFiles[0]) return;
-            this.setState({isLoading: true})
+            this.setState({
+                isLoading: true, 
+                dropzoneActive: false
+            })
             const upFile = acceptedFiles[0];
             const reader = new FileReader();
             reader.onload = () => {
@@ -47,7 +53,13 @@ const Sources = function(Composant){
             }
             reader.readAsDataURL(upFile);
         }
-        
+        onDragEnter(){
+            this.setState({dropzoneActive: true})
+        }
+        onDragLeave() {
+            this.setState({dropzoneActive: false});
+        }
+
         getUrl(imgFile) { 
             this.loadImage(imgFile);
         }
@@ -67,9 +79,16 @@ const Sources = function(Composant){
         }
         
         render() {
-            const {imgFile, isLoading, ...cadre} = this.state;
+            const {imgFile, isLoading, dropzoneActive, ...cadre} = this.state;
             const {ratio, placeholder} = cadre;
-            const {props, getUrl, getInputs, validateInput, onDrop} = this;
+            const {props, 
+                getUrl,
+                getInputs, 
+                validateInput, 
+                onDrop, 
+                onDragEnter,
+                onDragLeave
+            } = this;
             
             return (
                 <div className="element-wrapper">
@@ -84,6 +103,8 @@ const Sources = function(Composant){
                         maxSize={FILEMAX}
                         className="manip-conteneur"
                         onDrop={onDrop}
+                        onDragEnter={onDragEnter}
+                        onDragLeave={onDragLeave}
                         >
                             <Composant
                             {...{imgFile, ratio}}
@@ -91,6 +112,7 @@ const Sources = function(Composant){
                             handleCadre={getInputs}
                             isLoading={isLoading}
                             {...props}
+                            {...{dropzoneActive}}
                             />
                           
                     </Dropzone>

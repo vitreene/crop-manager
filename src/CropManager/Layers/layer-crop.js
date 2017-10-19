@@ -42,7 +42,7 @@ const LayerCrop = (props) => {
             <div className="layer-crop-inner"
              style={cropLayerInner}>
                 <div className="img-wrap">
-                    <img role="presentation"
+                    <img alt=""
                         src={proxy.src} 
                         style={transformation} 
                         className="layer-crop-img"/>

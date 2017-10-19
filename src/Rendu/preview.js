@@ -32,7 +32,7 @@ export default function Preview(props) {
             style={{width, height}}
             >
                 <img 
-                role="presentation"
+                alt=""
                 className="preview-image-crop-img"
                 style={transformation} 
                 src={image.src}

@@ -1,18 +1,9 @@
 /*
 undo-redo : met à jour son state enfonction de l'action qu'il recoit.
-
-actions :
-
-const UNDO = 'UNDO';
-const REDO = 'REDO'; 
-const DO = 'DO'; // update,
-const RAZ = 'RAZ'; // init
-
-state ->
-past : array,
-present : transform,
-futur : array
-
+    state ->
+    past : array,
+    present : transform,
+    futur : array
 */
 import {UNDO, REDO, DO, RAZ} from '../config/constantes'
 

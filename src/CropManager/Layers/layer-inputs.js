@@ -1,4 +1,6 @@
-import React, {PropTypes} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+
 import {TOUCH, MOUSE, START, MOVE, END} from '../config/constantes'
 
 // bug : touch si l'on relache d'abord axe, 

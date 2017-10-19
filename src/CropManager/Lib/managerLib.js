@@ -5,7 +5,7 @@ import creerCadrage from '../helpers/cadrage'
 import initTransform from '../helpers/transform'
 import {translateEnPixels} from '../helpers/translate-pc-px'
 import undoLib from './undoLib'
-import {UNDO, REDO, DO, RAZ} from '../config/constantes'
+import {/*UNDO, REDO, */ DO, RAZ} from '../config/constantes'
 
 const ManagerLib = {
     execute(action, donnees, state) {
@@ -17,13 +17,15 @@ const ManagerLib = {
         const proxy = await makeProxy(image);
         const ratio = obj.ratio || (obj.cadrage && obj.cadrage.ratio) || 1;
         const cadrage = creerCadrage(ratio, image);
-        const transform = obj.transform || initTransform(cadrage, image);
+        const newTransform = obj.transform || initTransform(cadrage, image);
+        const transform = undoLib.execute(RAZ, newTransform)
+        const commandes = this._canDO(transform);
 
         const nextState = {
             image,
             cadrage,
-            transform: undoLib.execute(RAZ, transform),
-            // transform,
+            transform,
+            commandes,
             proxy,
             pristine: true      
         };

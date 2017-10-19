@@ -1,7 +1,7 @@
 import React from 'react';
 // import Loading from '../Loading'
 
-const LayerImage = (props) => {
+const LayerFond = (props) => {
     const {rendu, proxy, options} = props;
 
     const transition = `transform ${options.smooth ? 0.3 : 0}s`;
@@ -24,7 +24,7 @@ const LayerImage = (props) => {
 
     return (
         <div className="layer-base layer-fond">
-            <img role="presentation"
+            <img alt=""
                 src={proxy.src} 
                 style={transformation} 
                 className="layer-fond-img"
@@ -32,5 +32,5 @@ const LayerImage = (props) => {
         </div>
 )};
 
-export default LayerImage;
+export default LayerFond;
 

@@ -3,7 +3,9 @@
 
 // a faire : séparer la logique de la présentation, pour une meilleure portabilité.
 
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
 import {
     MOUSE, 
     START, MOVE, END,

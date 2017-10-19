@@ -1,5 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import Loading from './UI/Loading'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
+// import Loading from './UI/Loading'
+import LayerInfo from './Layers/layer-info'
 
 import {isClient} from './config/constantes'
         
@@ -50,16 +53,21 @@ export default  class Wrapper extends Component {
         }
     }
 
+    get wrapperClass(){ 
+        const wrapperClass = "manip-wrapper paves ";
+        const dropActif = this.props.dropzoneActive ? "drop-actif" : ''
+        return wrapperClass + dropActif;
+    }
+
     render() {
-        const {isLoading, hasSrc} = this.props;
-        // loading s'arrette lorsque l'image est prete, mais pas le proxy
+        const {hasSrc} = this.props;
         return (
             <div
-            className="manip-wrapper" 
+            className={this.wrapperClass}
             ref={r => this.ref = r}>
-                { isLoading
-                    ? <Loading/>
-                    : hasSrc && this.props.children 
+                { hasSrc
+                    ? this.props.children 
+                    : <LayerInfo/>
                 }
             </div>
 

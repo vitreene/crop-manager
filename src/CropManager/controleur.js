@@ -1,5 +1,6 @@
 // import React, {Component, PropTypes} from 'react';
-import React, {PureComponent, PropTypes} from 'react';
+import React, {PureComponent} from 'react'
+import PropTypes from 'prop-types'
 
 import Wrapper from './Wrapper'
 import LayerScale from './Layers/layer-scale'
@@ -72,21 +73,25 @@ export default class Controleur extends PureComponent {
         this.props[action](donnees);
     }
 
+    get hasSrc(){return !!this.state.proxy.src}
+
     render() {
-        const {handleControl, handleCommand, state} = this;
-        const {isLoading, commandes} = this.props;
+        const {handleControl, handleCommand, hasSrc, state} = this;
+        const {isLoading, commandes, dropzoneActive} = this.props;
  
         return (
             <div className="manip-conteneur">
-                <Wrapper {...{handleControl, isLoading, hasSrc: state.proxy.src}} >
+                <Wrapper {...{handleControl, isLoading, hasSrc, dropzoneActive}} >
                     <LayerFond {...state}/>
                     <LayerCrop {...state}/>
                     <LayerReticule {...state}/>
                     <LayerInputs {...{handleControl, state}}/>
                     <LayerScale {...{handleControl, state}}/>
                     <LayerRotate {...{handleControl, state}}/>
+                   
                 </Wrapper>
                 <Controls {...{
+                    hasSrc,
                     handleControl, 
                     handleCommand,
                     commandes,

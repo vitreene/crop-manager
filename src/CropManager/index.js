@@ -1,10 +1,11 @@
-import React, {PureComponent, PropTypes} from 'react';
+import React, {PureComponent} from 'react'
+import PropTypes from 'prop-types'
 
 import Controleur from './Controleur' 
 import managerLib from './Lib/managerLib'
 import deepEQ from './helpers/deepEQ'
 
-import './index.css';
+import './index.css'
 
 const initialState = {
     image: {src: null},
@@ -115,7 +116,7 @@ export default class CropManager extends PureComponent {
 
     render() {        
         const {updatePosition, undoRedo} = this;
-        const {isLoading} = this.props;
+        const {isLoading, dropzoneActive} = this.props;
         const {proxy, cadrage, transform, hasUpdate, commandes} = this.state;
         
         const present = (transform && transform.present) || null;
@@ -130,7 +131,8 @@ export default class CropManager extends PureComponent {
                     transform: present,
                     commandes,
                     hasUpdate,
-                    isLoading
+                    isLoading,
+                    dropzoneActive
                 }
             } />
         );

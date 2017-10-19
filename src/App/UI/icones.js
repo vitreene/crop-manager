@@ -49,7 +49,7 @@ const icones = {
     </g>
   ),
   permuter: (
-    <g fill="none" stroke="currentcolor"  strokeWidth="4">
+    <g fill="none" stroke="currentcolor"  strokeWidth="2">
       <path d="M35.3 14.1l4.6 5.98-4.3 5.03m-25.5-5.5h29.8M14.7 36.1l-4.6-5.97 4.3-5.03m25.5 5.5H10.1"/>
     </g>
   ),

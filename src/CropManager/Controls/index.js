@@ -1,17 +1,20 @@
-/* eslint-disable */
-import React, {Component, PropTypes} from 'react';
+// à faire : composant à decomposer
 
-import {UNDO, REDO, DO, RAZ} from '../config/constantes'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+
+import {UNDO, REDO, /*DO, RAZ*/} from '../config/constantes'
 import Icon from '../UI/icones'
 import Text from '../UI/text'
 
 
 export default class Controls extends Component {
     static propTypes = {
-         pivot: PropTypes.object,
-         commandes: PropTypes.object,
-         handleCommand: PropTypes.func,
-         handleControl: PropTypes.func,
+        hasSrc: PropTypes.bool,
+        pivot: PropTypes.object,
+        commandes: PropTypes.object,
+        handleCommand: PropTypes.func,
+        handleControl: PropTypes.func,
      }    
     state = { 
         h : false,
@@ -68,17 +71,41 @@ export default class Controls extends Component {
     }
 
     render() {
-        const params = {maxScale:2.8, minScale:0.4};
+        // const params = {maxScale:2.8, minScale:0.4};
         const {v, h} = this.state;
-        const {placement=''} = this.props;
-        const {canundo, canredo} = this.props.commandes;
-        // console.log('canundo, canredo', canundo, canredo);
-        
+        const {placement='', hasSrc} = this.props;
+        const {canundo, canredo} = this.props.commandes;        
 
         return (
             <div className="manip-reglages-icons" >
-            <button onClick={this.onUndo} disabled={!canundo}>UNDO</button>
-            <button onClick={this.onRedo} disabled={!canredo}>REDO</button>
+                <input
+                className="input-hidden"
+                id="undo"
+                name="undo"
+                type="button"
+                onClick={this.onUndo }
+                disabled={!canundo}
+                />
+                <label htmlFor="undo"
+                className="label-reglage">
+                    <Icon name="undo" />    
+                    <Text small >Annuler</Text>
+                </label>
+
+                <input
+                className="input-hidden"
+                id="redo"
+                name="redo"
+                type="button"
+                onClick={this.onRedo }
+                disabled={!canredo}
+                />
+                <label htmlFor="redo"
+                className="label-reglage">
+                    <Icon name="redo" />    
+                    <Text small >Refaire</Text>
+                </label>
+
               <input
                 className="input-hidden"
                 id="miroir-h"
@@ -89,7 +116,7 @@ export default class Controls extends Component {
                 />
                 <label htmlFor="miroir-h"
                 className={['label-reglage', h && 'label-on'].join(' ')}>
-                    <Icon name="pivotH" checked={this.state.h} />
+                    <Icon name="pivotH" checked={h} />
                 <Text small >Miroir H</Text>
                 </label>
 
@@ -103,7 +130,7 @@ export default class Controls extends Component {
                 />
                 <label htmlFor="miroir-v"
                 className={['label-reglage', v && 'label-on'].join(' ')}>
-                    <Icon name="pivotV" checked={this.state.v} />
+                    <Icon name="pivotV" checked={v} />
                 <Text small >Miroir V</Text>
                 </label>
                
@@ -112,7 +139,7 @@ export default class Controls extends Component {
                 id="rotate90"
                 name="rotate90"
                 type="button"
-                onClick={ this.onRotate }
+                onClick={this.onRotate }
                 />
                 <label htmlFor="rotate90"
                 className="label-reglage">
@@ -130,6 +157,7 @@ export default class Controls extends Component {
                 type="radio"
                 checked={placement === 'cover'}
                 onChange={this.onCover}
+                disabled={!hasSrc}
                 />
                 <label 
                 htmlFor="visuel-cover"
@@ -146,6 +174,7 @@ export default class Controls extends Component {
                 type="radio"
                 checked={placement === 'contains'}
                 onChange={this.onCover}
+                disabled={!hasSrc}
                 />
                 <label htmlFor="visuel-contains"
                 className="label-reglage">
